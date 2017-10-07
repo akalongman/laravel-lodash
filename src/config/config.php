@@ -4,7 +4,7 @@ return [
 
     'debug' => [
         'ips' => [
-            '192.168.1.1',
+            // IP list for enabling debug mode
         ],
     ],
 

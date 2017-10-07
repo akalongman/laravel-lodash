@@ -11,30 +11,22 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Debug;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class DebugServiceProvider extends ServiceProvider
 {
-    protected $defer = false;
+    public function boot(): void
+    {
+        $ips = config('lodash.debug.ips');
+        $ip = app(Request::class)->getClientIp();
+        if (in_array($ip, $ips)) {
+            config(['app.debug' => true]);
+        }
+    }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function register(): void
     {
 
     }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-
-    }
-
 }

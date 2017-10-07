@@ -1,0 +1,57 @@
+{
+    "name": "longman/laravel-lodash",
+    "type": "library",
+    "description": "Add more functional to Laravel 5.x",
+    "keywords": [
+        "lodash",
+        "laravel",
+        "utilities",
+        "tools"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/akalongman/laravel-lodash",
+    "support": {
+        "issues": "https://github.com/akalongman/laravel-lodash/issues",
+        "source": "https://github.com/akalongman/laravel-lodash"
+    },
+    "authors": [
+        {
+            "name": "Avtandil Kikabidze aka LONGMAN",
+            "email": "akalongman@gmail.com",
+            "homepage": "http://longman.me",
+            "role": "Maintainer, Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "~6.0",
+        "longman/php-code-style": "^1.0",
+        "graham-campbell/testbench": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Longman\\LaravelLodash\\": "src/Lodash"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Longman\\LaravelMultiLang\\MultiLangServiceProvider"
+            ]
+        }
+    }
+}

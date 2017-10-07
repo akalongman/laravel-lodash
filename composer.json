@@ -50,7 +50,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Longman\\LaravelMultiLang\\MultiLangServiceProvider"
+                "Longman\\LaravelLodash\\LodashServiceProvider"
             ]
         }
     }

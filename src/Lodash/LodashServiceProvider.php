@@ -9,11 +9,11 @@
  */
 declare(strict_types=1);
 
-namespace Longman\LaravelLodash\Debug;
+namespace Longman\LaravelLodash;
 
 use Illuminate\Support\ServiceProvider;
 
-class DebugServiceProvider extends ServiceProvider
+class LodashServiceProvider extends ServiceProvider
 {
     protected $defer = false;
 

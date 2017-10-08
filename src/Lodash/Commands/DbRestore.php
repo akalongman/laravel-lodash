@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Commands;
 
 use Illuminate\Console\Command;
+use DB;
 
 class DbRestore extends Command
 {

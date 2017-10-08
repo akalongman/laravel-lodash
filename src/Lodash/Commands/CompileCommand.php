@@ -36,7 +36,6 @@ class CompileCommand extends Command
      */
     public function handle()
     {
-
         $this->call('config:cache');
         $this->call('route:cache');
     }

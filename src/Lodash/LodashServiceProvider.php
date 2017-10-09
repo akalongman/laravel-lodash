@@ -21,6 +21,8 @@ class LodashServiceProvider extends ServiceProvider
         'command.lodash.db.dump'   => \Longman\LaravelLodash\Commands\DbDump::class,
         'command.lodash.db.restore'   => \Longman\LaravelLodash\Commands\DbRestore::class,
         'command.lodash.log.clear' => \Longman\LaravelLodash\Commands\LogClear::class,
+        'command.lodash.user.add' => \Longman\LaravelLodash\Commands\UserAdd::class,
+        'command.lodash.user.password' => \Longman\LaravelLodash\Commands\UserPassword::class,
 
     ];
 

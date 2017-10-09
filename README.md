@@ -59,6 +59,8 @@ Command  | Description
 `php artisan db:dump`  |  Dump database to sql file using mysqldump CLI utility. Options:<br/>--database= : The database connection to use.<br/>--path= : Folder path for store database dump files.
 `php artisan db:restore {file}`  |  Dump database to sql file using mysqldump CLI utility. Options:<br/>--database= : The database connection to use.<br/>--force : Force the operation to run when in production
 `php artisan log:clear`  |  Clear log files from `storage/logs`. Options:<br/>--force : Force the operation to run when in production.
+`php artisan user:add {email} {password?}`  |  Create a new user. Options:<br/>--guard= : The guard to use.
+`php artisan user:password {email} {password?}`  |  Update/reset user password. Options:<br/>--guard= : The guard to use.
 
 
 ### Middlewares

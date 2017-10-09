@@ -26,8 +26,8 @@
         "php": ">=7.0"
     },
     "require-dev": {
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~6.0",
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "~6.4",
         "longman/php-code-style": "^1.0",
         "graham-campbell/testbench": "@dev"
     },

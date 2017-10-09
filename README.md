@@ -13,8 +13,10 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-    - [Commands](#commands)
     - [Functional](#functional)
+    - [Commands](#commands)
+    - [Middlewares](#middlewares)
+    - [Blade Directives](#blade-directives)
 - [TODO](#todo)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -50,6 +52,10 @@ Copy the package config to your local config with the publish command:
 
 ## Usage
 
+### Functional
+
+TBD
+
 ### Commands
 
 Command  | Description
@@ -70,9 +76,9 @@ Middleware  | Description
 `AllowCorsRequests`  |  Allows cross origin requests. Can be configured allowed hosts, methods and headers in the configuration file
 `XssSecurity`  |  Sets XSS Security headers. Can be configured excluded URI-s, etc.
 
+### Blade Directives
 
-### Functional
-
+TBD
 
 
 ## TODO

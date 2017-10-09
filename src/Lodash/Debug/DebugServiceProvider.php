@@ -27,6 +27,5 @@ class DebugServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-
     }
 }

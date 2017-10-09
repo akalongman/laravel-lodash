@@ -45,7 +45,7 @@ class DbDump extends Command
         $default = $config['default'];
         $connection = $config['connections'][$default];
 
-        $process = new Process('mysqldump --host='.$connection['host'].' --user='.$connection['username'].' --password='.$connection['password'].' '.$connection['database'].' > '.$path);
+        $process = new Process('mysqldump --host=' . $connection['host'] . ' --user=' . $connection['username'] . ' --password=' . $connection['password'] . ' ' . $connection['database'] . ' > ' . $path);
         $process->run();
 
         // executes after the command finishes
@@ -53,6 +53,6 @@ class DbDump extends Command
             throw new ProcessFailedException($process);
         }
 
-        $this->info('Database backup saved to: '.storage_path('dump.sql'));
+        $this->info('Database backup saved to: ' . storage_path('dump.sql'));
     }
 }

@@ -36,6 +36,5 @@ class LodashServiceProvider extends ServiceProvider
         $this->commands([
             'command.lodash.clear-all',
         ]);
-
     }
 }

@@ -42,7 +42,7 @@ class DbClear extends Command
         $tables = DB::select('SHOW TABLES');
         foreach ($tables as $table) {
             foreach ($table as $key => $value) {
-                DB::statement('DROP TABLE `'.$value.'`');
+                DB::statement('DROP TABLE `' . $value . '`');
             }
         }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

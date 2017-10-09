@@ -33,7 +33,7 @@ Create *composer.json* file:
     "name": "yourproject/yourproject",
     "type": "project",
     "require": {
-        "longman/laravel-lodash": "~0.0.1"
+        "longman/laravel-lodash": "~0.1"
     }
 }
 ```

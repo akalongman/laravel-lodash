@@ -11,17 +11,22 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Commands;
 
-use Illuminate\Console\Command;
 use DB;
+use Illuminate\Console\Command;
+use Illuminate\Console\ConfirmableTrait;
 
 class DbClear extends Command
 {
+    use ConfirmableTrait;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'db:clear';
+    protected $signature = 'db:clear {--database= : The database connection to use.}
+                {--force : Force the operation to run when in production.}
+                {--pretend : Dump the SQL queries that would be run.}';
 
     /**
      * The console command description.
@@ -37,15 +42,50 @@ class DbClear extends Command
      */
     public function handle()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
-        $tables = DB::select('SHOW TABLES');
-        foreach ($tables as $table) {
-            foreach ($table as $key => $value) {
-                DB::statement('DROP TABLE `' . $value . '`');
-            }
+        if (! $this->confirmToProceed('Application In Production! Will be dropped all tables!')) {
+            return;
         }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        $this->info('All tables dropped from database!');
+
+        $db_conn = $this->getDatabase();
+        $connection = DB::connection($db_conn);
+
+        $database = $connection->getDatabaseName();
+        $tables = $connection->select('SHOW TABLES');
+
+        if (empty($tables)) {
+            $this->info('Tables not found in database "' . $database . '"');
+
+            return;
+        }
+
+        $pretend = $this->input->getOption('pretend');
+        $connection->transaction(function () use ($connection, $tables, $database, $pretend) {
+            if (! $pretend) {
+                $connection->statement('SET FOREIGN_KEY_CHECKS=0;');
+            }
+
+            foreach ($tables as $table) {
+                foreach ($table as $key => $value) {
+                    $stm = 'DROP TABLE IF EXISTS `' . $value . '`';
+                    if ($pretend) {
+                        $this->line("{$stm}");
+                    } else {
+                        $connection->statement($stm);
+                        $this->comment('Table `' . $value . '` dropped');
+                    }
+                }
+            }
+            if (! $pretend) {
+                $connection->statement('SET FOREIGN_KEY_CHECKS=1;');
+                $this->info('All tables dropped from database "' . $database . '"!');
+            }
+        });
+    }
+
+    protected function getDatabase(): string
+    {
+        $database = $this->input->getOption('database');
+
+        return $database ?: $this->laravel['config']['database.default'];
     }
 }

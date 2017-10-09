@@ -8,7 +8,7 @@
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This package adds lot of useful functionality to the Laravel project
+This package adds lot of useful functionality to the Laravel >=5.5 project
 
 ## Table of Contents
 - [Installation](#installation)
@@ -55,13 +55,18 @@ Copy the package config to your local config with the publish command:
 Command  | Description
 ------------- | -------------
 `php artisan clear-all`  |  Clear entire cache and all cached routes, views, etc.
+`php artisan db:clear`  |  Drop all tables from database. Options:<br/>--database= : The database connection to use.<br/>--force : Force the operation to run when in production.<br/>--pretend : Dump the SQL queries that would be run.
+`php artisan db:dump`  |  Dump database to sql file using mysqldump CLI utility. Options:<br/>--database= : The database connection to use.<br/>--path= : Folder path for store database dump files.
+`php artisan db:restore {file}`  |  Dump database to sql file using mysqldump CLI utility. Options:<br/>--database= : The database connection to use.<br/>--force : Force the operation to run when in production
+`php artisan log:clear`  |  Clear log files from `storage/logs`. Options:<br/>--force : Force the operation to run when in production.
 
 
 ### Middlewares
 
 Middleware  | Description
 ------------- | -------------
-`AllowCorsRequests`  |  Allows cross origin requests. You can configure allowed hosts, methods and headers in the configuration file
+`AllowCorsRequests`  |  Allows cross origin requests. Can be configured allowed hosts, methods and headers in the configuration file
+`XssSecurity`  |  Sets XSS Security headers. Can be configured excluded URI-s, etc.
 
 
 ### Functional

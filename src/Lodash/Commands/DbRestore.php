@@ -11,24 +11,29 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Commands;
 
-use Illuminate\Console\Command;
 use DB;
+use Illuminate\Console\Command;
+use Illuminate\Console\ConfirmableTrait;
 
 class DbRestore extends Command
 {
+    use ConfirmableTrait;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'db:restore';
+    protected $signature = 'db:restore {file : Dump file path to restore.}
+                    {--database= : The database connection to use.}
+                    {--force : Force the operation to run when in production.}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Dump restore';
+    protected $description = 'Restore mysql dump.';
 
     /**
      * Execute the console command.
@@ -37,10 +42,36 @@ class DbRestore extends Command
      */
     public function handle()
     {
-        $path = storage_path('dump.sql');
+        if (! $this->confirmToProceed('Application In Production! Will be imported sql file!')) {
+            return;
+        }
 
-        DB::unprepared(file_get_contents($path));
+        $db_conn = $this->getDatabase();
+        $connection = DB::connection($db_conn);
+
+        $path = $this->getFilePath();
+        if (! file_exists($path)) {
+            $this->error('File ' . $path . ' not found!');
+
+            return;
+        }
+
+        $connection->unprepared(file_get_contents($path));
 
         $this->info('Database backup restored successfully');
+    }
+
+    protected function getDatabase(): string
+    {
+        $database = $this->input->getOption('database');
+
+        return $database ?: $this->laravel['config']['database.default'];
+    }
+
+    protected function getFilePath(): string
+    {
+        $file = $this->input->getArgument('file');
+
+        return base_path($file);
     }
 }

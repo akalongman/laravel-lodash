@@ -56,6 +56,7 @@
     },
     "scripts": {
         "phpcs": "./vendor/bin/phpcs --standard=phpcs.xml -spn --encoding=utf-8 src/ --report-width=150",
+        "phpcbf": "./vendor/bin/phpcbf --standard=phpcs.xml -spn --encoding=utf-8 src/ --report-width=150",
         "test": "./vendor/bin/phpunit -c phpunit.xml.dist"
     }
 }

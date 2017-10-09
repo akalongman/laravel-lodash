@@ -12,10 +12,19 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash;
 
 use Illuminate\Support\ServiceProvider;
-use Longman\LaravelLodash\Commands\ClearAllCommand;
 
 class LodashServiceProvider extends ServiceProvider
 {
+    protected $commands = [
+        'command.lodash.clear-all' => \Longman\LaravelLodash\Commands\ClearAll::class,
+        'command.lodash.db.clear'  => \Longman\LaravelLodash\Commands\DbClear::class,
+        'command.lodash.db.dump'   => \Longman\LaravelLodash\Commands\DbDump::class,
+        'command.lodash.db.restore'   => \Longman\LaravelLodash\Commands\DbRestore::class,
+        'command.lodash.log.clear' => \Longman\LaravelLodash\Commands\LogClear::class,
+
+    ];
+
+
     public function boot()
     {
         $this->publishes([
@@ -25,16 +34,10 @@ class LodashServiceProvider extends ServiceProvider
 
     public function register()
     {
+        foreach ($this->commands as $name => $class) {
+            $this->app->singleton($name, $class);
+        }
 
-        $this->app->singleton(
-            'command.lodash.clear-all',
-            function () {
-                return new ClearAllCommand();
-            }
-        );
-
-        $this->commands([
-            'command.lodash.clear-all',
-        ]);
+        $this->commands(array_keys($this->commands));
     }
 }

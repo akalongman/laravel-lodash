@@ -16,14 +16,14 @@ use Longman\LaravelLodash\Commands\ClearAllCommand;
 
 class LodashServiceProvider extends ServiceProvider
 {
-    public function boot(): void
+    public function boot()
     {
         $this->publishes([
             __DIR__ . '/../config/config.php' => config_path('lodash.php'),
         ]);
     }
 
-    public function register(): void
+    public function register()
     {
 
         $this->app->singleton(

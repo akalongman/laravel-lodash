@@ -49,8 +49,7 @@ class AllowCorsRequests
         $response
             ->header('Access-Control-Allow-Origin', $request->headers->get('Origin'))
             ->header('Access-Control-Allow-Credentials', 'true')
-            ->header('Content-Type', 'application/json')
-        ;
+            ->header('Content-Type', 'application/json');
 
         if ($request->method() === Request::METHOD_OPTIONS) {
             $allowed_headers = config('lodash.cors.allow_headers');

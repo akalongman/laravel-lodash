@@ -28,6 +28,8 @@ class AllowCorsRequests
 
         $host = parse_url($request->headers->get('Origin'), PHP_URL_HOST);
         if (empty($host)) {
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+
             return $response;
         }
 

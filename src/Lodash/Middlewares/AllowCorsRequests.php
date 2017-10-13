@@ -48,19 +48,17 @@ class AllowCorsRequests
             return $response;
         }
 
-        $response
-            ->header('Access-Control-Allow-Origin', $request->headers->get('Origin'))
-            ->header('Access-Control-Allow-Credentials', 'true')
-            ->header('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', $request->headers->get('Origin'));
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+        $response->headers->set('Content-Type', 'application/json');
 
         if ($request->method() === Request::METHOD_OPTIONS) {
             $allowed_headers = config('lodash.cors.allow_headers');
             $allowed_methods = config('lodash.cors.allow_methods');
 
-            $response
-                ->header('Access-Control-Allow-Methods', implode(',', $allowed_methods))
-                ->header('Access-Control-Allow-Headers', implode(',', $allowed_headers))
-                ->header('Access-Control-Max-Age', '1728000');
+            $response->headers->set('Access-Control-Allow-Methods', implode(',', $allowed_methods));
+            $response->headers->set('Access-Control-Allow-Headers', implode(',', $allowed_headers));
+            $response->headers->set('Access-Control-Max-Age', '1728000');
         }
 
         return $response;

@@ -11,17 +11,18 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash;
 
+use Blade;
 use Illuminate\Support\ServiceProvider;
 
 class LodashServiceProvider extends ServiceProvider
 {
     protected $commands = [
-        'command.lodash.clear-all' => \Longman\LaravelLodash\Commands\ClearAll::class,
-        'command.lodash.db.clear'  => \Longman\LaravelLodash\Commands\DbClear::class,
-        'command.lodash.db.dump'   => \Longman\LaravelLodash\Commands\DbDump::class,
-        'command.lodash.db.restore'   => \Longman\LaravelLodash\Commands\DbRestore::class,
-        'command.lodash.log.clear' => \Longman\LaravelLodash\Commands\LogClear::class,
-        'command.lodash.user.add' => \Longman\LaravelLodash\Commands\UserAdd::class,
+        'command.lodash.clear-all'     => \Longman\LaravelLodash\Commands\ClearAll::class,
+        'command.lodash.db.clear'      => \Longman\LaravelLodash\Commands\DbClear::class,
+        'command.lodash.db.dump'       => \Longman\LaravelLodash\Commands\DbDump::class,
+        'command.lodash.db.restore'    => \Longman\LaravelLodash\Commands\DbRestore::class,
+        'command.lodash.log.clear'     => \Longman\LaravelLodash\Commands\LogClear::class,
+        'command.lodash.user.add'      => \Longman\LaravelLodash\Commands\UserAdd::class,
         'command.lodash.user.password' => \Longman\LaravelLodash\Commands\UserPassword::class,
 
     ];
@@ -36,10 +37,38 @@ class LodashServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->registerCommands();
+
+        $this->registerBladeDirectives();
+    }
+
+    protected function registerCommands()
+    {
         foreach ($this->commands as $name => $class) {
             $this->app->singleton($name, $class);
         }
 
         $this->commands(array_keys($this->commands));
     }
+
+    protected function registerBladeDirectives()
+    {
+        // Display relative time
+        Blade::directive('datetime', function ($expression) {
+
+            return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
+                . '\' title=\'' . $expression . '\'>'
+                . with({$expression})->diffForHumans() . '</time>' ?>";
+        });
+
+        // Pluralization helper
+        Blade::directive('plural', function ($expression) {
+            $expression = trim($expression, '()');
+            list($count, $str, $spacer) = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
+
+            return "<?php echo $count . $spacer . str_plural($str, $count) ?>";
+        });
+    }
+
+
 }

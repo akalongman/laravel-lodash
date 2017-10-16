@@ -14,7 +14,8 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
 - [Installation](#installation)
 - [Usage](#usage)
     - [Functional](#functional)
-    - [Commands](#commands)
+        - [Enable Debug Mode depending on visitor's IP Address](#enable-debug-mode-depending-on-visitors-ip-address)
+    - [Artisan Commands](#artisan-commands)
     - [Middlewares](#middlewares)
     - [Blade Directives](#blade-directives)
 - [TODO](#todo)
@@ -54,9 +55,21 @@ Copy the package config to your local config with the publish command:
 
 ### Functional
 
-TBD
+#### Enable Debug Mode depending on visitor's IP Address 
 
-### Commands
+Add `Longman\LaravelLodash\Debug\DebugServiceProvider::class` in to `config/app.php`
+and specify debug IP's in your `config/lodash.php` config file:
+```php
+    . . .
+    'debug' => [
+        'ips' => [ // IP list for enabling debug mode
+            //'127.0.0.1',
+        ],
+    ],
+    . . .
+```
+
+### Artisan Commands
 
 Command  | Description
 ------------- | -------------
@@ -78,12 +91,15 @@ Middleware  | Description
 
 ### Blade Directives
 
-TBD
+Directive  | Description
+------------- | -------------
+`@datetime($date);`  |  Display relative time. Example:<br/>`$date = Carbon\Carbon::now();`<br />`@datetime($date);`
+`@plural($count, $word)`  |  Pluralization helper. Example:<br/>`@plural(count($posts), 'post')`<br />Produces '1 post' or '2 posts', depending on how many items in $posts there are
 
 
 ## TODO
 
-write more tests
+write more tests and add more funcional
 
 ## Troubleshooting
 

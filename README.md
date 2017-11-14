@@ -13,8 +13,10 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-    - [Functional](#functional)
+    - [General](#general)
         - [Enable Debug Mode depending on visitor's IP Address](#enable-debug-mode-depending-on-visitors-ip-address)
+        - [Add created_by, updated_by and deleted_by to the eloquent models](#add-created_by,-updated_by-and-deleted_by-to-the-eloquent-models)
+    - [Helper Functions](#helper-functions)
     - [Artisan Commands](#artisan-commands)
     - [Middlewares](#middlewares)
     - [Blade Directives](#blade-directives)
@@ -53,7 +55,7 @@ Copy the package config to your local config with the publish command:
 
 ## Usage
 
-### Functional
+### General
 
 #### Enable Debug Mode depending on visitor's IP Address 
 
@@ -69,6 +71,27 @@ and specify debug IP's in your `config/lodash.php` config file:
     . . .
 ```
 
+#### Add created_by, updated_by and deleted_by to the eloquent models 
+
+Sometimes we need to know who created, updated or deleted entry in the database.
+
+For this just add `Longman\LaravelLodash\Eloquent\UserIdentities` trait to your model and also
+update migration file adding necessary columns:
+
+```php
+    $table->unsignedInteger('created_by')->nullable();
+    $table->unsignedInteger('updated_by')->nullable();
+    $table->unsignedInteger('deleted_by')->nullable();
+```
+
+### Helper Functions
+
+Function  | Description
+------------- | -------------
+`p(...$values): void`  |  Add debug messages to the debugbar
+`get_db_query(): ?string`  |  Get last executed database query
+`get_db_queries(): ?array`  |  Get all executed database queries
+
 ### Artisan Commands
 
 Command  | Description
@@ -76,7 +99,7 @@ Command  | Description
 `php artisan clear-all`  |  Clear entire cache and all cached routes, views, etc.
 `php artisan db:clear`  |  Drop all tables from database. Options:<br/>--database= : The database connection to use.<br/>--force : Force the operation to run when in production.<br/>--pretend : Dump the SQL queries that would be run.
 `php artisan db:dump`  |  Dump database to sql file using mysqldump CLI utility. Options:<br/>--database= : The database connection to use.<br/>--path= : Folder path for store database dump files.
-`php artisan db:restore {file}`  |  Dump database to sql file using mysqldump CLI utility. Options:<br/>--database= : The database connection to use.<br/>--force : Force the operation to run when in production
+`php artisan db:restore {file}`  |  Restore database from sql file using mysqldump CLI utility. Options:<br/>--database= : The database connection to use.<br/>--force : Force the operation to run when in production
 `php artisan log:clear`  |  Clear log files from `storage/logs`. Options:<br/>--force : Force the operation to run when in production.
 `php artisan user:add {email} {password?}`  |  Create a new user. Options:<br/>--guard= : The guard to use.
 `php artisan user:password {email} {password?}`  |  Update/reset user password. Options:<br/>--guard= : The guard to use.
@@ -99,7 +122,7 @@ Directive  | Description
 
 ## TODO
 
-write more tests and add more funcional
+write more tests and add more features
 
 ## Troubleshooting
 

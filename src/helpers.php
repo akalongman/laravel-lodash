@@ -10,10 +10,11 @@
 declare(strict_types=1);
 
 if (! function_exists('p')) {
-    function p($value): void
+    function p(...$values): void
     {
+        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = app('debugbar');
-        foreach (func_get_args() as $value) {
+        foreach ($values as $value) {
             $debugbar->addMessage($value, 'debug');
         }
     }

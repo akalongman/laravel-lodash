@@ -53,7 +53,7 @@ trait UserIdentities
             $model->{$model->columnUpdatedBy} = auth()->id();
         });
 
-        // Delete/Restore
+        // Deleting/Restoring
         if (static::usingSoftDeletes()) {
             static::deleting(function (Model $model) {
                 if (! $model->usesUserIdentities()) {

@@ -16,10 +16,64 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
+ * @method $this limitPerGroupViaSubQuery(Builder $query, int $limit = 10)
  * @method $this limitPerGroupViaUnion(Builder $query, int $limit = 10, array $pivotColumns = [])
  */
-trait ManyToManyViaUnion
+trait ManyToManyPreload
 {
+    public function scopeLimitPerGroupViaSubQuery(Builder $query, int $limit = 10): Model
+    {
+        $table = $this->getTable();
+        $queryKeyColumn = $query->getQuery()->wheres[0]['column'];
+        $join = $query->getQuery()->joins;
+        $newQuery = $this->newQueryWithoutScopes();
+        $connection = $this->getConnection();
+
+        // Initialize MySQL variables inline
+        $newQuery->from($connection->raw('(select @num:=0, @group:=0) as `vars`, ' . $this->quoteColumn($table)));
+
+        // If no columns already selected, let's select *
+        if (! $query->getQuery()->columns) {
+            $newQuery->select($table . '.*');
+        }
+
+        // Make sure column aliases are unique
+        $groupAlias = $table . '_grp';
+        $numAlias = $table . '_rn';
+
+        // Apply mysql variables
+        $newQuery->addSelect($connection->raw(
+            "@num := if(@group = {$this->quoteColumn($queryKeyColumn)}, @num+1, 1) as `{$numAlias}`, @group := {$this->quoteColumn($queryKeyColumn)} as `{$groupAlias}`"
+        ));
+
+        // Make sure first order clause is the group order
+        $newQuery->getQuery()->orders = (array) $query->getQuery()->orders;
+        array_unshift($newQuery->getQuery()->orders, [
+            'column'    => $queryKeyColumn,
+            'direction' => 'asc',
+        ]);
+
+        if ($join) {
+            $leftKey = explode('.', $queryKeyColumn)[1];
+            $leftKeyColumn = "`{$table}`.`{$leftKey}`";
+            $newQuery->addSelect($queryKeyColumn);
+            $newQuery->mergeBindings($query->getQuery());
+            $newQuery->getQuery()->joins = (array) $query->getQuery()->joins;
+            $query->whereRaw("{$leftKeyColumn} = {$this->quoteColumn($queryKeyColumn)}");
+        }
+
+        $query->from($connection->raw("({$newQuery->toSql()}) as `{$table}`"))
+            ->where($numAlias, '<=', $limit);
+
+        return $this;
+    }
+
+    private function quoteColumn(string $column): string
+    {
+
+        return '`' . str_replace('.', '`.`', $column) . '`';
+    }
+
     public function scopeLimitPerGroupViaUnion(Builder $query, int $limit = 10, array $pivotColumns = []): Model
     {
         $table = $this->getTable();

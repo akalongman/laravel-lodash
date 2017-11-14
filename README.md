@@ -15,7 +15,8 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
 - [Usage](#usage)
     - [General](#general)
         - [Enable Debug Mode depending on visitor's IP Address](#enable-debug-mode-depending-on-visitors-ip-address)
-        - [Add created_by, updated_by and deleted_by to the eloquent models](#add-created_by,-updated_by-and-deleted_by-to-the-eloquent-models)
+        - [Add created_by, updated_by and deleted_by to the eloquent models](#add-created_by-updated_by-and-deleted_by-to-the-eloquent-models)
+        - [Eager loading of limited many to many relations via subquery or union](#eager-loading-of-limited-many-to-many-relations-via-subquery-or-union)
     - [Helper Functions](#helper-functions)
     - [Artisan Commands](#artisan-commands)
     - [Middlewares](#middlewares)
@@ -83,6 +84,32 @@ update migration file adding necessary columns:
     $table->unsignedInteger('updated_by')->nullable();
     $table->unsignedInteger('deleted_by')->nullable();
 ```
+
+#### Eager loading of limited many to many relations via subquery or union
+
+Eager load many to many relations with limit via subquery or union. 
+For using this feature, add `Longman\LaravelLodash\Eloquent\ManyToManyPreload` trait to the models.
+After that you can use methods `limitPerGroupViaUnion()` and `limitPerGroupViaSubQuery()`.
+For example you want to select users and 3 related user photos per user. 
+
+```php
+    $query = new UserList();
+    
+    $items = $query->where('user_id', 59823)->withCount(['movies']);
+    
+    $items = new (new User)->with([
+        'photos' => function (BelongsToMany $builder) {
+            // Select via union. There you should pass pivot table fields array
+            $builder->limitPerGroupViaUnion(3, ['list_id', 'movie_id', 'sortorder']);
+            // or
+            // Select via subquery
+            $builder->limitPerGroupViaSubQuery(3);
+        }, 'other.relations'
+    ]);
+    $items = $items->get();
+```
+
+Now each user model have 3 photos model selected via one query.
 
 ### Helper Functions
 

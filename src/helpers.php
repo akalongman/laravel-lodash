@@ -8,3 +8,63 @@
  * file that was distributed with this source code.
  */
 declare(strict_types=1);
+
+if (! function_exists('p')) {
+    function p($value): void
+    {
+        $debugbar = app('debugbar');
+        foreach (func_get_args() as $value) {
+            $debugbar->addMessage($value, 'debug');
+        }
+    }
+}
+
+if (! function_exists('get_db_query')) {
+    function get_db_query(): ?string
+    {
+        if (! app()->bound('debugbar')) {
+            return null;
+        }
+
+        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
+        $debugbar = app('debugbar');
+
+        $queries = $debugbar->getCollector('queries')->collect();
+        if (empty($queries['statements'])) {
+            return null;
+        }
+
+        $query = end($queries['statements']);
+
+        return $query['sql'];
+    }
+}
+
+if (! function_exists('get_db_queries')) {
+    function get_db_queries(): ?array
+    {
+        if (! app()->bound('debugbar')) {
+            return null;
+        }
+        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
+        $debugbar = app('debugbar');
+
+        try {
+            $collector = $debugbar->getCollector('queries');
+        } catch (DebugBarException $e) {
+            return null;
+        }
+
+        $queries = $collector->collect();
+        if (empty($queries['statements'])) {
+            return null;
+        }
+
+        $list = [];
+        foreach ($queries['statements'] as $query) {
+            $list[] = $query['sql'];
+        }
+
+        return $list;
+    }
+}

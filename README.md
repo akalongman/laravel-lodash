@@ -93,18 +93,14 @@ After that you can use methods `limitPerGroupViaUnion()` and `limitPerGroupViaSu
 For example you want to select users and 3 related user photos per user. 
 
 ```php
-    $query = new UserList();
-    
-    $items = $query->where('user_id', 59823)->withCount(['movies']);
-    
-    $items = new (new User)->with([
+    $items = (new User)->with([
         'photos' => function (BelongsToMany $builder) {
             // Select via union. There you should pass pivot table fields array
-            $builder->limitPerGroupViaUnion(3, ['list_id', 'movie_id', 'sortorder']);
+            $builder->limitPerGroupViaUnion(3, ['user_id', 'photo_id']);
             // or
             // Select via subquery
             $builder->limitPerGroupViaSubQuery(3);
-        }, 'other.relations'
+        }, 'other.relation1', 'other.relation2'
     ]);
     $items = $items->get();
 ```

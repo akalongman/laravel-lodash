@@ -55,7 +55,6 @@ trait UserIdentities
 
         // Delete/Restore
         if (static::usingSoftDeletes()) {
-
             static::deleting(function (Model $model) {
                 if (! $model->usesUserIdentities()) {
                     return;
@@ -76,7 +75,6 @@ trait UserIdentities
                 $model->{$model->columnDeletedBy} = null;
             });
         }
-
     }
 
     public static function usingSoftDeletes(): bool

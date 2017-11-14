@@ -24,7 +24,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "barryvdh/laravel-debugbar": "^2.4"
+        "barryvdh/laravel-debugbar": "~2.4|~3.1"
     },
     "require-dev": {
         "mockery/mockery": "~1.0",

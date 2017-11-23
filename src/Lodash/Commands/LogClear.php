@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Console\ConfirmableTrait;
+use Illuminate\Filesystem\Filesystem;
 
 class LogClear extends Command
 {
@@ -38,22 +38,28 @@ class LogClear extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(Filesystem $filesystem)
     {
-        if (! $this->confirmToProceed('Application In Production! Will be deleted all log files!')) {
+        if (! $this->confirmToProceed('Application In Production! Will be deleted all log files from storage/log folder!')) {
             return;
         }
 
-        $filesystem = app(Filesystem::class);
+        $logFiles = $filesystem->allFiles(storage_path('logs'));
+        if (! $logFiles) {
+            $this->comment('Log files does not found in path ' . storage_path('logs'));
 
-        $logFiles = $filesystem->glob(storage_path('logs/*.log'));
+            return;
+        }
 
         foreach ($logFiles as $file) {
-            $status = $filesystem->delete($file);
+            if ($file->getExtension() !== 'log') {
+                continue;
+            }
+
+            $status = $filesystem->delete($file->getRealPath());
             if ($status) {
                 $this->info('Successfully deleted: ' . $file);
             }
         }
     }
-
 }

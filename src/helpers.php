@@ -21,10 +21,10 @@ if (! function_exists('p')) {
 }
 
 if (! function_exists('get_db_query')) {
-    function get_db_query(): ?string
+    function get_db_query(): string
     {
         if (! app()->bound('debugbar')) {
-            return null;
+            return '';
         }
 
         /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
@@ -33,12 +33,12 @@ if (! function_exists('get_db_query')) {
         try {
             $collector = $debugbar->getCollector('queries');
         } catch (Exception $e) {
-            return null;
+            return '';
         }
 
         $queries = $collector->collect();
         if (empty($queries['statements'])) {
-            return null;
+            return '';
         }
 
         $query = end($queries['statements']);
@@ -48,10 +48,10 @@ if (! function_exists('get_db_query')) {
 }
 
 if (! function_exists('get_db_queries')) {
-    function get_db_queries(): ?array
+    function get_db_queries(): array
     {
         if (! app()->bound('debugbar')) {
-            return null;
+            return [];
         }
         /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = app('debugbar');
@@ -59,12 +59,12 @@ if (! function_exists('get_db_queries')) {
         try {
             $collector = $debugbar->getCollector('queries');
         } catch (Exception $e) {
-            return null;
+            return [];
         }
 
         $queries = $collector->collect();
         if (empty($queries['statements'])) {
-            return null;
+            return [];
         }
 
         $list = [];

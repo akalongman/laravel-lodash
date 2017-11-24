@@ -45,7 +45,7 @@ class LogClear extends Command
         }
 
         $logFiles = $filesystem->allFiles(storage_path('logs'));
-        if (! $logFiles) {
+        if (empty($logFiles)) {
             $this->comment('Log files does not found in path ' . storage_path('logs'));
 
             return;

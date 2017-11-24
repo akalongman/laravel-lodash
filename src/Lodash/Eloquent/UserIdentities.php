@@ -27,6 +27,17 @@ trait UserIdentities
     protected $columnUpdatedBy = 'updated_by';
     protected $columnDeletedBy = 'deleted_by';
 
+    /**
+     * Define an inverse one-to-one or many relationship.
+     *
+     * @param  string $related
+     * @param  string $foreignKey
+     * @param  string $ownerKey
+     * @param  string $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public abstract function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null);
+
     protected static function bootUserIdentities()
     {
         // Creating

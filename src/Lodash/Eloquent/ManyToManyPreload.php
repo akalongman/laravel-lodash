@@ -15,12 +15,32 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Model
  * @method $this limitPerGroupViaSubQuery(Builder $query, int $limit = 10)
  * @method $this limitPerGroupViaUnion(Builder $query, int $limit = 10, array $pivotColumns = [])
  */
 trait ManyToManyPreload
 {
+    /**
+     * Get the table associated with the model.
+     *
+     * @return string
+     */
+    public abstract function getTable();
+
+    /**
+     * Get the database connection for the model.
+     *
+     * @return \Illuminate\Database\Connection
+     */
+    public abstract function getConnection();
+
+    /**
+     * Get a new query builder that doesn't have any global scopes.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public abstract function newQueryWithoutScopes();
+
     public function scopeLimitPerGroupViaSubQuery(Builder $query, int $limit = 10): Model
     {
         $table = $this->getTable();

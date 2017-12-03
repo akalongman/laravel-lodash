@@ -18,6 +18,8 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
         - [Add created_by, updated_by and deleted_by to the eloquent models](#add-created_by-updated_by-and-deleted_by-to-the-eloquent-models)
         - [Eager loading of limited many to many relations via subquery or union](#eager-loading-of-limited-many-to-many-relations-via-subquery-or-union)
     - [Helper Functions](#helper-functions)
+    - [Extended Classes](#extended-classes)
+        - [Request Class](#request-class)
     - [Artisan Commands](#artisan-commands)
     - [Middlewares](#middlewares)
     - [Blade Directives](#blade-directives)
@@ -114,6 +116,19 @@ Function  | Description
 `p(...$values): void`  |  Add debug messages to the debugbar
 `get_db_query(): ?string`  |  Get last executed database query
 `get_db_queries(): ?array`  |  Get all executed database queries
+
+### Extended Classes
+
+There is an extended classes via Laravel's builtin macros functionality
+
+#### Request class
+
+Method  | Description
+------------- | -------------
+`getInt(string $name, int $default = 0): int`  |  Return request field value as a integer
+`getBool(string $name, bool $default = false): bool`  |  Return request field value as a boolean
+`getFloat(string $name, float $default = 0): float`  |  Return request field value as a float
+`getString(string $name, string $default = ''): string`  |  Return request field value as a string
 
 ### Artisan Commands
 

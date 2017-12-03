@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash;
 
 use Blade;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class LodashServiceProvider extends ServiceProvider
@@ -27,7 +28,6 @@ class LodashServiceProvider extends ServiceProvider
 
     ];
 
-
     public function boot()
     {
         $this->publishes([
@@ -38,6 +38,8 @@ class LodashServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerCommands();
+
+        $this->registerRequestMacros();
 
         $this->registerBladeDirectives();
     }
@@ -70,5 +72,26 @@ class LodashServiceProvider extends ServiceProvider
         });
     }
 
+    protected function registerRequestMacros()
+    {
+        Request::macro('getInt', function (string $name, int $default = 0): int {
 
+            return (int) $this->get($name, $default);
+        });
+
+        Request::macro('getBool', function (string $name, bool $default = false): bool {
+
+            return (bool) $this->get($name, $default);
+        });
+
+        Request::macro('getFloat', function (string $name, float $default = 0): float {
+
+            return (float) $this->get($name, $default);
+        });
+
+        Request::macro('getString', function (string $name, string $default = ''): string {
+
+            return (string) $this->get($name, $default);
+        });
+    }
 }

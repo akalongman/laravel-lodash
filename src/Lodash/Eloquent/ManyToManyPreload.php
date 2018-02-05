@@ -142,7 +142,6 @@ trait ManyToManyPreload
 
                 // Merge wheres
                 $unionQuery1->mergeWheres($wheres, $bindings);
-
             } else {
                 $select = [
                     $table . '.*',

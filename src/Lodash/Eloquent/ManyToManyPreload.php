@@ -108,6 +108,19 @@ trait ManyToManyPreload
         $joinRightColumn = $joins[0]->wheres[0]['second'];
         $joinOperator = $joins[0]->wheres[0]['operator'];
 
+        // Remove extra wheres and bindings
+        $wheres = $query->getQuery()->wheres;
+        $bindings = $query->getQuery()->bindings;
+        foreach ($wheres as $key => $where) {
+            if (isset($where['column']) && $where['column'] === $queryKeyColumn) {
+                $count = count($where['values']);
+                $bindings['where'] = array_slice($bindings['where'], $count);
+                unset($wheres[$key]);
+            }
+        }
+        $groups = $query->getQuery()->groups;
+        $orders = $query->getQuery()->orders;
+
         foreach ($queryKeyValues as $value) {
             if (! isset($unionQuery1)) {
                 $unionQuery1 = $connection->table($pivotTable)
@@ -115,6 +128,21 @@ trait ManyToManyPreload
                     ->join($table, $joinLeftColumn, $joinOperator, $joinRightColumn)
                     ->where($queryKeyColumn, '=', $value)
                     ->limit($limit);
+                if (! empty($groups)) {
+                    foreach ($groups as $group) {
+                        $unionQuery1->groupBy($group);
+                    }
+                }
+
+                if (! empty($orders)) {
+                    foreach ($orders as $order) {
+                        $unionQuery1->orderBy($order['column'], $order['direction']);
+                    }
+                }
+
+                // Merge wheres
+                $unionQuery1->mergeWheres($wheres, $bindings);
+
             } else {
                 $select = [
                     $table . '.*',
@@ -129,6 +157,20 @@ trait ManyToManyPreload
                     ->join($table, $joinLeftColumn, $joinOperator, $joinRightColumn)
                     ->where($queryKeyColumn, '=', $value)
                     ->limit($limit);
+                if (! empty($groups)) {
+                    foreach ($groups as $group) {
+                        $unionQuery2->groupBy($group);
+                    }
+                }
+
+                if (! empty($orders)) {
+                    foreach ($orders as $order) {
+                        $unionQuery2->orderBy($order['column'], $order['direction']);
+                    }
+                }
+
+                // Merge wheres
+                $unionQuery2->mergeWheres($wheres, $bindings);
 
                 $unionQuery1->unionAll($unionQuery2);
             }

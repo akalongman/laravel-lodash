@@ -129,7 +129,8 @@ After that include Cache and Redis service providers in the `app.php` before you
     
     Longman\LaravelLodash\Redis\RedisServiceProvider::class,
 
-You can comment Laravel's Cache and Redis service providers, because LaravelLodash providers are extended from them
+You can comment Laravel's Cache and Redis service providers, 
+because LaravelLodash providers are extended from them and therefore implements entire functional.
 
 Now you can specify the serializer in your `database.php` under `config` folder:
 

@@ -36,11 +36,11 @@ class PhpRedisConnector extends BasePhpRedisConnector
             }
 
             if (! empty($config['prefix'])) {
-                $client->setOption(Redis::OPT_PREFIX, $config['prefix']);
+                $client->setOption(Redis::OPT_PREFIX, (string) $config['prefix']);
             }
 
             if (! empty($config['read_timeout'])) {
-                $client->setOption(Redis::OPT_READ_TIMEOUT, $config['read_timeout']);
+                $client->setOption(Redis::OPT_READ_TIMEOUT, (string) $config['read_timeout']);
             }
 
             if (! empty($config['serializer'])) {

@@ -18,6 +18,7 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
         - [Add created_by, updated_by and deleted_by to the eloquent models](#add-created_by-updated_by-and-deleted_by-to-the-eloquent-models)
         - [Eager loading of limited many to many relations via subquery or union](#eager-loading-of-limited-many-to-many-relations-via-subquery-or-union)
         - [Redis using igbinary](#redis-using-igbinary)
+        - [AWS SQS Fifo Queue](#aws-sqs-fifo-queue)
     - [Helper Functions](#helper-functions)
     - [Extended Classes](#extended-classes)
         - [Request Class](#request-class)
@@ -124,12 +125,13 @@ and you have to use LaravelLodash implementation for this.
 First of all, make sure you enabled PhpRedis driver by this guide https://laravel.com/docs/5.5/redis#phpredis
 
 After that include Cache and Redis service providers in the `app.php` before your App providers:
-
+```php
+    . . .
     Longman\LaravelLodash\Cache\CacheServiceProvider::class,
-    
     Longman\LaravelLodash\Redis\RedisServiceProvider::class,
-
-You can comment Laravel's Cache and Redis service providers, 
+    . . .
+```
+You can remove Laravel's Cache and Redis service providers from the config, 
 because LaravelLodash providers are extended from them and therefore implements entire functional.
 
 Now you can specify the serializer in your `database.php` under `config` folder:
@@ -151,6 +153,40 @@ Now you can specify the serializer in your `database.php` under `config` folder:
 ```
 
 Also, you can specify other options like `scan` or etc. See https://github.com/phpredis/phpredis#setoption
+
+#### AWS SQS Fifo Queue
+
+Laravel by default does not supports AWS FIFO queues and this package fixes it.
+
+You have to add `QueueServiceProvider` service provider in the `app.php` before your App providers:
+```php
+    . . .
+    Longman\LaravelLodash\Queue\QueueServiceProvider::class,
+    . . .
+```
+You can remove Laravel's Queue service provider from the config, 
+because LaravelLodash provider are extended from that and therefore implements entire functional.
+
+Now you can add the new connection in the `queue.php` under `config` folder:
+
+```php
+    . . .
+    'sqs_fifo' => [
+        'driver'  => 'sqs.fifo',
+        'version' => 'latest',
+        'key'     => env('AWS_ACCESS_KEY_ID'),
+        'secret'  => env('AWS_SECRET_ACCESS_KEY'),
+        'prefix'  => env('AWS_SQS_URL'),
+        'queue'   => env('AWS_SQS_DEFAULT_QUEUE'),
+        'region'  => env('AWS_REGION'),
+        'options' => [
+            'type'      => 'fifo', // fifo, normal
+            'polling'   => 'long', // long, short
+            'wait_time' => 20,
+        ],
+    ],
+    . . .
+```
 
 ### Helper Functions
 

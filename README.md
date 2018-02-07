@@ -17,6 +17,7 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
         - [Enable Debug Mode depending on visitor's IP Address](#enable-debug-mode-depending-on-visitors-ip-address)
         - [Add created_by, updated_by and deleted_by to the eloquent models](#add-created_by-updated_by-and-deleted_by-to-the-eloquent-models)
         - [Eager loading of limited many to many relations via subquery or union](#eager-loading-of-limited-many-to-many-relations-via-subquery-or-union)
+        - [Redis using igbinary](#redis-using-igbinary)
     - [Helper Functions](#helper-functions)
     - [Extended Classes](#extended-classes)
         - [Request Class](#request-class)
@@ -107,7 +108,48 @@ For example you want to select users and 3 related user photos per user.
     $items = $items->get();
 ```
 
-Now each user model have 3 photos model selected via one query.
+Now each user model have 3 photos model selected via one query. 
+You can specify additional where clauses or order by fields before the group method call.
+
+#### Redis using igbinary
+
+Igbinary is a drop in replacement for the standard php serializer. 
+Igbinary stores php data structures in compact binary form. 
+Savings are significant when using Redis or similar memory based storages for serialized data.
+Via Igbinary repetitive strings are stored only once. Collections of Eloquent objects benefit significantly from this.
+
+By default Laravel does not provide an option to enable igbinary serializer for PhpRedis connection 
+and you have to use LaravelLodash implementation for this.
+
+First of all, make sure you enabled PhpRedis driver by this guide https://laravel.com/docs/5.5/redis#phpredis
+
+After that include Cache and Redis service providers in the `app.php` before your App providers:
+
+    Longman\LaravelLodash\Cache\CacheServiceProvider::class,
+    
+    Longman\LaravelLodash\Redis\RedisServiceProvider::class,
+
+You can comment Laravel's Cache and Redis service providers, because LaravelLodash providers are extended from them
+
+Now you can specify the serializer in your `database.php` under `config` folder:
+
+```php
+    . . .
+    'redis' => [
+        'client' => 'phpredis',
+        
+        'default' => [
+            'host'       => env('REDIS_HOST', '127.0.0.1'),
+            'password'   => env('REDIS_PASSWORD', null),
+            'port'       => env('REDIS_PORT', 6379),
+            'database'   => 0,
+            'serializer' => 'igbinary', // igbinary, php, null
+        ],
+    ],
+    . . .
+```
+
+Also, you can specify other options like `scan` or etc. See https://github.com/phpredis/phpredis#setoption
 
 ### Helper Functions
 

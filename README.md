@@ -198,6 +198,8 @@ Function  | Description
 
 ### Extended Classes
 
+For this fuctional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
+
 There is an extended classes via Laravel's builtin macros functionality
 
 #### Request class
@@ -210,6 +212,8 @@ Method  | Description
 `getString(string $name, string $default = ''): string`  |  Return request field value as a string
 
 ### Artisan Commands
+
+For this fuctional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
 
 Command  | Description
 ------------- | -------------
@@ -230,6 +234,8 @@ Middleware  | Description
 `XssSecurity`  |  Sets XSS Security headers. Can be configured excluded URI-s, etc.
 
 ### Blade Directives
+
+For this fuctional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
 
 Directive  | Description
 ------------- | -------------

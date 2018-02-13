@@ -1,11 +1,13 @@
 {
     "name": "longman/laravel-lodash",
     "type": "library",
-    "description": "Add more functional to Laravel 5.x",
+    "description": "Add more functional to Laravel >=5.5",
     "keywords": [
         "lodash",
         "laravel",
         "utilities",
+        "igbinary",
+        "redis",
         "tools"
     ],
     "license": "MIT",
@@ -23,8 +25,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "barryvdh/laravel-debugbar": "~2.4|~3.1"
+        "php": ">=7.0"
     },
     "require-dev": {
         "mockery/mockery": "~1.0",
@@ -48,12 +49,10 @@
     "config": {
         "sort-packages": true
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Longman\\LaravelLodash\\LodashServiceProvider"
-            ]
-        }
+    "suggest": {
+        "ext-igbinary": "Needed for speed up Redis/Memcached cache",
+        "barryvdh/laravel-debugbar": "Allow print compiled queries via function get_db_queries()",
+        "longman/laravel-multilang": "Adds multilanguage functional to Laravel >=5.5"
     },
     "scripts": {
         "phpcs": "./vendor/bin/phpcs --standard=phpcs.xml -spn --encoding=utf-8 src/ tests/ --report-width=150",

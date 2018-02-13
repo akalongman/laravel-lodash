@@ -28,11 +28,11 @@ class PhpRedisConnector extends BasePhpRedisConnector
             $this->establishConnection($client, $config);
 
             if (! empty($config['password'])) {
-                $client->auth($config['password']);
+                $client->auth((string) $config['password']);
             }
 
             if (! empty($config['database'])) {
-                $client->select($config['database']);
+                $client->select((string) $config['database']);
             }
 
             if (! empty($config['prefix'])) {

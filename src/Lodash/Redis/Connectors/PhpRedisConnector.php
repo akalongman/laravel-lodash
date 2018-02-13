@@ -32,7 +32,7 @@ class PhpRedisConnector extends BasePhpRedisConnector
             }
 
             if (! empty($config['database'])) {
-                $client->select((string) $config['database']);
+                $client->select((int) $config['database']);
             }
 
             if (! empty($config['prefix'])) {

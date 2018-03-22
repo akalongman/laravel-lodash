@@ -13,58 +13,105 @@ namespace Longman\LaravelLodash\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class AllowCorsRequests
 {
+    protected $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function handle(Request $request, Closure $next)
     {
-        /** @var \Illuminate\Http\Response $response */
-        $response = $next($request);
-
         if (! $request->headers->has('Origin')) {
-            return $response;
+            return $next($request);
         }
 
-        $host = parse_url($request->headers->get('Origin'), PHP_URL_HOST);
+        $origin = $request->headers->get('Origin', '');
+        $host = $this->parseUrl($origin);
         if (empty($host)) {
-            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            $this->logRequest('Origin is invalid', [
+                'origin' => $origin,
+                'parsed' => $host,
+            ]);
 
-            return $response;
+            return $this->response($request, 'Origin is invalid', Response::HTTP_BAD_REQUEST);
         }
 
         $allowed_origins = config('lodash.cors.allow_origins', []);
-        $host = config('app.url');
+        $current_app = $this->parseUrl(config('app.url', ''));
         if (! empty($host)) {
-            $allowed_origins[] = $host;
+            $allowed_origins[] = $current_app;
         }
 
         $found = false;
-        foreach ($allowed_origins as $origin) {
-            if ($found = ends_with($host, $origin)) {
+        foreach ($allowed_origins as $allowed_origin) {
+            if ($host === $allowed_origin) {
+                $found = true;
                 break;
             }
         }
 
         if (! $found) {
-            $response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED);
+            $this->logRequest('Origin is not allowed', [
+                'origin' => $origin,
+                'parsed' => $host,
+            ]);
 
-            return $response;
+            return $this->response($request, 'Origin is not allowed', Response::HTTP_METHOD_NOT_ALLOWED);
         }
-
-        $response->headers->set('Access-Control-Allow-Origin', $request->headers->get('Origin'));
-        $response->headers->set('Access-Control-Allow-Credentials', 'true');
-        $response->headers->set('Content-Type', 'application/json');
 
         if ($request->method() === Request::METHOD_OPTIONS) {
             $allowed_headers = config('lodash.cors.allow_headers');
             $allowed_methods = config('lodash.cors.allow_methods');
 
+            $response = $this->response($request, 'Allowed', Response::HTTP_OK);
+
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+            $response->headers->set('Access-Control-Allow-Credentials', 'true');
+
             $response->headers->set('Access-Control-Allow-Methods', implode(',', $allowed_methods));
             $response->headers->set('Access-Control-Allow-Headers', implode(',', $allowed_headers));
             $response->headers->set('Access-Control-Max-Age', '1728000');
+
+            return $response;
         }
 
+        /** @var \Illuminate\Http\Response $response */
+        $response = $next($request);
+
+        $response->headers->set('Access-Control-Allow-Origin', $origin);
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+
         return $response;
+    }
+
+    protected function logRequest(string $message, array $context = [])
+    {
+        $this->logger->warning($message, $context);
+    }
+
+    protected function parseUrl(string $url): string
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+
+        if (starts_with($host, 'www.')) {
+            $host = str_replace('www.', '', $host);
+        }
+
+        return $host ?? '';
+    }
+
+    protected function response(Request $request, string $message, int $code): Response
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message], $code);
+        }
+
+        return response($message, $code);
     }
 }

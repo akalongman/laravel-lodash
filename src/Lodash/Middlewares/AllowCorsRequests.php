@@ -97,13 +97,17 @@ class AllowCorsRequests
 
     protected function parseUrl(string $url): string
     {
-        $host = parse_url($url, PHP_URL_HOST);
+        $host = (string) parse_url($url, PHP_URL_HOST);
 
         if (starts_with($host, 'www.')) {
             $host = str_replace('www.', '', $host);
         }
 
-        return $host ?? '';
+        if (strpos($host, ':') !== false) {
+            $host = strtok($host, ':');
+        }
+
+        return $host;
     }
 
     protected function response(Request $request, string $message, int $code): Response

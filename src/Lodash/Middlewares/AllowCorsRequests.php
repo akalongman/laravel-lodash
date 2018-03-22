@@ -33,7 +33,11 @@ class AllowCorsRequests
             return $response;
         }
 
-        $allowed_origins = config('lodash.cors.allow_origins');
+        $allowed_origins = config('lodash.cors.allow_origins', []);
+        $host = config('app.url');
+        if (! empty($host)) {
+            $allowed_origins[] = $host;
+        }
 
         $found = false;
         foreach ($allowed_origins as $origin) {

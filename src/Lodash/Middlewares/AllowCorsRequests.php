@@ -50,7 +50,7 @@ class AllowCorsRequests
 
         $found = false;
         foreach ($allowed_origins as $allowed_origin) {
-            if ($host === $allowed_origin) {
+            if ($host === $allowed_origin || ends_with($host, '.' . $allowed_origin)) {
                 $found = true;
                 break;
             }

@@ -27,7 +27,7 @@ trait UuidAsPrimary
             if (empty($model->{$key_name})) {
                 $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : 4;
 
-                $model->attributes[$key_name] = self::getUuid($uuidVersion);
+                $model->attributes[$key_name] = self::generateUuid($uuidVersion);
             }
         });
     }

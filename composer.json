@@ -51,8 +51,9 @@
     },
     "suggest": {
         "ext-igbinary": "Needed for speed up Redis/Memcached cache",
-        "barryvdh/laravel-debugbar": "Allow print compiled queries via function get_db_queries()",
-        "longman/laravel-multilang": "Adds multilanguage functional to Laravel >=5.5"
+        "longman/laravel-multilang": "Adds multilanguage functional to Laravel >=5.5",
+        "ramsey/uuid": "Use UUID identifiers in the eloquent models",
+        "barryvdh/laravel-debugbar": "Allow print compiled queries via function get_db_queries()"
     },
     "scripts": {
         "phpcs": "./vendor/bin/phpcs --standard=phpcs.xml -spn --encoding=utf-8 src/ tests/ --report-width=150",

@@ -16,6 +16,7 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
     - [General](#general)
         - [Enable Debug Mode depending on visitor's IP Address](#enable-debug-mode-depending-on-visitors-ip-address)
         - [Add created_by, updated_by and deleted_by to the eloquent models](#add-created_by-updated_by-and-deleted_by-to-the-eloquent-models)
+        - [Use UUID in the Eloquent Models](#use-uuid-in-the-eloquent-models)
         - [Eager loading of limited many to many relations via subquery or union](#eager-loading-of-limited-many-to-many-relations-via-subquery-or-union)
         - [Redis using igbinary](#redis-using-igbinary)
         - [AWS SQS Fifo Queue](#aws-sqs-fifo-queue)
@@ -43,7 +44,7 @@ Create *composer.json* file:
     "name": "yourproject/yourproject",
     "type": "project",
     "require": {
-        "longman/laravel-lodash": "~0.1"
+        "longman/laravel-lodash": "~0.8"
     }
 }
 ```
@@ -88,6 +89,17 @@ update migration file adding necessary columns:
     $table->unsignedInteger('updated_by')->nullable();
     $table->unsignedInteger('deleted_by')->nullable();
 ```
+
+#### Use UUID in the Eloquent Models
+
+For this just add `Longman\LaravelLodash\Eloquent\UuidAsPrimary` trait to your model and also
+update related migration file:
+
+```php
+    $table->uuid('id')->primary();
+```
+
+Also there is possible to specify uuid version via defining `uuidVersion` property in the model class.
 
 #### Eager loading of limited many to many relations via subquery or union
 

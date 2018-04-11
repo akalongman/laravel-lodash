@@ -37,7 +37,6 @@ class ElasticSearchServiceProvider extends ServiceProvider
 
             if (! empty($config['connectionParams'])) {
                 $params['connectionParams'] = $config['connectionParams'];
-
             }
 
             $logger = ! empty($config['log_channel']) ? $app['log']->stack($config['log_channel']) : null;

@@ -20,6 +20,7 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
         - [Eager loading of limited many to many relations via subquery or union](#eager-loading-of-limited-many-to-many-relations-via-subquery-or-union)
         - [Redis using igbinary](#redis-using-igbinary)
         - [AWS SQS Fifo Queue](#aws-sqs-fifo-queue)
+        - [ElasticSearch Integration](#elasticsearch-integration)
     - [Helper Functions](#helper-functions)
     - [Extended Classes](#extended-classes)
         - [Request Class](#request-class)
@@ -198,6 +199,65 @@ Now you can add the new connection in the `queue.php` under `config` folder:
         ],
     ],
     . . .
+```
+
+#### ElasticSearch Integration
+
+First of all you have to install official elasticsearch php sdk:
+
+    composer require elasticsearch/elasticsearch
+
+After add `ElasticSearchServiceProvider` service provider in the `app.php` before your App providers:
+```php
+    . . .
+    Longman\LaravelLodash\ElasticSearch\ElasticSearchServiceProvider::class,
+    . . .
+```
+Now you can add the configuration in the `services.php` under `config` folder:
+
+```php
+    . . .
+    'elastic_search' => [
+        'enabled'          => env('ELASTICSEARCH_ENABLED', false),
+        'log_channel'      => ['daily'],
+        'hosts'            => [
+            [
+                'host' => env('ELASTICSEARCH_HOST', 'localhost'),
+                'port' => env('ELASTICSEARCH_PORT', 9200),
+            ],
+        ],
+        'connectionParams' => [
+            'client' => [
+                'timeout'         => env('ELASTICSEARCH_TIMEOUT', 3),
+                'connect_timeout' => env('ELASTICSEARCH_TIMEOUT', 3),
+            ],
+        ],
+    ],
+    . . .
+```
+
+You can use ElasticSearch integration via 
+
+```php
+    $elasticsearch_manager = app(ElasticSearchManagerContract::class);
+    
+    // Call wrapped methods
+    $elasticsearch_manager->createIndex('some-index');
+    
+    // Or get native client and access their methods
+    $client = $elasticsearch_manager->getClient();
+    $client->indices()->create($params);
+
+```
+
+Also you can perform search via searchable query object. Just create class and 
+implement `ElasticSearchQueryContract` and you can pass object to `performSearch` method
+
+```php
+
+    $elasticsearch_manager = app(ElasticSearchManagerContract::class);
+    $results = $elasticsearch_manager->performSearch($query); 
+
 ```
 
 ### Helper Functions

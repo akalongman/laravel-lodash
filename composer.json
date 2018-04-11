@@ -53,6 +53,7 @@
         "ext-igbinary": "Needed for speed up Redis/Memcached cache",
         "longman/laravel-multilang": "Adds multilanguage functional to Laravel >=5.5",
         "ramsey/uuid": "Use UUID identifiers in the eloquent models",
+        "elasticsearch/elasticsearch": "Use ElasticSearch service in the laravel",
         "barryvdh/laravel-debugbar": "Allow print compiled queries via function get_db_queries()"
     },
     "scripts": {

@@ -25,6 +25,8 @@ interface ElasticSearchManagerContract
 
     public function addDocumentsToIndex(string $index_name, string $type_name, array $items);
 
+    public function updateDocumentsInIndex(string $index_name, string $type_name, array $items);
+
     public function deleteIndexesByAlias(string $alias_name);
 
     public function refreshIndex(string $index_name);

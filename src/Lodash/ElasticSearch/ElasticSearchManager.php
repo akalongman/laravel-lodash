@@ -141,7 +141,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         foreach ($items as $id => $item) {
             $params['body'][] = [
-                'index' => [
+                'create' => [
                     '_index' => $index_name,
                     '_type'  => $type_name,
                     '_id'    => $id,
@@ -149,6 +149,40 @@ class ElasticSearchManager implements ElasticSearchManagerContract
             ];
 
             $params['body'][] = $item;
+        }
+
+        $responses = $this->client->bulk($params);
+        if ($responses['errors'] === true) {
+            throw new RuntimeException('Error occurred during bulk insert');
+        }
+    }
+
+    public function updateDocumentsInIndex(string $index_name, string $type_name, array $items)
+    {
+        if (! $this->isEnabled()) {
+            return;
+        }
+
+        $params = [
+            'body' => [],
+        ];
+
+        if (! empty($this->timeout)) {
+            $params['client'] = [
+                'timeout' => $this->timeout,
+            ];
+        }
+
+        foreach ($items as $id => $item) {
+            $params['body'][] = [
+                'update' => [
+                    '_index' => $index_name,
+                    '_type'  => $type_name,
+                    '_id'    => $id,
+                ],
+            ];
+
+            $params['body'][] = ['doc' => $item];
         }
 
         $responses = $this->client->bulk($params);

@@ -13,7 +13,6 @@ namespace Longman\LaravelLodash\ElasticSearch;
 
 use ElasticSearch\Client;
 use InvalidArgumentException;
-use RuntimeException;
 
 class ElasticSearchManager implements ElasticSearchManagerContract
 {
@@ -75,7 +74,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         $response = $this->client->indices()->create($params);
 
         if ($response['acknowledged'] !== true) {
-            throw new RuntimeException('Something went wrong during index creation');
+            throw new ElasticSearchException('Something went wrong during index creation');
         }
     }
 
@@ -100,7 +99,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $response = $this->client->indices()->delete($params);
         if ($response['acknowledged'] !== true) {
-            throw new RuntimeException('Something went wrong during index deletion');
+            throw new ElasticSearchException('Something went wrong during index deletion');
         }
     }
 
@@ -116,13 +115,16 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $response = $this->client->indices()->getAlias($params);
         if (empty($response)) {
-            throw new RuntimeException('Can not get alias ' . $alias_name);
+            throw new ElasticSearchException('Can not get alias ' . $alias_name);
         }
 
         $indexes = array_keys($response);
         $this->deleteIndexes($indexes);
     }
 
+    /**
+     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     */
     public function addDocumentsToIndex(string $index_name, string $type_name, array $items)
     {
         if (! $this->isEnabled()) {
@@ -153,10 +155,13 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $responses = $this->client->bulk($params);
         if ($responses['errors'] === true) {
-            throw new RuntimeException('Error occurred during bulk insert');
+            $this->handleBulkError($responses);
         }
     }
 
+    /**
+     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     */
     public function updateDocumentsInIndex(string $index_name, string $type_name, array $items)
     {
         if (! $this->isEnabled()) {
@@ -187,8 +192,25 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $responses = $this->client->bulk($params);
         if ($responses['errors'] === true) {
-            throw new RuntimeException('Error occurred during bulk insert');
+            $this->handleBulkError($responses);
         }
+    }
+
+    /**
+     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     */
+    protected function handleBulkError(array $responses)
+    {
+        $errors = [];
+        foreach ($responses['items'] as $item) {
+            $row = $item;
+            $row = reset($row);
+            if (! empty($row['error'])) {
+                $errors[] = $row['error'];
+            }
+        }
+
+        throw new ElasticSearchException('Error occurred during bulk update', $errors);
     }
 
     public function refreshIndex(string $index_name)
@@ -249,7 +271,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
             $response = $this->client->indices()->getAlias($params);
             if (empty($response)) {
-                throw new RuntimeException('Can not get alias ' . $alias_name);
+                throw new ElasticSearchException('Can not get alias ' . $alias_name);
             }
 
             $indexes = array_keys($response);
@@ -279,7 +301,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $response = $this->client->indices()->updateAliases($params);
         if ($response['acknowledged'] !== true) {
-            throw new RuntimeException('Switching alias response error');
+            throw new ElasticSearchException('Switching alias response error');
         }
     }
 
@@ -303,7 +325,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         $response = $this->client->indices()->putTemplate($params);
 
         if ($response['acknowledged'] !== true) {
-            throw new RuntimeException('Something went wrong during template creation');
+            throw new ElasticSearchException('Something went wrong during template creation');
         }
     }
 

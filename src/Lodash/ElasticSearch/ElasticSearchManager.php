@@ -155,7 +155,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $responses = $this->client->bulk($params);
         if ($responses['errors'] === true) {
-            $this->handleBulkError($responses);
+            $this->handleBulkError($responses, 'Error occurred during bulk create');
         }
     }
 
@@ -192,7 +192,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $responses = $this->client->bulk($params);
         if ($responses['errors'] === true) {
-            $this->handleBulkError($responses);
+            $this->handleBulkError($responses, 'Error occurred during bulk update');
         }
     }
 
@@ -224,19 +224,19 @@ class ElasticSearchManager implements ElasticSearchManagerContract
                 ],
             ];
 
-            $params['body'][] = ['doc' => $item];
+            $params['body'][] = $item;
         }
 
         $responses = $this->client->bulk($params);
         if ($responses['errors'] === true) {
-            $this->handleBulkError($responses);
+            $this->handleBulkError($responses, 'Error occurred during bulk index');
         }
     }
 
     /**
      * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
      */
-    protected function handleBulkError(array $responses)
+    protected function handleBulkError(array $responses, string $message)
     {
         $errors = [];
         foreach ($responses['items'] as $item) {
@@ -247,7 +247,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
             }
         }
 
-        throw new ElasticSearchException('Error occurred during bulk update', $errors);
+        throw new ElasticSearchException($message, $errors);
     }
 
     public function refreshIndex(string $index_name)

@@ -199,6 +199,43 @@ class ElasticSearchManager implements ElasticSearchManagerContract
     /**
      * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
      */
+    public function addOrUpdateDocumentsInIndex(string $index_name, string $type_name, array $items)
+    {
+        if (! $this->isEnabled()) {
+            return;
+        }
+
+        $params = [
+            'body' => [],
+        ];
+
+        if (! empty($this->timeout)) {
+            $params['client'] = [
+                'timeout' => $this->timeout,
+            ];
+        }
+
+        foreach ($items as $id => $item) {
+            $params['body'][] = [
+                'index' => [
+                    '_index' => $index_name,
+                    '_type'  => $type_name,
+                    '_id'    => $id,
+                ],
+            ];
+
+            $params['body'][] = ['doc' => $item];
+        }
+
+        $responses = $this->client->bulk($params);
+        if ($responses['errors'] === true) {
+            $this->handleBulkError($responses);
+        }
+    }
+
+    /**
+     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     */
     protected function handleBulkError(array $responses)
     {
         $errors = [];

@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @method $this limitPerGroupViaSubQuery(Builder $query, int $limit = 10)
- * @method $this limitPerGroupViaUnion(Builder $query, int $limit = 10, array $pivotColumns = [])
+ * @method $this limitPerGroupViaSubQuery(int $limit = 10)
+ * @method $this limitPerGroupViaUnion(int $limit = 10, array $pivotColumns = [])
  */
 trait ManyToManyPreload
 {

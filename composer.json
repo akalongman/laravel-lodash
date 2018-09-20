@@ -8,6 +8,8 @@
         "utilities",
         "igbinary",
         "redis",
+        "aws",
+        "sqs",
         "tools"
     ],
     "license": "MIT",
@@ -54,6 +56,7 @@
         "longman/laravel-multilang": "Adds multilanguage functional to Laravel >=5.5",
         "ramsey/uuid": "Use UUID identifiers in the eloquent models",
         "elasticsearch/elasticsearch": "Use ElasticSearch service in the laravel",
+        "aws/aws-sdk-php": "Use AWS SQS >=3",
         "barryvdh/laravel-debugbar": "Allow print compiled queries via function get_db_queries()"
     },
     "scripts": {

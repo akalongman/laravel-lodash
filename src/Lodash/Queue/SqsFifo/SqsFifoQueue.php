@@ -115,7 +115,7 @@ class SqsFifoQueue extends SqsQueue
             'WaitTimeSeconds'     => Arr::get($this->options, 'wait_time', 20),
         ]);
 
-        if (count($response['Messages']) > 0) {
+        if (! is_null($response['Messages']) && count($response['Messages']) > 0) {
             return new SqsJob(
                 $this->container,
                 $this->sqs,

@@ -27,10 +27,10 @@ class SqsFifoQueue extends SqsQueue
     /**
      * Create a new Amazon SQS queue instance.
      *
-     * @param  \Aws\Sqs\SqsClient $sqs
-     * @param  string $default
-     * @param  string $prefix
-     * @return void
+     * @param \Aws\Sqs\SqsClient $sqs
+     * @param string $default
+     * @param string $prefix
+     * @param array $options
      */
     public function __construct(SqsClient $sqs, $default, $prefix = '', array $options = [])
     {

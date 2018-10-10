@@ -20,12 +20,12 @@ class ElasticSearchServiceProvider extends ServiceProvider
 {
     protected $defer = true;
 
-    public function boot()
+    public function boot(): void
     {
         //
     }
 
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(Client::class, function (Application $app) {
             // Logger instance

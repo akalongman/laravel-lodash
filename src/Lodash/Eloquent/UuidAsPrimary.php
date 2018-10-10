@@ -18,7 +18,7 @@ use Ramsey\Uuid\Uuid;
  */
 trait UuidAsPrimary
 {
-    protected static function bootUuidAsPrimary()
+    protected static function bootUuidAsPrimary(): void
     {
         /** @var \Illuminate\Database\Eloquent\Model $model */
         static::creating(function ($model) {

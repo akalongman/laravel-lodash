@@ -36,9 +36,10 @@ class LogClear extends Command
     /**
      * Execute the console command.
      *
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
      * @return mixed
      */
-    public function handle(Filesystem $filesystem)
+    public function handle(Filesystem $filesystem): void
     {
         if (! $this->confirmToProceed('Application In Production! Will be deleted all log files from storage/log folder!')) {
             return;

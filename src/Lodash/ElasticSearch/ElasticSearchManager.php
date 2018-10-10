@@ -51,7 +51,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         return $this;
     }
 
-    public function createIndex(string $index_name, array $settings, array $mappings)
+    public function createIndex(string $index_name, array $settings, array $mappings): void
     {
         if (! $this->isEnabled()) {
             return;
@@ -78,7 +78,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         }
     }
 
-    public function deleteIndexes(array $names)
+    public function deleteIndexes(array $names): void
     {
         if (! $this->isEnabled()) {
             return;
@@ -103,7 +103,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         }
     }
 
-    public function deleteIndexesByAlias(string $alias_name)
+    public function deleteIndexesByAlias(string $alias_name): void
     {
         if (! $this->isEnabled()) {
             return;
@@ -250,7 +250,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         throw new ElasticSearchException($message, $errors);
     }
 
-    public function refreshIndex(string $index_name)
+    public function refreshIndex(string $index_name): void
     {
         if (! $this->isEnabled()) {
             return;
@@ -287,7 +287,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         return $results;
     }
 
-    public function switchIndexAlias(string $alias_name, string $index_name)
+    public function switchIndexAlias(string $alias_name, string $index_name): void
     {
         if (! $this->isEnabled()) {
             return;
@@ -342,7 +342,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         }
     }
 
-    public function createTemplate(string $name, array $settings)
+    public function createTemplate(string $name, array $settings): void
     {
         if (! $this->isEnabled()) {
             return;

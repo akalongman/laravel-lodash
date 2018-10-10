@@ -16,7 +16,7 @@ use Illuminate\Support\ServiceProvider;
 
 class DebugServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $ips = config('lodash.debug.ips');
         $ip = app(Request::class)->getClientIp();
@@ -25,7 +25,7 @@ class DebugServiceProvider extends ServiceProvider
         }
     }
 
-    public function register()
+    public function register(): void
     {
     }
 }

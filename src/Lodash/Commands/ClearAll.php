@@ -34,7 +34,7 @@ class ClearAll extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         $this->call('clear-compiled');
         $this->call('cache:clear');

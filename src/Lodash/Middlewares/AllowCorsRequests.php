@@ -90,7 +90,7 @@ class AllowCorsRequests
         return $response;
     }
 
-    protected function logRequest(string $message, array $context = [])
+    protected function logRequest(string $message, array $context = []): void
     {
         $this->logger->warning($message, $context);
     }

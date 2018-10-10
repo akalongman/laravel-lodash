@@ -24,7 +24,7 @@ class PhpRedisConnector extends BasePhpRedisConnector
      */
     protected function createClient(array $config)
     {
-        return tap(new Redis, function ($client) use ($config) {
+        return tap(new Redis, function (Redis $client) use ($config) {
             $this->establishConnection($client, $config);
 
             if (! empty($config['password'])) {

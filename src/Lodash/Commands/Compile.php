@@ -34,7 +34,7 @@ class Compile extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         $this->call('config:cache');
         $this->call('route:cache');

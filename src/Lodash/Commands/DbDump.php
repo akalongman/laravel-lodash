@@ -39,7 +39,7 @@ class DbDump extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         $db_conn = $this->getDatabase();
         $connection = DB::connection($db_conn);

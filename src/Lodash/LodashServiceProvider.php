@@ -28,14 +28,14 @@ class LodashServiceProvider extends ServiceProvider
 
     ];
 
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/../config/config.php' => config_path('lodash.php'),
         ]);
     }
 
-    public function register()
+    public function register(): void
     {
         $this->registerCommands();
 
@@ -44,7 +44,7 @@ class LodashServiceProvider extends ServiceProvider
         $this->registerBladeDirectives();
     }
 
-    protected function registerCommands()
+    protected function registerCommands(): void
     {
         foreach ($this->commands as $name => $class) {
             $this->app->singleton($name, $class);
@@ -53,7 +53,7 @@ class LodashServiceProvider extends ServiceProvider
         $this->commands(array_keys($this->commands));
     }
 
-    protected function registerBladeDirectives()
+    protected function registerBladeDirectives(): void
     {
         // Display relative time
         Blade::directive('datetime', function ($expression) {
@@ -72,7 +72,7 @@ class LodashServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerRequestMacros()
+    protected function registerRequestMacros(): void
     {
         Request::macro('getInt', function (string $name, int $default = 0): int {
 

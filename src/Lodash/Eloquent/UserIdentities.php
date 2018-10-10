@@ -38,7 +38,7 @@ trait UserIdentities
      */
     public abstract function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null);
 
-    protected static function bootUserIdentities()
+    protected static function bootUserIdentities(): void
     {
         // Creating
         static::creating(function (Model $model) {

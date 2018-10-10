@@ -28,7 +28,7 @@ class CacheServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton('cache', function ($app) {
             return new CacheManager($app);

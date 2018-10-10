@@ -19,9 +19,9 @@ interface ElasticSearchManagerContract
 
     public function setTimeout(int $timeout): ElasticSearchManagerContract;
 
-    public function createIndex(string $index_name, array $settings, array $mappings);
+    public function createIndex(string $index_name, array $settings, array $mappings): void;
 
-    public function deleteIndexes(array $names);
+    public function deleteIndexes(array $names): void;
 
     public function addDocumentsToIndex(string $index_name, string $type_name, array $items);
 
@@ -29,15 +29,15 @@ interface ElasticSearchManagerContract
 
     public function addOrUpdateDocumentsInIndex(string $index_name, string $type_name, array $items);
 
-    public function deleteIndexesByAlias(string $alias_name);
+    public function deleteIndexesByAlias(string $alias_name): void;
 
-    public function refreshIndex(string $index_name);
+    public function refreshIndex(string $index_name): void;
 
     public function performSearch(ElasticSearchQueryContract $query): array;
 
-    public function switchIndexAlias(string $alias_name, string $index_name);
+    public function switchIndexAlias(string $alias_name, string $index_name): void;
 
-    public function createTemplate(string $name, array $settings);
+    public function createTemplate(string $name, array $settings): void;
 
     public function ping(): bool;
 

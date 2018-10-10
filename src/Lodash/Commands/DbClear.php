@@ -40,7 +40,7 @@ class DbClear extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         if (! $this->confirmToProceed('Application In Production! Will be dropped all tables!')) {
             return;

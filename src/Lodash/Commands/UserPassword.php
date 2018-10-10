@@ -35,7 +35,7 @@ class UserPassword extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         $guard = $this->getGuard();
         $config = config('auth');

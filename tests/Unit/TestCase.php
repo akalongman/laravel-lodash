@@ -13,8 +13,13 @@ class TestCase extends BaseTestCase
         return [LodashServiceProvider::class];
     }
 
-    protected function overrideApplicationAliases($app)
+    protected function getApplicationAliases($app)
     {
-        return [];
+        $aliases = $app['config']['app.aliases'];
+
+        // Remove Redis facade
+        unset($aliases['Redis']);
+
+        return $aliases;
     }
 }

@@ -11,7 +11,7 @@ class RedisTest extends TestCase
     private const PHPREDIS_SERIALIZER_IGBINARY = 2;
 
     /** @test */
-    public function it_should_return_instance_with_custom_serializer()
+    public function it_should_set_custom_serializer()
     {
         $redis = $this->createConnection('phpredis', [
             'default' => [
@@ -20,7 +20,11 @@ class RedisTest extends TestCase
         ]);
         $client = $redis->connection()->client();
 
+        $data = ['name' => 'Georgia'];
+        $redis->set('country', $data, null, 60);
+
         $this->assertEquals($client->getOption(self::PHPREDIS_OPT_SERIALIZER), self::PHPREDIS_SERIALIZER_IGBINARY);
+        $this->assertEquals($redis->get('country'), $data);
     }
 
     public function createConnection(string $driver, array $config = []): RedisManager

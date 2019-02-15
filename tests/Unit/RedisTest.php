@@ -42,7 +42,11 @@ class RedisTest extends TestCase
         ];
         $options = array_replace_recursive($defaultConfig, $config);
 
-        $redis = new RedisManager($this->app, $driver, $options);
+        if (version_compare($this->app->version(), '5.7', '<')) {
+            $redis = new RedisManager($driver, $options);
+        } else {
+            $redis = new RedisManager($this->app, $driver, $options);
+        }
 
         return $redis;
     }

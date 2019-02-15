@@ -10,27 +10,6 @@ class RedisTest extends TestCase
     private const PHPREDIS_OPT_SERIALIZER = 1;
     private const PHPREDIS_SERIALIZER_IGBINARY = 2;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->setUpRedis();
-
-        if (! isset($this->redis['phpredis'])) {
-            $this->markTestSkipped('PhpRedis should be enabled to run the tests');
-        }
-
-        if (! isset($this->redis['predis'])) {
-            $this->markTestSkipped('Predis should be enabled to run the tests');
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->tearDownRedis();
-    }
-
     /** @test */
     public function it_should_return_instance_with_custom_serializer()
     {

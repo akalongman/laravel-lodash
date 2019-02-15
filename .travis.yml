@@ -26,8 +26,6 @@ services:
   - redis-server
   - mysql
 
-sudo: false
-
 before_install:
   #- phpenv config-rm xdebug.ini || true
   - printf "\n" | pecl install -f memcached redis

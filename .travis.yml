@@ -13,9 +13,9 @@ services:
 sudo: false
 
 before_install:
-  - phpenv config-add ./build/redis.ini
+  #- phpenv config-add ./build/redis.ini
+  - pecl install redis
   - composer self-update
-  - php -m
 
 install:
   - travis_retry composer update --no-interaction --prefer-source

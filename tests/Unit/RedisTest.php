@@ -7,8 +7,6 @@ use Longman\LaravelLodash\Redis\RedisManager;
 
 class RedisTest extends TestCase
 {
-    use InteractsWithRedis;
-
     const PHPREDIS_OPT_SERIALIZER = 1;
     const PHPREDIS_OPT_PREFIX = 2;
     const PHPREDIS_OPT_READ_TIMEOUT = 3;

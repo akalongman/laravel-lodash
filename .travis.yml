@@ -15,6 +15,7 @@ sudo: false
 before_install:
   - phpenv config-add ./build/redis.ini
   - composer self-update
+  - php -m
 
 install:
   - travis_retry composer update --no-interaction --prefer-source

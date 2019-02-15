@@ -66,8 +66,8 @@ class AllowCorsRequests
         }
 
         if ($request->method() === Request::METHOD_OPTIONS) {
-            $allowed_headers = config('lodash.cors.allow_headers');
-            $allowed_methods = config('lodash.cors.allow_methods');
+            $allowed_headers = config('lodash.cors.allow_headers', []);
+            $allowed_methods = config('lodash.cors.allow_methods', []);
 
             $response = $this->response($request, 'Allowed', Response::HTTP_OK);
 

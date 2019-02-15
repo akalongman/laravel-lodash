@@ -19,6 +19,7 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
         - [Use UUID in the Eloquent Models](#use-uuid-in-the-eloquent-models)
         - [Eager loading of limited many to many relations via subquery or union](#eager-loading-of-limited-many-to-many-relations-via-subquery-or-union)
         - [Redis using igbinary](#redis-using-igbinary)
+        - [Redis client side sharding](#redis-client-side-sharding)
         - [AWS SQS Fifo Queue](#aws-sqs-fifo-queue)
         - [ElasticSearch Integration](#elasticsearch-integration)
     - [Helper Functions](#helper-functions)
@@ -149,23 +150,48 @@ because LaravelLodash providers are extended from them and therefore implements 
 
 Now you can specify the serializer in your `database.php` under `config` folder:
 
+Also, you can specify other options like `scan` or etc. See https://github.com/phpredis/phpredis#setoption
+
+#### Redis client side sharding
+
+PhpRedis extension along with native Redis Cluster, also supports [client-side sharding](https://github.com/phpredis/phpredis/blob/develop/arrays.markdown#readme).
+This feature is very useful, when you want distribute your data between multiple servers, but do not want use native Redis Cluster.
+
+Its not implemented in the Laravel by default. We tried to fix this :smile:
+
+Config example:
+
 ```php
     . . .
     'redis' => [
         'client' => 'phpredis',
         
-        'default' => [
-            'host'       => env('REDIS_HOST', '127.0.0.1'),
-            'password'   => env('REDIS_PASSWORD', null),
-            'port'       => env('REDIS_PORT', 6379),
-            'database'   => 0,
-            'serializer' => 'igbinary', // igbinary, php, null
+        'clusters' => [
+            'options' => [
+                'lazy_connect'    => true,
+                'connect_timeout' => 1,
+                'read_timeout'    => 3,
+                'password'        => env('REDIS_PASSWORD', null),
+                'database'        => env('REDIS_DATABASE', 0),
+                'prefix'          => env('REDIS_PREFIX'),
+                'serializer'      => 'igbinary',
+            ],
+
+            'default' => [
+                [
+                    'host' => env('REDIS_SHARD1_HOST', '127.0.0.1'),
+                    'port' => env('REDIS_SHARD1_PORT', 6379),
+                ],
+                [
+                    'host' => env('REDIS_SHARD2_HOST', '127.0.0.2'),
+                    'port' => env('REDIS_SHARD2_PORT', 6379),
+                ],
+                . . .
+            ],
         ],
     ],
     . . .
 ```
-
-Also, you can specify other options like `scan` or etc. See https://github.com/phpredis/phpredis#setoption
 
 #### AWS SQS Fifo Queue
 

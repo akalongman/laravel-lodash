@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class ServiceProviderTest extends TestCase
 {
-
     /** @test */
     public function check_if_commands_registered()
     {
@@ -52,5 +51,4 @@ class ServiceProviderTest extends TestCase
             $this->assertContains($directive, array_keys($registered));
         }
     }
-
 }

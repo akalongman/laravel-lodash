@@ -19,9 +19,7 @@ use Illuminate\Support\Arr;
 
 class SqsFifoQueue extends SqsQueue
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $options;
 
     /**

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Blade;
 use Longman\LaravelLodash\Middlewares\AllowCorsRequests;
 use Orchestra\Testbench\Http\Kernel;
 

@@ -11,16 +11,16 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Queue;
 
-use Longman\LaravelLodash\Queue\SqsFifo\Connectors\SqsFifoConnector;
 use Illuminate\Queue\QueueManager;
 use Illuminate\Queue\QueueServiceProvider as BaseQueueServiceProvider;
+use Longman\LaravelLodash\Queue\SqsFifo\Connectors\SqsFifoConnector;
 
 class QueueServiceProvider extends BaseQueueServiceProvider
 {
     /**
      * Register the connectors on the queue manager.
      *
-     * @param  \Illuminate\Queue\QueueManager  $manager
+     * @param  \Illuminate\Queue\QueueManager $manager
      * @return void
      */
     public function registerConnectors($manager)
@@ -33,7 +33,7 @@ class QueueServiceProvider extends BaseQueueServiceProvider
     protected function registerSqsFifoConnector(QueueManager $manager): void
     {
         $manager->addConnector('sqs.fifo', function (): SqsFifoConnector {
-            return new SqsFifoConnector;
+            return new SqsFifoConnector();
         });
     }
 }

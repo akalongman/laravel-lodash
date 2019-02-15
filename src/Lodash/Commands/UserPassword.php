@@ -52,7 +52,7 @@ class UserPassword extends Command
             return;
         }
         $model = $config['providers'][$provider]['model'];
-        $user = new $model;
+        $user = new $model();
 
         $email = $this->argument('email');
         $user = $user->where(compact('email'))->first();
@@ -85,5 +85,4 @@ class UserPassword extends Command
 
         return $guard ?? config('auth.defaults.guard');
     }
-
 }

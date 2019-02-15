@@ -16,19 +16,13 @@ use InvalidArgumentException;
 
 class ElasticSearchManager implements ElasticSearchManagerContract
 {
-    /**
-     * @var \ElasticSearch\Client
-     */
+    /** @var \ElasticSearch\Client */
     protected $client;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $enabled;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     protected $timeout;
 
     public function __construct(Client $client, bool $enabled = false)

@@ -28,7 +28,7 @@ class PhpRedisConnector extends BasePhpRedisConnector
      */
     protected function createClient(array $config)
     {
-        return tap(new Redis, function (Redis $client) use ($config) {
+        return tap(new Redis(), function (Redis $client) use ($config) {
             $this->establishConnection($client, $config);
 
             if (! empty($config['password'])) {
@@ -73,13 +73,15 @@ class PhpRedisConnector extends BasePhpRedisConnector
         // Use native Redis clustering
         if (Arr::get($options, 'cluster') === 'redis') {
             return new PhpRedisClusterConnection($this->createRedisClusterInstance(
-                array_map([$this, 'buildClusterConnectionString'], $config), $options
+                array_map([$this, 'buildClusterConnectionString'], $config),
+                $options
             ));
         }
 
         // Use client-side sharding
         return new PhpRedisClusterConnection($this->createRedisArrayInstance(
-            array_map([$this, 'buildRedisArrayConnectionString'], $config), $options
+            array_map([$this, 'buildRedisArrayConnectionString'], $config),
+            $options
         ));
     }
 

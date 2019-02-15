@@ -52,7 +52,7 @@ class UserAdd extends Command
             return;
         }
         $model = $config['providers'][$provider]['model'];
-        $user = new $model;
+        $user = new $model();
 
         $email = $this->argument('email');
         $password = $this->argument('password');
@@ -80,5 +80,4 @@ class UserAdd extends Command
 
         return $guard ?? config('auth.defaults.guard');
     }
-
 }

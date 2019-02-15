@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Queue\SqsFifo\Connectors;
 
-use Longman\LaravelLodash\Queue\SqsFifo\SqsFifoQueue;
 use Aws\Sqs\SqsClient;
 use Illuminate\Queue\Connectors\SqsConnector;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Arr;
+use Longman\LaravelLodash\Queue\SqsFifo\SqsFifoQueue;
 
 class SqsFifoConnector extends SqsConnector
 {

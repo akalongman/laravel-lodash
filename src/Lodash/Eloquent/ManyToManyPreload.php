@@ -25,21 +25,21 @@ trait ManyToManyPreload
      *
      * @return string
      */
-    public abstract function getTable();
+    abstract public function getTable();
 
     /**
      * Get the database connection for the model.
      *
      * @return \Illuminate\Database\Connection
      */
-    public abstract function getConnection();
+    abstract public function getConnection();
 
     /**
      * Get a new query builder that doesn't have any global scopes.
      *
      * @return \Illuminate\Database\Eloquent\Builder|static
      */
-    public abstract function newQueryWithoutScopes();
+    abstract public function newQueryWithoutScopes();
 
     public function scopeLimitPerGroupViaSubQuery(Builder $query, int $limit = 10): Model
     {

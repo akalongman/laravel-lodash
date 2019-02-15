@@ -36,7 +36,7 @@ trait UserIdentities
      * @param  string $relation
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public abstract function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null);
+    abstract public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null);
 
     protected static function bootUserIdentities(): void
     {

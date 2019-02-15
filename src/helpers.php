@@ -32,7 +32,7 @@ if (! function_exists('get_db_query')) {
 
         try {
             $collector = $debugbar->getCollector('queries');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return '';
         }
 
@@ -58,7 +58,7 @@ if (! function_exists('get_db_queries')) {
 
         try {
             $collector = $debugbar->getCollector('queries');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return [];
         }
 

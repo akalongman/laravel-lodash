@@ -1,37 +1,50 @@
 dist: xenial
-
 language: php
 
-php:
-  - 7.1
-  - 7.2
-  - 7.3
+env:
+  global:
+    - SETUP=stable
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.1
+    - php: 7.1
+      env: SETUP=lowest
+    - php: 7.2
+    - php: 7.2
+      env: SETUP=lowest
+    - php: 7.3
+    - php: 7.3
+      env: SETUP=lowest
+
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 services:
   - redis-server
+  - mysql
 
 sudo: false
 
 before_install:
-  #- phpenv config-add ./build/redis.ini
-  - pecl install redis
-  - composer self-update
+  #- phpenv config-rm xdebug.ini || true
+  - printf "\n" | pecl install -f memcached redis
+  - travis_retry composer self-update
+  - mysql -e 'CREATE DATABASE forge;'
 
 install:
-  - travis_retry composer update --no-interaction --prefer-source
+  - if [[ $SETUP = 'stable' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
+  - if [[ $SETUP = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
 
 script:
   - composer phpcs
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
-
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
-
-matrix:
-  fast_finish: true
-
 
 notifications:
   on_success: never

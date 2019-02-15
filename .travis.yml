@@ -46,7 +46,7 @@ install:
 
 script:
   - composer phpcs
-  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - composer coverage-clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar

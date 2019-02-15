@@ -8,6 +8,7 @@
         "utilities",
         "igbinary",
         "redis",
+        "phpredis",
         "aws",
         "sqs",
         "tools"
@@ -56,7 +57,7 @@
     },
     "suggest": {
         "ext-redis": "Needed for using phpredis",
-        "ext-igbinary": "Needed for speed up Redis/Memcached cache",
+        "ext-igbinary": "Needed for speed up Redis/Memcached data serialization and reduce serialized data size",
         "longman/laravel-multilang": "Adds multilanguage functional to Laravel >=5.5",
         "ramsey/uuid": "Use UUID identifiers in the eloquent models",
         "elasticsearch/elasticsearch": "Use ElasticSearch service in the laravel",

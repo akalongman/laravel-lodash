@@ -28,7 +28,15 @@ services:
 
 before_install:
   #- phpenv config-rm xdebug.ini || true
-  - printf "\n" | pecl install -f igbinary memcached redis
+  - printf "\n" | pecl install -f igbinary
+  # Install & Build Redis
+  - printf "\n" | pecl install -f --nobuild redis
+  - cd "$(pecl config-get temp_dir)/redis"
+  - phpize
+  - ./configure --enable-redis-igbinary
+  - make && make install
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - cd -
   - travis_retry composer self-update
   - mysql -e 'CREATE DATABASE forge;'
 

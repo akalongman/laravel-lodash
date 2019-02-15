@@ -142,6 +142,9 @@ class PhpRedisConnector extends BasePhpRedisConnector
 
     protected function getSerializerFromConfig(string $serializer): int
     {
+        dump(get_class_methods(Redis::class));
+        dump(get_class_vars(Redis::class));
+        
         switch ($serializer) {
             default:
                 $flag = Redis::SERIALIZER_NONE;

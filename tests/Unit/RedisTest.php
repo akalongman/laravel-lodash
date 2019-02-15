@@ -11,9 +11,6 @@ class RedisTest extends TestCase
     /** @test */
     public function it_should_set_custom_serializer()
     {
-        dump(get_class_methods('Redis'));
-        die;
-
         $redis = $this->createConnection('phpredis', [
             'default' => [
                 'serializer' => 'igbinary',

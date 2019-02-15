@@ -12,4 +12,9 @@ class TestCase extends BaseTestCase
     {
         return [LodashServiceProvider::class];
     }
+
+    protected function overrideApplicationAliases($app)
+    {
+        return [];
+    }
 }

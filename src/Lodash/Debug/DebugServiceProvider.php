@@ -18,7 +18,7 @@ class DebugServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $ips = config('lodash.debug.ips');
+        $ips = config('lodash.debug.ips', []);
         $ip = app(Request::class)->getClientIp();
         if (in_array($ip, $ips)) {
             config(['app.debug' => true]);

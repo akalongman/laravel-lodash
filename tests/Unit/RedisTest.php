@@ -4,15 +4,16 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use Longman\LaravelLodash\Redis\RedisManager;
+use Redis;
 
 class RedisTest extends TestCase
 {
-    private const PHPREDIS_OPT_SERIALIZER = 1;
-    private const PHPREDIS_SERIALIZER_IGBINARY = 2;
-
     /** @test */
     public function it_should_set_custom_serializer()
     {
+        dump(get_class_methods('Redis'));
+        die;
+
         $redis = $this->createConnection('phpredis', [
             'default' => [
                 'serializer' => 'igbinary',
@@ -23,7 +24,7 @@ class RedisTest extends TestCase
         $data = ['name' => 'Georgia'];
         $redis->set('country', $data, null, 60);
 
-        $this->assertEquals($client->getOption(self::PHPREDIS_OPT_SERIALIZER), self::PHPREDIS_SERIALIZER_IGBINARY);
+        $this->assertEquals($client->getOption(Redis::OPT_SERIALIZER), Redis::SERIALIZER_IGBINARY);
         $this->assertEquals($redis->get('country'), $data);
     }
 

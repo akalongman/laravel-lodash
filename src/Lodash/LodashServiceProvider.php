@@ -17,17 +17,6 @@ use Illuminate\Support\ServiceProvider;
 
 class LodashServiceProvider extends ServiceProvider
 {
-    protected $commands = [
-        'command.lodash.clear-all'     => \Longman\LaravelLodash\Commands\ClearAll::class,
-        'command.lodash.db.clear'      => \Longman\LaravelLodash\Commands\DbClear::class,
-        'command.lodash.db.dump'       => \Longman\LaravelLodash\Commands\DbDump::class,
-        'command.lodash.db.restore'    => \Longman\LaravelLodash\Commands\DbRestore::class,
-        'command.lodash.log.clear'     => \Longman\LaravelLodash\Commands\LogClear::class,
-        'command.lodash.user.add'      => \Longman\LaravelLodash\Commands\UserAdd::class,
-        'command.lodash.user.password' => \Longman\LaravelLodash\Commands\UserPassword::class,
-
-    ];
-
     public function boot(): void
     {
         $this->publishes([
@@ -37,6 +26,8 @@ class LodashServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'lodash');
+
         $this->registerCommands();
 
         $this->registerRequestMacros();
@@ -46,52 +37,65 @@ class LodashServiceProvider extends ServiceProvider
 
     protected function registerCommands(): void
     {
-        foreach ($this->commands as $name => $class) {
+        if (empty($commands = (array) config('lodash.available_commands'))) {
+            return;
+        }
+
+        foreach ($commands as $name => $class) {
             $this->app->singleton($name, $class);
         }
 
-        $this->commands(array_keys($this->commands));
+        $this->commands(array_keys($commands));
     }
 
     protected function registerBladeDirectives(): void
     {
-        // Display relative time
-        Blade::directive('datetime', function ($expression) {
+        $register_directives = config('lodash.register_blade_directives');
 
-            return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
-                . '\' title=\'' . $expression . '\'>'
-                . with({$expression})->diffForHumans() . '</time>' ?>";
-        });
+        if ($register_directives['datetime'] ?? false) {
+            Blade::directive('datetime', function ($expression) {
+                return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
+                    . '\' title=\'' . $expression . '\'>'
+                    . with({$expression})->diffForHumans() . '</time>' ?>";
+            });
+        }
 
-        // Pluralization helper
-        Blade::directive('plural', function ($expression) {
-            $expression = trim($expression, '()');
-            list($count, $str, $spacer) = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
-
-            return "<?php echo $count . $spacer . str_plural($str, $count) ?>";
-        });
+        if ($register_directives['plural'] ?? false) {
+            Blade::directive('plural', function ($expression) {
+                $expression = trim($expression, '()');
+                list($count, $str, $spacer) = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
+    
+                return "<?php echo $count . $spacer . str_plural($str, $count) ?>";
+            });
+        }
     }
 
     protected function registerRequestMacros(): void
     {
-        Request::macro('getInt', function (string $name, int $default = 0): int {
+        $register_request_macros = config('lodash.register_request_macros');
 
-            return (int) $this->get($name, $default);
-        });
+        if ($register_request_macros['getInt'] ?? false) {
+            Request::macro('getInt', function (string $name, int $default = 0): int {
+                return (int) $this->get($name, $default);
+            });
+        }
 
-        Request::macro('getBool', function (string $name, bool $default = false): bool {
+        if ($register_request_macros['getBool'] ?? false) {
+            Request::macro('getBool', function (string $name, bool $default = false): bool {
+                return (bool) $this->get($name, $default);
+            });
+        }
 
-            return (bool) $this->get($name, $default);
-        });
+        if ($register_request_macros['getFloat'] ?? false) {
+            Request::macro('getFloat', function (string $name, float $default = 0): float {
+                return (float) $this->get($name, $default);
+            });
+        }
 
-        Request::macro('getFloat', function (string $name, float $default = 0): float {
-
-            return (float) $this->get($name, $default);
-        });
-
-        Request::macro('getString', function (string $name, string $default = ''): string {
-
-            return (string) $this->get($name, $default);
-        });
+        if ($register_request_macros['getString'] ?? false) {
+            Request::macro('getString', function (string $name, string $default = ''): string {
+                return (string) $this->get($name, $default);
+            });
+        }
     }
 }

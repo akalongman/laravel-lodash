@@ -33,6 +33,7 @@
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.90",
+        "beyondcode/laravel-self-diagnosis": "^1.2",
         "longman/php-code-style": "^2.0",
         "mockery/mockery": "~1.2",
         "orchestra/testbench": "^3.8",
@@ -63,7 +64,8 @@
         "ramsey/uuid": "Use UUID identifiers in the eloquent models",
         "elasticsearch/elasticsearch": "Use ElasticSearch service in the laravel",
         "aws/aws-sdk-php": "Use AWS SQS >=3",
-        "barryvdh/laravel-debugbar": "Allow print compiled queries via function get_db_queries()"
+        "barryvdh/laravel-debugbar": "Allow print compiled queries via function get_db_queries()",
+        "beyondcode/laravel-self-diagnosis": "Run system diagnosis with many custom checks"
     },
     "scripts": {
         "phpcs": "./vendor/bin/phpcs --standard=phpcs.xml -spn --encoding=utf-8 src/ tests/ --report-width=150",

@@ -33,6 +33,8 @@ class LodashServiceProvider extends ServiceProvider
         ]);
 
         $this->registerBladeDirectives();
+
+        $this->loadTranslations();
     }
 
     public function register(): void
@@ -91,5 +93,14 @@ class LodashServiceProvider extends ServiceProvider
 
             return (string) $this->get($name, $default);
         });
+    }
+
+    protected function loadTranslations(): void
+    {
+        $this->loadTranslationsFrom(__DIR__ . '/../translations', 'lodash');
+
+        $this->publishes([
+            __DIR__ . '/../translations' => resource_path('lang/vendor/lodash'),
+        ], 'translations');
     }
 }

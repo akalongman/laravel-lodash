@@ -101,6 +101,6 @@ class LodashServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../translations' => resource_path('lang/vendor/lodash'),
-        ], 'translations');
+        ]);
     }
 }

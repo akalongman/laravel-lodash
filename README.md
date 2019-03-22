@@ -58,7 +58,7 @@ And run composer update
 
 Copy the package config to your local config with the publish command:
 
-    php artisan vendor:publish --provider="Longman\LaravelLodash\LaravelLodashServiceProvider"
+    php artisan vendor:publish --provider="Longman\LaravelLodash\LodashServiceProvider"
 
 
 ## Usage

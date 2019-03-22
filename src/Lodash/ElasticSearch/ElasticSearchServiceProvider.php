@@ -13,13 +13,12 @@ namespace Longman\LaravelLodash\ElasticSearch;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-class ElasticSearchServiceProvider extends ServiceProvider
+class ElasticSearchServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    protected $defer = true;
-
     public function boot(): void
     {
         //

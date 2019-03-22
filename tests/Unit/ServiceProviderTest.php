@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Blade;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Http\Request;
 
@@ -46,7 +45,7 @@ class ServiceProviderTest extends TestCase
             'plural',
         ];
 
-        $registered = Blade::getCustomDirectives();
+        $registered = app('blade.compiler')->getCustomDirectives();
         foreach ($directives as $directive) {
             $this->assertContains($directive, array_keys($registered));
         }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash;
 
-use Blade;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
@@ -55,7 +54,7 @@ class LodashServiceProvider extends ServiceProvider
     protected function registerBladeDirectives(): void
     {
         // Display relative time
-        Blade::directive('datetime', function ($expression) {
+        app('blade.compiler')->directive('datetime', function ($expression) {
 
             return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
                 . '\' title=\'' . $expression . '\'>'
@@ -63,7 +62,7 @@ class LodashServiceProvider extends ServiceProvider
         });
 
         // Pluralization helper
-        Blade::directive('plural', function ($expression) {
+        app('blade.compiler')->directive('plural', function ($expression) {
             $expression = trim($expression, '()');
             list($count, $str, $spacer) = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
 

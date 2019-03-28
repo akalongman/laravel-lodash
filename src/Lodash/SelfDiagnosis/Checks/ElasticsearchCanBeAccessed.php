@@ -38,7 +38,7 @@ class ElasticsearchCanBeAccessed implements Check
     {
         try {
 
-            /** @var \Longman\LaravelLodash\ElasticSearch\ElasticSearchManagerContract $elasticsearch */
+            /** @var \Longman\LaravelLodash\Elasticsearch\ElasticsearchManagerContract $elasticsearch */
             $elasticsearch = app($config['client']);
 
             if (! $elasticsearch->getClient()->ping()) {

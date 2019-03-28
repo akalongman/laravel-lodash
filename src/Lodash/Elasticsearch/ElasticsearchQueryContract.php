@@ -9,9 +9,9 @@
  */
 declare(strict_types=1);
 
-namespace Longman\LaravelLodash\ElasticSearch;
+namespace Longman\LaravelLodash\Elasticsearch;
 
-interface ElasticSearchQueryContract
+interface ElasticsearchQueryContract
 {
     public function build(): array;
 }

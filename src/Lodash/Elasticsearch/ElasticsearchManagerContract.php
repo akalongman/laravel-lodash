@@ -9,15 +9,15 @@
  */
 declare(strict_types=1);
 
-namespace Longman\LaravelLodash\ElasticSearch;
+namespace Longman\LaravelLodash\Elasticsearch;
 
-use ElasticSearch\Client;
+use Elasticsearch\Client;
 
-interface ElasticSearchManagerContract
+interface ElasticsearchManagerContract
 {
-    public function setEnabled(bool $enabled): ElasticSearchManagerContract;
+    public function setEnabled(bool $enabled): ElasticsearchManagerContract;
 
-    public function setTimeout(int $timeout): ElasticSearchManagerContract;
+    public function setTimeout(int $timeout): ElasticsearchManagerContract;
 
     public function createIndex(string $index_name, array $settings, array $mappings): void;
 
@@ -33,7 +33,7 @@ interface ElasticSearchManagerContract
 
     public function refreshIndex(string $index_name): void;
 
-    public function performSearch(ElasticSearchQueryContract $query): array;
+    public function performSearch(ElasticsearchQueryContract $query): array;
 
     public function switchIndexAlias(string $alias_name, string $index_name): void;
 

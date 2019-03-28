@@ -5,7 +5,7 @@ namespace Tests\Unit;
 
 use Longman\LaravelLodash\Cache\CacheServiceProvider;
 use Longman\LaravelLodash\Debug\DebugServiceProvider;
-use Longman\LaravelLodash\ElasticSearch\ElasticSearchServiceProvider;
+use Longman\LaravelLodash\Elasticsearch\ElasticsearchServiceProvider;
 use Longman\LaravelLodash\LodashServiceProvider;
 use Longman\LaravelLodash\Queue\QueueServiceProvider;
 use Longman\LaravelLodash\Redis\RedisServiceProvider;
@@ -19,7 +19,7 @@ class TestCase extends BaseTestCase
             LodashServiceProvider::class,
             CacheServiceProvider::class,
             DebugServiceProvider::class,
-            ElasticSearchServiceProvider::class,
+            ElasticsearchServiceProvider::class,
             QueueServiceProvider::class,
             RedisServiceProvider::class,
         ];

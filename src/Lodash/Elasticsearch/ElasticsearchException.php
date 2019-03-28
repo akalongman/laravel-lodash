@@ -9,11 +9,11 @@
  */
 declare(strict_types=1);
 
-namespace Longman\LaravelLodash\ElasticSearch;
+namespace Longman\LaravelLodash\Elasticsearch;
 
 use Exception;
 
-class ElasticSearchException extends Exception
+class ElasticsearchException extends Exception
 {
     protected $errors = [];
 

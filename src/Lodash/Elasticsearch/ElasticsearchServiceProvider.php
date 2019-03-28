@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace Longman\LaravelLodash\ElasticSearch;
+namespace Longman\LaravelLodash\Elasticsearch;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
@@ -17,7 +17,7 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-class ElasticSearchServiceProvider extends ServiceProvider implements DeferrableProvider
+class ElasticsearchServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     public function boot(): void
     {
@@ -48,16 +48,16 @@ class ElasticSearchServiceProvider extends ServiceProvider implements Deferrable
             return $client;
         });
 
-        $this->app->singleton(ElasticSearchManagerContract::class, function (Application $app) {
+        $this->app->singleton(ElasticsearchManagerContract::class, function (Application $app) {
             $client = $app->make(Client::class);
             $enabled = (bool) $app['config']->get('services.elastic_search.enabled', false);
 
-            return new ElasticSearchManager($client, $enabled);
+            return new ElasticsearchManager($client, $enabled);
         });
     }
 
     public function provides()
     {
-        return [Client::class, ElasticSearchManagerContract::class];
+        return [Client::class, ElasticsearchManagerContract::class];
     }
 }

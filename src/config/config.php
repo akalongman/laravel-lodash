@@ -2,14 +2,12 @@
 declare(strict_types=1);
 
 return [
-
     'debug' => [
-        'ips' => [ // IP list for enabling debug mode
-            //'127.0.0.1',
-        ],
+        'ips' => explode(',', env('DEBUG_IP_LIST', '')), // IP list for enabling debug mode
     ],
 
     'cors' => [
+        'allow_origins' => explode(',', env('CORS_ALLOW_ORIGINS', '')), // Allowed domains
         'allow_methods' => [ // Allowed request methods
             'HEAD',
             'GET',
@@ -18,9 +16,6 @@ return [
             'PUT',
             'PATCH',
             'DELETE',
-        ],
-        'allow_origins' => [ // Allowed domains
-            //'locahost',
         ],
         'allow_headers' => [ // Allowed headers
             'Origin',
@@ -37,5 +32,4 @@ return [
         'x_content_type_options' => 'nosniff', // X-Content-Type-Options header value
         'x_xss_protection'       => '1; mode=block', // X-XSS-Protection header value
     ],
-
 ];

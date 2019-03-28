@@ -8,7 +8,9 @@
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This package adds lot of useful functionality to the Laravel >=5.5 project
+This package adds lot of useful functionality to the Laravel >=5.8 project
+
+__Note:__ For Laravel older than 5.8 use the package version 1.*
 
 ## Table of Contents
 - [Installation](#installation)
@@ -26,8 +28,10 @@ This package adds lot of useful functionality to the Laravel >=5.5 project
     - [Extended Classes](#extended-classes)
         - [Request Class](#request-class)
     - [Artisan Commands](#artisan-commands)
-    - [Middlewares](#middlewares)
+    - [Middleware List](#middleware-list)
     - [Blade Directives](#blade-directives)
+    - [Misc](#misc)
+        - [SelfDiagnosis Checks](#selfdiagnosis-checks)
 - [TODO](#todo)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -46,7 +50,7 @@ Create *composer.json* file:
     "name": "yourproject/yourproject",
     "type": "project",
     "require": {
-        "longman/laravel-lodash": "~0.8"
+        "longman/laravel-lodash": "^2.0"
     }
 }
 ```
@@ -56,7 +60,20 @@ And run composer update
 
     composer require longman/laravel-lodash
 
-Copy the package config to your local config with the publish command:
+Add `LodashServiceProvider` to your service providers list in the `app.php`
+
+```php
+'providers' => [
+    . . .
+    /*
+     * Package Service Providers...
+     */
+    Longman\LaravelLodash\LodashServiceProvider::class,
+    . . .
+],
+```
+
+Copy the package config and translations to your application with the publish command:
 
     php artisan vendor:publish --provider="Longman\LaravelLodash\LodashServiceProvider"
 
@@ -324,7 +341,7 @@ Command  | Description
 `php artisan user:password {email} {password?}`  |  Update/reset user password. Options:<br/>--guard= : The guard to use.
 
 
-### Middlewares
+### Middleware List
 
 Middleware  | Description
 ------------- | -------------
@@ -333,13 +350,96 @@ Middleware  | Description
 
 ### Blade Directives
 
-For this fuctional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
+For this functional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
 
 Directive  | Description
 ------------- | -------------
 `@datetime($date);`  |  Display relative time. Example:<br/>`$date = Carbon\Carbon::now();`<br />`@datetime($date);`
 `@plural($count, $word)`  |  Pluralization helper. Example:<br/>`@plural(count($posts), 'post')`<br />Produces '1 post' or '2 posts', depending on how many items in $posts there are
 
+
+### Misc
+
+#### SelfDiagnosis Checks
+
+For using this checks, you have to install the package: [laravel-self-diagnosis](https://github.com/beyondcode/laravel-self-diagnosis)
+
+#### Available Disk Space Check
+
+```php
+...
+\Longman\LaravelLodash\SelfDiagnosis\Checks\AvailableDiskSpace::class => [
+    'paths' => [
+        '/' => '100G', // At least 100G should be available for the path "/"
+        '/var/www' => '5G',
+    ],
+],
+...
+```
+
+#### Elasticsearch Health Check
+
+```php
+...
+\Longman\LaravelLodash\SelfDiagnosis\Checks\ElasticsearchCanBeAccessed::class => [
+    'client' => ElasticSearchClient::class,
+],
+...
+```
+
+#### Php Ini Options Check
+
+```php
+...
+\Longman\LaravelLodash\SelfDiagnosis\Checks\PhpIniOptions::class => [
+    'options' => [
+        'upload_max_filesize' => '>=128M',
+        'post_max_size'       => '>=128M',
+        'memory_limit'        => '>=128M',
+        'max_input_vars'      => '>=10000',
+        'file_uploads'        => '1',
+        'disable_functions'   => '',
+    ],
+],
+...
+```
+
+#### Php Ini Options Check
+
+```php
+...
+\Longman\LaravelLodash\SelfDiagnosis\Checks\RedisCanBeAccessed::class => [
+    'default_connection' => true,
+    'connections'        => ['sessions'],
+],
+...
+```
+
+#### Servers Are Pingable Check
+
+```php
+...
+\Longman\LaravelLodash\SelfDiagnosis\Checks\ServersArePingable::class => [
+    'servers' => [
+        [
+            'host'    => config('app.url'),
+            'port'    => 80,
+            'timeout' => 1,
+        ],
+        [
+            'host'    => 'sqs.eu-west-1.amazonaws.com',
+            'port'    => 443,
+            'timeout' => 3,
+        ],
+        [
+            'host'    => 'www.googleapis.com',
+            'port'    => 443,
+            'timeout' => 3,
+        ],
+    ],
+],
+...
+```
 
 ## TODO
 
@@ -364,4 +464,4 @@ which this project is licensed under.
 
 - [Avtandil Kikabidze aka LONGMAN](https://github.com/akalongman)
 
-Full credit list in [CREDITS](CREDITS)
+Full credit list in [Contributors](https://github.com/akalongman/laravel-lodash/graphs/contributors)

@@ -56,7 +56,20 @@ And run composer update
 
     composer require longman/laravel-lodash
 
-Copy the package config to your local config with the publish command:
+Add `LodashServiceProvider` to your service providers list in the `app.php`
+
+```php
+'providers' => [
+    . . .
+    /*
+     * Package Service Providers...
+     */
+    Longman\LaravelLodash\LodashServiceProvider::class,
+    . . .
+],
+```
+
+Copy the package config and translations to your application with the publish command:
 
     php artisan vendor:publish --provider="Longman\LaravelLodash\LodashServiceProvider"
 

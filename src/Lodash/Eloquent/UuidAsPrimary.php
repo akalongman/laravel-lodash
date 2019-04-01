@@ -25,14 +25,14 @@ trait UuidAsPrimary
             $key_name = $model->getKeyName();
 
             if (empty($model->{$key_name})) {
-                $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : 4;
+                $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : Uuid::UUID_TYPE_RANDOM;
 
                 $model->attributes[$key_name] = self::generateUuid($uuidVersion);
             }
         });
     }
 
-    public static function generateUuid(int $version = 4): string
+    public static function generateUuid(int $version = Uuid::UUID_TYPE_RANDOM): string
     {
         switch ($version) {
             default:

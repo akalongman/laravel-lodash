@@ -9,14 +9,14 @@
  */
 declare(strict_types=1);
 
-namespace Longman\LaravelLodash\ElasticSearch;
+namespace Longman\LaravelLodash\Elasticsearch;
 
-use ElasticSearch\Client;
+use Elasticsearch\Client;
 use InvalidArgumentException;
 
-class ElasticSearchManager implements ElasticSearchManagerContract
+class ElasticsearchManager implements ElasticsearchManagerContract
 {
-    /** @var \ElasticSearch\Client */
+    /** @var \Elasticsearch\Client */
     protected $client;
 
     /** @var bool */
@@ -31,14 +31,14 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         $this->enabled = $enabled;
     }
 
-    public function setEnabled(bool $enabled): ElasticSearchManagerContract
+    public function setEnabled(bool $enabled): ElasticsearchManagerContract
     {
         $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function setTimeout(int $timeout): ElasticSearchManagerContract
+    public function setTimeout(int $timeout): ElasticsearchManagerContract
     {
         $this->timeout = $timeout;
 
@@ -68,7 +68,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         $response = $this->client->indices()->create($params);
 
         if ($response['acknowledged'] !== true) {
-            throw new ElasticSearchException('Something went wrong during index creation');
+            throw new ElasticsearchException('Something went wrong during index creation');
         }
     }
 
@@ -93,7 +93,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $response = $this->client->indices()->delete($params);
         if ($response['acknowledged'] !== true) {
-            throw new ElasticSearchException('Something went wrong during index deletion');
+            throw new ElasticsearchException('Something went wrong during index deletion');
         }
     }
 
@@ -109,7 +109,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $response = $this->client->indices()->getAlias($params);
         if (empty($response)) {
-            throw new ElasticSearchException('Can not get alias ' . $alias_name);
+            throw new ElasticsearchException('Can not get alias ' . $alias_name);
         }
 
         $indexes = array_keys($response);
@@ -117,7 +117,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
     }
 
     /**
-     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
     public function addDocumentsToIndex(string $index_name, string $type_name, array $items)
     {
@@ -154,7 +154,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
     }
 
     /**
-     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
     public function updateDocumentsInIndex(string $index_name, string $type_name, array $items)
     {
@@ -191,7 +191,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
     }
 
     /**
-     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
     public function addOrUpdateDocumentsInIndex(string $index_name, string $type_name, array $items)
     {
@@ -228,7 +228,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
     }
 
     /**
-     * @throws \Longman\LaravelLodash\ElasticSearch\ElasticSearchException
+     * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
     protected function handleBulkError(array $responses, string $message)
     {
@@ -241,7 +241,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
             }
         }
 
-        throw new ElasticSearchException($message, $errors);
+        throw new ElasticsearchException($message, $errors);
     }
 
     public function refreshIndex(string $index_name): void
@@ -263,7 +263,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         $this->client->indices()->refresh($params);
     }
 
-    public function performSearch(ElasticSearchQueryContract $query): array
+    public function performSearch(ElasticsearchQueryContract $query): array
     {
         if (! $this->isEnabled()) {
             return [];
@@ -302,7 +302,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
             $response = $this->client->indices()->getAlias($params);
             if (empty($response)) {
-                throw new ElasticSearchException('Can not get alias ' . $alias_name);
+                throw new ElasticsearchException('Can not get alias ' . $alias_name);
             }
 
             $indexes = array_keys($response);
@@ -332,7 +332,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
 
         $response = $this->client->indices()->updateAliases($params);
         if ($response['acknowledged'] !== true) {
-            throw new ElasticSearchException('Switching alias response error');
+            throw new ElasticsearchException('Switching alias response error');
         }
     }
 
@@ -356,7 +356,7 @@ class ElasticSearchManager implements ElasticSearchManagerContract
         $response = $this->client->indices()->putTemplate($params);
 
         if ($response['acknowledged'] !== true) {
-            throw new ElasticSearchException('Something went wrong during template creation');
+            throw new ElasticsearchException('Something went wrong during template creation');
         }
     }
 

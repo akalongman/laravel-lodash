@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash;
 
-use Blade;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +21,10 @@ class LodashServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/config.php' => config_path('lodash.php'),
         ]);
+
+        $this->registerBladeDirectives();
+
+        $this->loadTranslations();
     }
 
     public function register(): void
@@ -31,8 +34,6 @@ class LodashServiceProvider extends ServiceProvider
         $this->registerCommands();
 
         $this->registerRequestMacros();
-
-        $this->registerBladeDirectives();
     }
 
     protected function registerCommands(): void
@@ -60,7 +61,7 @@ class LodashServiceProvider extends ServiceProvider
             });
         }
 
-        if ($register_directives['plural'] ?? false) {
+      if ($register_directives['plural'] ?? false) {
             Blade::directive('plural', function ($expression) {
                 $expression = trim($expression, '()');
                 list($count, $str, $spacer) = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
@@ -97,5 +98,14 @@ class LodashServiceProvider extends ServiceProvider
                 return (string) $this->get($name, $default);
             });
         }
+    }
+
+    protected function loadTranslations(): void
+    {
+        $this->loadTranslationsFrom(__DIR__ . '/../translations', 'lodash');
+
+        $this->publishes([
+            __DIR__ . '/../translations' => resource_path('lang/vendor/lodash'),
+        ]);
     }
 }

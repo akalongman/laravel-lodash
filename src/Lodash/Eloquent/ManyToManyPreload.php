@@ -108,13 +108,12 @@ trait ManyToManyPreload
         $joinRightColumn = $joins[0]->wheres[0]['second'];
         $joinOperator = $joins[0]->wheres[0]['operator'];
 
-        // Remove extra wheres and bindings
+        // Remove extra wheres
         $wheres = $query->getQuery()->wheres;
         $bindings = $query->getQuery()->bindings;
         foreach ($wheres as $key => $where) {
             if (isset($where['column']) && $where['column'] === $queryKeyColumn) {
                 $count = count($where['values']);
-                $bindings['where'] = array_slice($bindings['where'], $count);
                 unset($wheres[$key]);
             }
         }

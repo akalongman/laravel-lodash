@@ -51,7 +51,7 @@ class RedisTest extends TestCase
             ],
         ]);
 
-        /** @var \Predis\Client */
+        /** @var \Predis\Client $client */
         $client = $redis->connection()->client();
 
         $redis->set('country_predis', 'asdfg');

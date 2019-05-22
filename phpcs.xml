@@ -6,5 +6,13 @@
     <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
         <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array">
+                <element key="src/Lodash" value="Longman\LaravelLodash"/>
+                <element key="tests" value="Tests"/>
+            </property>
+        </properties>
+    </rule>
 
 </ruleset>

@@ -35,7 +35,7 @@ class ServersArePingable extends BaseServersArePingable implements Check
             return true;
         }
 
-        $this->notReachableServers = $this->notReachableServers->reject(function (Server $server) {
+        $this->notReachableServers = $this->notReachableServers->reject(static function (Server $server) {
             $ping = new Ping($server->getHost());
             $ping->setPort($server->getPort());
             $ping->setTimeout($server->getTimeout());

@@ -20,9 +20,11 @@ class DebugServiceProvider extends ServiceProvider
     {
         $ips = config('lodash.debug.ips', []);
         $ip = app(Request::class)->getClientIp();
-        if (in_array($ip, $ips)) {
-            config(['app.debug' => true]);
+        if (!in_array($ip, $ips)) {
+            return;
         }
+
+        config(['app.debug' => true]);
     }
 
     public function register(): void

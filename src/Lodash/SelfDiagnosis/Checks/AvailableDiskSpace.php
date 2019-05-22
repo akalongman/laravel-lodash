@@ -45,9 +45,11 @@ class AvailableDiskSpace implements Check
             }
             $actual_space = (int) $actual_space;
             $bytes = $this->toBytes($value);
-            if ($actual_space < $bytes) {
-                $this->options[$path] = $actual_space;
+            if ($actual_space >= $bytes) {
+                continue;
             }
+
+            $this->options[$path] = $actual_space;
         }
 
         return count($this->options) === 0;

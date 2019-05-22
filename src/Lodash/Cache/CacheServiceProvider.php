@@ -30,15 +30,15 @@ class CacheServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('cache', function ($app) {
+        $this->app->singleton('cache', static function ($app) {
             return new CacheManager($app);
         });
 
-        $this->app->singleton('cache.store', function ($app) {
+        $this->app->singleton('cache.store', static function ($app) {
             return $app['cache']->driver();
         });
 
-        $this->app->singleton('memcached.connector', function () {
+        $this->app->singleton('memcached.connector', static function () {
             return new MemcachedConnector();
         });
     }

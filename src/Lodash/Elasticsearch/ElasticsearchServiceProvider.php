@@ -26,7 +26,7 @@ class ElasticsearchServiceProvider extends ServiceProvider implements Deferrable
 
     public function register(): void
     {
-        $this->app->singleton(Client::class, function (Application $app) {
+        $this->app->singleton(Client::class, static function (Application $app) {
             // Logger instance
             $config = $app['config']->get('services.elastic_search');
 
@@ -48,7 +48,7 @@ class ElasticsearchServiceProvider extends ServiceProvider implements Deferrable
             return $client;
         });
 
-        $this->app->singleton(ElasticsearchManagerContract::class, function (Application $app) {
+        $this->app->singleton(ElasticsearchManagerContract::class, static function (Application $app) {
             $client = $app->make(Client::class);
             $enabled = (bool) $app['config']->get('services.elastic_search.enabled', false);
 

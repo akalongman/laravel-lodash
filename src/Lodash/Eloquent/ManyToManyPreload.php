@@ -112,10 +112,12 @@ trait ManyToManyPreload
         $wheres = $query->getQuery()->wheres;
         $bindings = $query->getQuery()->bindings;
         foreach ($wheres as $key => $where) {
-            if (isset($where['column']) && $where['column'] === $queryKeyColumn) {
-                $count = count($where['values']);
-                unset($wheres[$key]);
+            if (!isset($where['column']) || $where['column'] !== $queryKeyColumn) {
+                continue;
             }
+
+            //$count = count($where['values']);
+            unset($wheres[$key]);
         }
         $groups = $query->getQuery()->groups;
         $orders = $query->getQuery()->orders;

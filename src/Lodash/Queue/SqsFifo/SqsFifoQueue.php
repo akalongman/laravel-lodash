@@ -37,14 +37,16 @@ class SqsFifoQueue extends SqsQueue
         $this->default = $default;
         $this->options = $options;
 
-        if (Arr::get($this->options, 'polling') === 'long') {
-            $this->sqs->setQueueAttributes([
-                'Attributes' => [
-                    'ReceiveMessageWaitTimeSeconds' => Arr::get($this->options, 'wait_time', 20),
-                ],
-                'QueueUrl'   => $this->getQueue($default),
-            ]);
+        if (Arr::get($this->options, 'polling') !== 'long') {
+            return;
         }
+
+        $this->sqs->setQueueAttributes([
+            'Attributes' => [
+                'ReceiveMessageWaitTimeSeconds' => Arr::get($this->options, 'wait_time', 20),
+            ],
+            'QueueUrl'   => $this->getQueue($default),
+        ]);
     }
 
     /**

@@ -75,10 +75,12 @@ class DbClear extends Command
                     }
                 }
             }
-            if (! $pretend) {
-                $connection->statement('SET FOREIGN_KEY_CHECKS=1;');
-                $this->info('All tables dropped from database "' . $database . '"!');
+            if ($pretend) {
+                return;
             }
+
+            $connection->statement('SET FOREIGN_KEY_CHECKS=1;');
+            $this->info('All tables dropped from database "' . $database . '"!');
         });
     }
 

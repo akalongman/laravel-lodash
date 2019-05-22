@@ -1,22 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Unit\Middleware;
 
 use Longman\LaravelLodash\Middlewares\AllowCorsRequests;
+use Tests\Unit\TestCase;
 
-class MiddlewareTest extends TestCase
+use function config;
+use function implode;
+
+class AllowCorsRequestsTest extends TestCase
 {
     protected function getEnvironmentSetUp($app)
     {
         /** @var \Illuminate\Routing\Router $router */
         $router = $app['router'];
 
-        $router->get('url1', function () {
+        $router->get('url1', static function () {
             return 'ok';
         })->middleware(AllowCorsRequests::class);
 
-        $router->options('url1', function () {
+        $router->options('url1', static function () {
             return 'ok';
         })->middleware(AllowCorsRequests::class);
     }
@@ -113,4 +117,5 @@ class MiddlewareTest extends TestCase
         $response = $this->call('GET', 'url1', [], [], [], ['HTTP_Origin' => config('app.url', 'http://localhost')]);
         $response->assertStatus(200);
     }
+
 }

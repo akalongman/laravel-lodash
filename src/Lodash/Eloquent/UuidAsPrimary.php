@@ -21,14 +21,16 @@ trait UuidAsPrimary
     protected static function bootUuidAsPrimary(): void
     {
         /** @var \Illuminate\Database\Eloquent\Model $model */
-        static::creating(function ($model) {
+        static::creating(static function ($model) {
             $key_name = $model->getKeyName();
 
-            if (empty($model->{$key_name})) {
-                $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : Uuid::UUID_TYPE_RANDOM;
-
-                $model->attributes[$key_name] = self::generateUuid($uuidVersion);
+            if (!empty($model->{$key_name})) {
+                return;
             }
+
+            $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : Uuid::UUID_TYPE_RANDOM;
+
+            $model->attributes[$key_name] = self::generateUuid($uuidVersion);
         });
     }
 

@@ -56,7 +56,7 @@ class LodashServiceProvider extends ServiceProvider
     protected function registerBladeDirectives(): void
     {
         // Display relative time
-        app('blade.compiler')->directive('datetime', function ($expression) {
+        app('blade.compiler')->directive('datetime', static function ($expression) {
 
             return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
                 . '\' title=\'' . $expression . '\'>'
@@ -64,9 +64,9 @@ class LodashServiceProvider extends ServiceProvider
         });
 
         // Pluralization helper
-        app('blade.compiler')->directive('plural', function ($expression) {
+        app('blade.compiler')->directive('plural', static function ($expression) {
             $expression = trim($expression, '()');
-            list($count, $str, $spacer) = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
+            [$count, $str, $spacer] = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
 
             return "<?php echo $count . $spacer . str_plural($str, $count) ?>";
         });

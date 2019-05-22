@@ -58,9 +58,11 @@ class LogClear extends Command
             }
 
             $status = $filesystem->delete($file->getRealPath());
-            if ($status) {
-                $this->info('Successfully deleted: ' . $file);
+            if (!$status) {
+                continue;
             }
+
+            $this->info('Successfully deleted: ' . $file);
         }
     }
 }

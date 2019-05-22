@@ -148,9 +148,11 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         }
 
         $responses = $this->client->bulk($params);
-        if ($responses['errors'] === true) {
-            $this->handleBulkError($responses, 'Error occurred during bulk create');
+        if ($responses['errors'] !== true) {
+            return;
         }
+
+        $this->handleBulkError($responses, 'Error occurred during bulk create');
     }
 
     /**
@@ -185,9 +187,11 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         }
 
         $responses = $this->client->bulk($params);
-        if ($responses['errors'] === true) {
-            $this->handleBulkError($responses, 'Error occurred during bulk update');
+        if ($responses['errors'] !== true) {
+            return;
         }
+
+        $this->handleBulkError($responses, 'Error occurred during bulk update');
     }
 
     /**
@@ -222,9 +226,11 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         }
 
         $responses = $this->client->bulk($params);
-        if ($responses['errors'] === true) {
-            $this->handleBulkError($responses, 'Error occurred during bulk index');
+        if ($responses['errors'] !== true) {
+            return;
         }
+
+        $this->handleBulkError($responses, 'Error occurred during bulk index');
     }
 
     /**
@@ -236,9 +242,11 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         foreach ($responses['items'] as $item) {
             $row = $item;
             $row = reset($row);
-            if (! empty($row['error'])) {
-                $errors[] = $row['error'];
+            if (empty($row['error'])) {
+                continue;
             }
+
+            $errors[] = $row['error'];
         }
 
         throw new ElasticsearchException($message, $errors);

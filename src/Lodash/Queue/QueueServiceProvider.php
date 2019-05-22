@@ -32,7 +32,7 @@ class QueueServiceProvider extends BaseQueueServiceProvider
 
     protected function registerSqsFifoConnector(QueueManager $manager): void
     {
-        $manager->addConnector('sqs.fifo', function (): SqsFifoConnector {
+        $manager->addConnector('sqs.fifo', static function (): SqsFifoConnector {
             return new SqsFifoConnector();
         });
     }

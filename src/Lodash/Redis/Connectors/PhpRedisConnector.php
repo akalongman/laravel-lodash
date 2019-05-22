@@ -52,8 +52,8 @@ class PhpRedisConnector extends BasePhpRedisConnector
                 $client->setOption(Redis::OPT_SERIALIZER, (string) $serializer);
             }
 
-            if (! empty($config['scan'])) {
-                $client->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+            if (empty($config['scan'])) {
+                $client->setOption(Redis::OPT_SCAN, (string) Redis::SCAN_RETRY);
             }
         });
     }

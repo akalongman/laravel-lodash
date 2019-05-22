@@ -41,7 +41,7 @@ trait UserIdentities
     protected static function bootUserIdentities(): void
     {
         // Creating
-        static::creating(function (Model $model) {
+        static::creating(static function (Model $model) {
             if (! $model->usesUserIdentities()) {
                 return;
             }
@@ -50,13 +50,15 @@ trait UserIdentities
                 $model->{$model->columnCreatedBy} = auth()->id();
             }
 
-            if (is_null($model->{$model->columnUpdatedBy})) {
-                $model->{$model->columnUpdatedBy} = auth()->id();
+            if (!is_null($model->{$model->columnUpdatedBy})) {
+                return;
             }
+
+            $model->{$model->columnUpdatedBy} = auth()->id();
         });
 
         // Updating
-        static::updating(function (Model $model) {
+        static::updating(static function (Model $model) {
             if (! $model->usesUserIdentities()) {
                 return;
             }
@@ -65,27 +67,29 @@ trait UserIdentities
         });
 
         // Deleting/Restoring
-        if (static::usingSoftDeletes()) {
-            static::deleting(function (Model $model) {
-                if (! $model->usesUserIdentities()) {
-                    return;
-                }
-
-                if (is_null($model->{$model->columnDeletedBy})) {
-                    $model->{$model->columnDeletedBy} = auth()->id();
-                }
-
-                $model->save();
-            });
-
-            static::restoring(function (Model $model) {
-                if (! $model->usesUserIdentities()) {
-                    return;
-                }
-
-                $model->{$model->columnDeletedBy} = null;
-            });
+        if (!static::usingSoftDeletes()) {
+            return;
         }
+
+        static::deleting(static function (Model $model) {
+            if (! $model->usesUserIdentities()) {
+                return;
+            }
+
+            if (is_null($model->{$model->columnDeletedBy})) {
+                $model->{$model->columnDeletedBy} = auth()->id();
+            }
+
+            $model->save();
+        });
+
+        static::restoring(static function (Model $model) {
+            if (! $model->usesUserIdentities()) {
+                return;
+            }
+
+            $model->{$model->columnDeletedBy} = null;
+        });
     }
 
     public static function usingSoftDeletes(): bool
@@ -93,7 +97,7 @@ trait UserIdentities
         static $usingSoftDeletes;
 
         if (is_null($usingSoftDeletes)) {
-            return $usingSoftDeletes = in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive(get_called_class()));
+            return $usingSoftDeletes = in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive(static::class));
         }
 
         return $usingSoftDeletes;

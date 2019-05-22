@@ -29,6 +29,9 @@ __Note:__ For Laravel older than 5.8 use the package version 1.*
         - [Request Class](#request-class)
     - [Artisan Commands](#artisan-commands)
     - [Middleware List](#middleware-list)
+        - [AllowCorsRequests](#allowcorsrequests)
+        - [XssSecurity](#xsssecurity)
+        - [SimpleBasicAuth](#simplebasicauth)
     - [Blade Directives](#blade-directives)
     - [Misc](#misc)
         - [SelfDiagnosis Checks](#selfdiagnosis-checks)
@@ -343,10 +346,30 @@ Command  | Description
 
 ### Middleware List
 
-Middleware  | Description
-------------- | -------------
-`AllowCorsRequests`  |  Allows cross origin requests. Can be configured allowed hosts, methods and headers in the configuration file
-`XssSecurity`  |  Sets XSS Security headers. Can be configured excluded URI-s, etc.
+#### AllowCorsRequests
+
+Allows cross origin requests. Can be configured allowed hosts, methods and headers in the `config/lodash.php` file
+
+#### XssSecurity
+
+Sets XSS Security headers. Can be configured excluded URI-s, etc in the `config/lodash.php` .
+
+#### SimpleBasicAuth
+
+Add simple basic auth to a route.
+
+In the `config/auth.php` you have to add:
+
+```php
+    . . .
+    'simple' => [
+        'enabled'  => env('SIMPLE_AUTH_ENABLED', true),
+        'user'     => env('SIMPLE_AUTH_USER', 'user'),
+        'password' => env('SIMPLE_AUTH_PASS', 'secret'),
+    ],
+    . . .
+```
+
 
 ### Blade Directives
 

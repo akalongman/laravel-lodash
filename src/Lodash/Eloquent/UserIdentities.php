@@ -50,7 +50,7 @@ trait UserIdentities
                 $model->{$model->columnCreatedBy} = auth()->id();
             }
 
-            if (!is_null($model->{$model->columnUpdatedBy})) {
+            if (! is_null($model->{$model->columnUpdatedBy})) {
                 return;
             }
 
@@ -67,7 +67,7 @@ trait UserIdentities
         });
 
         // Deleting/Restoring
-        if (!static::usingSoftDeletes()) {
+        if (! static::usingSoftDeletes()) {
             return;
         }
 

@@ -72,5 +72,4 @@ class SimpleBasicAuthTest extends TestCase
         $response->assertStatus(200);
         $response->assertSeeText('ok');
     }
-
 }

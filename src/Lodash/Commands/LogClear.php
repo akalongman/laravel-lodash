@@ -58,7 +58,7 @@ class LogClear extends Command
             }
 
             $status = $filesystem->delete($file->getRealPath());
-            if (!$status) {
+            if (! $status) {
                 continue;
             }
 

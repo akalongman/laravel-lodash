@@ -117,5 +117,4 @@ class AllowCorsRequestsTest extends TestCase
         $response = $this->call('GET', 'url1', [], [], [], ['HTTP_Origin' => config('app.url', 'http://localhost')]);
         $response->assertStatus(200);
     }
-
 }

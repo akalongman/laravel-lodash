@@ -24,7 +24,7 @@ trait UuidAsPrimary
         static::creating(static function ($model) {
             $key_name = $model->getKeyName();
 
-            if (!empty($model->{$key_name})) {
+            if (! empty($model->{$key_name})) {
                 return;
             }
 

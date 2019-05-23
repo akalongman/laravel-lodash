@@ -112,7 +112,7 @@ trait ManyToManyPreload
         $wheres = $query->getQuery()->wheres;
         $bindings = $query->getQuery()->bindings;
         foreach ($wheres as $key => $where) {
-            if (!isset($where['column']) || $where['column'] !== $queryKeyColumn) {
+            if (! isset($where['column']) || $where['column'] !== $queryKeyColumn) {
                 continue;
             }
 

@@ -400,6 +400,19 @@ For using this checks, you have to install the package: [laravel-self-diagnosis]
 ...
 ```
 
+#### Filesystem Disks Are Available
+
+```php
+...
+\Longman\LaravelLodash\SelfDiagnosis\Checks\FilesystemsAreAvailable::class => [
+    'disks' => [
+        'local',
+        's3',
+    ],
+],
+...
+```
+
 #### Elasticsearch Health Check
 
 ```php

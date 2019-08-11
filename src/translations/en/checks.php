@@ -28,4 +28,8 @@ return [
         'message' => 'The space is less for the paths:' . PHP_EOL . ':options',
         'name'    => 'The available disk spaces are ok',
     ],
+    'filesystems_are_available'     => [
+        'message' => 'Filesystem disks are not available:' . PHP_EOL . ':options',
+        'name'    => 'Filesystem disks are available',
+    ],
 ];

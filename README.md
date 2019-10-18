@@ -237,7 +237,7 @@ Now you can add the new connection in the `queue.php` under `config` folder:
         'secret'  => env('AWS_SECRET_ACCESS_KEY'),
         'prefix'  => env('AWS_SQS_URL'),
         'queue'   => env('AWS_SQS_DEFAULT_QUEUE'),
-        'region'  => env('AWS_REGION'),
+        'region'  => env('AWS_DEFAULT_REGION'),
         'options' => [
             'type'      => 'fifo', // fifo, normal
             'polling'   => 'long', // long, short

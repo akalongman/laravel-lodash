@@ -13,8 +13,11 @@ namespace Longman\LaravelLodash\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+
+use const PHP_URL_HOST;
 
 class AllowCorsRequests
 {
@@ -43,14 +46,14 @@ class AllowCorsRequests
         }
 
         $allowed_origins = config('lodash.cors.allow_origins', []);
-        $current_app = $this->parseUrl(config('app.url', ''));
+        $current_app = $this->parseUrl((string) config('app.url', ''));
         if (! empty($host)) {
             $allowed_origins[] = $current_app;
         }
 
         $found = false;
         foreach ($allowed_origins as $allowed_origin) {
-            if ($host === $allowed_origin || ends_with($host, '.' . $allowed_origin)) {
+            if ($host === $allowed_origin || Str::endsWith($host, '.' . $allowed_origin)) {
                 $found = true;
                 break;
             }
@@ -99,7 +102,7 @@ class AllowCorsRequests
     {
         $host = (string) parse_url($url, PHP_URL_HOST);
 
-        if (starts_with($host, 'www.')) {
+        if (Str::startsWith($host, 'www.')) {
             $host = str_replace('www.', '', $host);
         }
 

@@ -6,6 +6,7 @@ namespace Longman\LaravelLodash\SelfDiagnosis\Checks;
 
 use BeyondCode\SelfDiagnosis\Checks\Check;
 use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Support\Str;
 use Throwable;
 
 use function app;
@@ -53,7 +54,7 @@ class FilesystemsAreAvailable implements Check
         /** @var \Illuminate\Filesystem\FilesystemAdapter $diskInstance */
         $diskInstance = $this->filesystemManager->disk($disk);
 
-        $file = 'test/test.txt';
+        $file = 'check_' . Str::random(32);
 
         $status = $diskInstance->put($file, now()->toString());
         if (! $status) {

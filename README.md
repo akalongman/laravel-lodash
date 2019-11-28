@@ -477,6 +477,14 @@ For using this checks, you have to install the package: [laravel-self-diagnosis]
 ...
 ```
 
+#### Horizon is running
+
+```php
+...
+\Longman\LaravelLodash\SelfDiagnosis\Checks\HorizonIsRunning::class,
+...
+```
+
 ## TODO
 
 write more tests and add more features

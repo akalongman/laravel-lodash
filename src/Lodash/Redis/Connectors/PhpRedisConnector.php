@@ -7,7 +7,9 @@ namespace Longman\LaravelLodash\Redis\Connectors;
 use Illuminate\Redis\Connections\PhpRedisClusterConnection;
 use Illuminate\Redis\Connectors\PhpRedisConnector as BasePhpRedisConnector;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Redis as RedisFacade;
 use InvalidArgumentException;
+use LogicException;
 use Redis;
 use RedisArray;
 
@@ -22,6 +24,12 @@ class PhpRedisConnector extends BasePhpRedisConnector
     protected function createClient(array $config)
     {
         return tap(new Redis(), function (Redis $client) use ($config) {
+            if ($client instanceof RedisFacade) {
+                throw new LogicException(
+                    'Please remove or rename the Redis facade alias in your "app" configuration file in order to avoid collision with the PHP Redis extension.'
+                );
+            }
+
             $this->establishConnection($client, $config);
 
             if (! empty($config['password'])) {

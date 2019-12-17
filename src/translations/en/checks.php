@@ -33,4 +33,8 @@ return [
         'message' => 'Filesystem disks are not available:' . PHP_EOL . ':options',
         'name'    => 'Filesystem disks are available',
     ],
+    'horizon_is_running'          => [
+        'message' => 'Horizon process is inactive',
+        'name'    => 'Horizon process is running',
+    ],
 ];

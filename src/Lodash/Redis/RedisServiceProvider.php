@@ -9,17 +9,12 @@ use Illuminate\Support\Arr;
 
 class RedisServiceProvider extends BaseRedisServiceProvider
 {
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton('redis', static function ($app) {
             $config = $app->make('config')->get('database.redis');
 
-            return new RedisManager($app, Arr::pull($config, 'client', 'predis'), $config);
+            return new RedisManager($app, Arr::pull($config, 'client', 'phpredis'), $config);
         });
 
         $this->app->bind('redis.connection', static function ($app) {

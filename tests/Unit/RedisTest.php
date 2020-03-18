@@ -9,6 +9,9 @@ use Predis\Client;
 use Redis;
 use RedisArray;
 
+use function getenv;
+use function version_compare;
+
 class RedisTest extends TestCase
 {
     /** @test */

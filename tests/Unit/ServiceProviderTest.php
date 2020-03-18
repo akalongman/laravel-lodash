@@ -7,6 +7,8 @@ namespace Tests\Unit;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Http\Request;
 
+use function array_keys;
+
 class ServiceProviderTest extends TestCase
 {
     /** @test */

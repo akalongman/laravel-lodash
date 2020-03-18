@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Eloquent;
 
+use Illuminate\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use function get_class;
+use function in_array;
+use function is_null;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
@@ -30,6 +36,51 @@ trait UserIdentities
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     abstract public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null);
+
+    public static function usingSoftDeletes(): bool
+    {
+        static $usingSoftDeletes;
+
+        if (is_null($usingSoftDeletes)) {
+            return $usingSoftDeletes = in_array(SoftDeletes::class, class_uses_recursive(static::class));
+        }
+
+        return $usingSoftDeletes;
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo($this->getUserClass(), $this->columnCreatedBy);
+    }
+
+    public function editor(): BelongsTo
+    {
+        return $this->belongsTo($this->getUserClass(), $this->columnUpdatedBy);
+    }
+
+    public function destroyer(): BelongsTo
+    {
+        return $this->belongsTo($this->getUserClass(), $this->columnDeletedBy);
+    }
+
+    public function usesUserIdentities(): bool
+    {
+        return $this->userIdentities;
+    }
+
+    public function stopUserIdentities(): self
+    {
+        $this->userIdentities = false;
+
+        return $this;
+    }
+
+    public function startUserIdentities(): self
+    {
+        $this->userIdentities = true;
+
+        return $this;
+    }
 
     protected static function bootUserIdentities(): void
     {
@@ -85,54 +136,9 @@ trait UserIdentities
         });
     }
 
-    public static function usingSoftDeletes(): bool
-    {
-        static $usingSoftDeletes;
-
-        if (is_null($usingSoftDeletes)) {
-            return $usingSoftDeletes = in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive(static::class));
-        }
-
-        return $usingSoftDeletes;
-    }
-
-    public function creator(): BelongsTo
-    {
-        return $this->belongsTo($this->getUserClass(), $this->columnCreatedBy);
-    }
-
-    public function editor(): BelongsTo
-    {
-        return $this->belongsTo($this->getUserClass(), $this->columnUpdatedBy);
-    }
-
-    public function destroyer(): BelongsTo
-    {
-        return $this->belongsTo($this->getUserClass(), $this->columnDeletedBy);
-    }
-
-    public function usesUserIdentities(): bool
-    {
-        return $this->userIdentities;
-    }
-
-    public function stopUserIdentities(): self
-    {
-        $this->userIdentities = false;
-
-        return $this;
-    }
-
-    public function startUserIdentities(): self
-    {
-        $this->userIdentities = true;
-
-        return $this;
-    }
-
     protected function getUserClass(): string
     {
-        if (get_class(auth()) === \Illuminate\Auth\Guard::class) {
+        if (get_class(auth()) === Guard::class) {
             return auth()->getProvider()->getModel();
         }
 

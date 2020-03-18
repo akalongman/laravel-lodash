@@ -9,6 +9,13 @@ use BeyondCode\SelfDiagnosis\Exceptions\InvalidConfigurationException;
 use Illuminate\Support\Arr;
 use Longman\LaravelLodash\SelfDiagnosis\ParsesNumValues;
 
+use function count;
+use function implode;
+use function ini_get;
+use function preg_match;
+
+use const PHP_EOL;
+
 class PhpIniOptions implements Check
 {
     use ParsesNumValues;

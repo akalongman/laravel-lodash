@@ -6,17 +6,29 @@ namespace Longman\LaravelLodash;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Longman\LaravelLodash\Commands\ClearAll;
+use Longman\LaravelLodash\Commands\DbClear;
+use Longman\LaravelLodash\Commands\DbDump;
+use Longman\LaravelLodash\Commands\DbRestore;
+use Longman\LaravelLodash\Commands\LogClear;
+use Longman\LaravelLodash\Commands\UserAdd;
+use Longman\LaravelLodash\Commands\UserPassword;
+
+use function array_keys;
+use function array_pad;
+use function preg_split;
+use function trim;
 
 class LodashServiceProvider extends ServiceProvider
 {
     protected $commands = [
-        'command.lodash.clear-all'     => \Longman\LaravelLodash\Commands\ClearAll::class,
-        'command.lodash.db.clear'      => \Longman\LaravelLodash\Commands\DbClear::class,
-        'command.lodash.db.dump'       => \Longman\LaravelLodash\Commands\DbDump::class,
-        'command.lodash.db.restore'    => \Longman\LaravelLodash\Commands\DbRestore::class,
-        'command.lodash.log.clear'     => \Longman\LaravelLodash\Commands\LogClear::class,
-        'command.lodash.user.add'      => \Longman\LaravelLodash\Commands\UserAdd::class,
-        'command.lodash.user.password' => \Longman\LaravelLodash\Commands\UserPassword::class,
+        'command.lodash.clear-all'     => ClearAll::class,
+        'command.lodash.db.clear'      => DbClear::class,
+        'command.lodash.db.dump'       => DbDump::class,
+        'command.lodash.db.restore'    => DbRestore::class,
+        'command.lodash.log.clear'     => LogClear::class,
+        'command.lodash.user.add'      => UserAdd::class,
+        'command.lodash.user.password' => UserPassword::class,
     ];
 
     public function boot(): void

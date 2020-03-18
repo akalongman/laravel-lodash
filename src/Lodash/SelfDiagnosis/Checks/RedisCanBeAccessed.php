@@ -9,6 +9,7 @@ use Illuminate\Contracts\Redis\Factory as RedisFactory;
 use Illuminate\Redis\Connections\PhpRedisClusterConnection;
 use Illuminate\Redis\Connections\PhpRedisConnection;
 use Illuminate\Support\Arr;
+use Throwable;
 
 class RedisCanBeAccessed implements Check
 {
@@ -51,7 +52,7 @@ class RedisCanBeAccessed implements Check
                     return false;
                 }
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->message = $e->getMessage();
 
             return false;

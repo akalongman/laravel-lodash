@@ -7,6 +7,8 @@ namespace Longman\LaravelLodash\Middlewares;
 use Closure;
 use Illuminate\Http\Request;
 
+use function strpos;
+
 class XssSecurity
 {
     public function handle(Request $request, Closure $next)

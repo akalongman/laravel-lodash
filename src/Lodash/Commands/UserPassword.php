@@ -6,6 +6,8 @@ namespace Longman\LaravelLodash\Commands;
 
 use Illuminate\Console\Command;
 
+use function compact;
+
 class UserPassword extends Command
 {
     /**

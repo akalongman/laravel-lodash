@@ -11,22 +11,6 @@ use Ramsey\Uuid\Uuid;
  */
 trait UuidAsPrimary
 {
-    protected static function bootUuidAsPrimary(): void
-    {
-        /** @var \Illuminate\Database\Eloquent\Model $model */
-        static::creating(static function ($model) {
-            $key_name = $model->getKeyName();
-
-            if (! empty($model->{$key_name})) {
-                return;
-            }
-
-            $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : Uuid::UUID_TYPE_RANDOM;
-
-            $model->attributes[$key_name] = self::generateUuid($uuidVersion);
-        });
-    }
-
     public static function generateUuid(int $version = Uuid::UUID_TYPE_RANDOM): string
     {
         switch ($version) {
@@ -54,5 +38,21 @@ trait UuidAsPrimary
     public function getKeyType(): string
     {
         return 'string';
+    }
+
+    protected static function bootUuidAsPrimary(): void
+    {
+        /** @var \Illuminate\Database\Eloquent\Model $model */
+        static::creating(static function ($model) {
+            $key_name = $model->getKeyName();
+
+            if (! empty($model->{$key_name})) {
+                return;
+            }
+
+            $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : Uuid::UUID_TYPE_RANDOM;
+
+            $model->attributes[$key_name] = self::generateUuid($uuidVersion);
+        });
     }
 }

@@ -10,6 +10,11 @@ use Illuminate\Console\Command;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+use function is_dir;
+use function mkdir;
+
+use const DIRECTORY_SEPARATOR;
+
 class DbDump extends Command
 {
     /**

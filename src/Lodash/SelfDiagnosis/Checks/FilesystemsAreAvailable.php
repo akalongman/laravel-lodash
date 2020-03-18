@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Throwable;
 
 use function app;
+use function count;
 use function implode;
 use function now;
 use function trans;
@@ -49,6 +50,23 @@ class FilesystemsAreAvailable implements Check
         return count($this->options) === 0;
     }
 
+    public function message(array $config): string
+    {
+        $options = [];
+        foreach ($this->options as $option => $value) {
+            $message = 'Disk "' . $option . '" is not available';
+            if (! empty($value)) {
+                $message .= '. Reason: ' . $value;
+            }
+
+            $options[] = $message;
+        }
+
+        return trans('lodash::checks.filesystems_are_available.message', [
+            'options' => implode(PHP_EOL, $options),
+        ]);
+    }
+
     private function checkDisk(string $disk): bool
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $diskInstance */
@@ -67,22 +85,5 @@ class FilesystemsAreAvailable implements Check
         }
 
         return $status;
-    }
-
-    public function message(array $config): string
-    {
-        $options = [];
-        foreach ($this->options as $option => $value) {
-            $message = 'Disk "' . $option . '" is not available';
-            if (! empty($value)) {
-                $message .= '. Reason: ' . $value;
-            }
-
-            $options[] = $message;
-        }
-
-        return trans('lodash::checks.filesystems_are_available.message', [
-            'options' => implode(PHP_EOL, $options),
-        ]);
     }
 }

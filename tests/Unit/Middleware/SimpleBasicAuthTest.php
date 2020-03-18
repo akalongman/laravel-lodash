@@ -11,16 +11,6 @@ use function config;
 
 class SimpleBasicAuthTest extends TestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        /** @var \Illuminate\Routing\Router $router */
-        $router = $app['router'];
-
-        $router->get('url1', static function () {
-            return 'ok';
-        })->middleware(SimpleBasicAuth::class);
-    }
-
     /** @test */
     public function it_should_return_access_denied_on_empty_credentials()
     {
@@ -72,5 +62,15 @@ class SimpleBasicAuthTest extends TestCase
         $response = $this->call('GET', 'url1', [], [], [], ['PHP_AUTH_USER' => 'testuser', 'PHP_AUTH_PW' => 'testpass']);
         $response->assertStatus(200);
         $response->assertSeeText('ok');
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        /** @var \Illuminate\Routing\Router $router */
+        $router = $app['router'];
+
+        $router->get('url1', static function () {
+            return 'ok';
+        })->middleware(SimpleBasicAuth::class);
     }
 }

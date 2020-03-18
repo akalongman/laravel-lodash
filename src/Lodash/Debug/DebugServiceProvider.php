@@ -7,6 +7,8 @@ namespace Longman\LaravelLodash\Debug;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
+use function in_array;
+
 class DebugServiceProvider extends ServiceProvider
 {
     public function boot(): void

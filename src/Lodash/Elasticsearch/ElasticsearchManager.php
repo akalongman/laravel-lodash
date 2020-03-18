@@ -7,6 +7,10 @@ namespace Longman\LaravelLodash\Elasticsearch;
 use Elasticsearch\Client;
 use InvalidArgumentException;
 
+use function array_keys;
+use function implode;
+use function reset;
+
 class ElasticsearchManager implements ElasticsearchManagerContract
 {
     /** @var \Elasticsearch\Client */
@@ -226,25 +230,6 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         $this->handleBulkError($responses, 'Error occurred during bulk index');
     }
 
-    /**
-     * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
-     */
-    protected function handleBulkError(array $responses, string $message)
-    {
-        $errors = [];
-        foreach ($responses['items'] as $item) {
-            $row = $item;
-            $row = reset($row);
-            if (empty($row['error'])) {
-                continue;
-            }
-
-            $errors[] = $row['error'];
-        }
-
-        throw new ElasticsearchException($message, $errors);
-    }
-
     public function refreshIndex(string $index_name): void
     {
         if (! $this->isEnabled()) {
@@ -378,5 +363,24 @@ class ElasticsearchManager implements ElasticsearchManagerContract
     public function isEnabled(): bool
     {
         return $this->enabled;
+    }
+
+    /**
+     * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
+     */
+    protected function handleBulkError(array $responses, string $message)
+    {
+        $errors = [];
+        foreach ($responses['items'] as $item) {
+            $row = $item;
+            $row = reset($row);
+            if (empty($row['error'])) {
+                continue;
+            }
+
+            $errors[] = $row['error'];
+        }
+
+        throw new ElasticsearchException($message, $errors);
     }
 }

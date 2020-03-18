@@ -7,6 +7,10 @@ namespace Longman\LaravelLodash\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+use function array_unshift;
+use function explode;
+use function str_replace;
+
 /**
  * @method $this limitPerGroupViaSubQuery(int $limit = 10)
  * @method $this limitPerGroupViaUnion(int $limit = 10, array $pivotColumns = [])
@@ -79,12 +83,6 @@ trait ManyToManyPreload
             ->where($numAlias, '<=', $limit);
 
         return $this;
-    }
-
-    private function quoteColumn(string $column): string
-    {
-
-        return '`' . str_replace('.', '`.`', $column) . '`';
     }
 
     public function scopeLimitPerGroupViaUnion(Builder $query, int $limit = 10, array $pivotColumns = []): Model
@@ -176,5 +174,11 @@ trait ManyToManyPreload
         $query->setQuery($unionQuery1);
 
         return $this;
+    }
+
+    private function quoteColumn(string $column): string
+    {
+
+        return '`' . str_replace('.', '`.`', $column) . '`';
     }
 }

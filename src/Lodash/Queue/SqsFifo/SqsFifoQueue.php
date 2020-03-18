@@ -10,6 +10,10 @@ use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Arr;
 
+use function count;
+use function is_null;
+use function sha1;
+
 class SqsFifoQueue extends SqsQueue
 {
     /** @var array */
@@ -68,21 +72,6 @@ class SqsFifoQueue extends SqsQueue
         return $messageId;
     }
 
-    protected function getMessageGroupId(): string
-    {
-        $messageGroupId = session()->getId();
-        if (empty($messageGroupId)) {
-            $messageGroupId = str_random(40);
-        }
-
-        return $messageGroupId;
-    }
-
-    protected function getMessageDeduplicationId(string $payload): string
-    {
-        return config('app.debug') ? str_random(40) : sha1($payload);
-    }
-
     /**
      * FIFO queues don't support per-message delays, only per-queue delays
      *
@@ -117,5 +106,20 @@ class SqsFifoQueue extends SqsQueue
                 $queue
             );
         }
+    }
+
+    protected function getMessageGroupId(): string
+    {
+        $messageGroupId = session()->getId();
+        if (empty($messageGroupId)) {
+            $messageGroupId = str_random(40);
+        }
+
+        return $messageGroupId;
+    }
+
+    protected function getMessageDeduplicationId(string $payload): string
+    {
+        return config('app.debug') ? str_random(40) : sha1($payload);
     }
 }

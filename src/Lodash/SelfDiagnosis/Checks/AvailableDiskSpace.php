@@ -9,6 +9,12 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Longman\LaravelLodash\SelfDiagnosis\ParsesNumValues;
 
+use function count;
+use function disk_free_space;
+use function implode;
+
+use const PHP_EOL;
+
 class AvailableDiskSpace implements Check
 {
     use ParsesNumValues;

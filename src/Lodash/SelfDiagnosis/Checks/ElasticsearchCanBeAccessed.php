@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\SelfDiagnosis\Checks;
 
 use BeyondCode\SelfDiagnosis\Checks\Check;
+use Throwable;
 
 class ElasticsearchCanBeAccessed implements Check
 {
@@ -41,7 +42,7 @@ class ElasticsearchCanBeAccessed implements Check
 
                 return false;
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->message = $e->getMessage();
 
             return false;

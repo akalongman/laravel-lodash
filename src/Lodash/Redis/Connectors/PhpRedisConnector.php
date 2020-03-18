@@ -13,8 +13,39 @@ use LogicException;
 use Redis;
 use RedisArray;
 
+use function array_map;
+use function array_merge;
+use function defined;
+
 class PhpRedisConnector extends BasePhpRedisConnector
 {
+    /**
+     * Create a new clustered PhpRedis connection.
+     *
+     * @param  array $config
+     * @param  array $clusterOptions
+     * @param  array $options
+     * @return \Illuminate\Redis\Connections\PhpRedisClusterConnection
+     */
+    public function connectToCluster(array $config, array $clusterOptions, array $options)
+    {
+        $options = array_merge($options, $clusterOptions, Arr::pull($config, 'options', []));
+
+        // Use native Redis clustering
+        if (Arr::get($options, 'cluster') === 'redis') {
+            return new PhpRedisClusterConnection($this->createRedisClusterInstance(
+                array_map([$this, 'buildClusterConnectionString'], $config),
+                $options
+            ));
+        }
+
+        // Use client-side sharding
+        return new PhpRedisClusterConnection($this->createRedisArrayInstance(
+            array_map([$this, 'buildRedisArrayConnectionString'], $config),
+            $options
+        ));
+    }
+
     /**
      * Create the Redis client instance.
      *
@@ -57,33 +88,6 @@ class PhpRedisConnector extends BasePhpRedisConnector
                 $client->setOption(Redis::OPT_SCAN, (string) Redis::SCAN_RETRY);
             }
         });
-    }
-
-    /**
-     * Create a new clustered PhpRedis connection.
-     *
-     * @param  array $config
-     * @param  array $clusterOptions
-     * @param  array $options
-     * @return \Illuminate\Redis\Connections\PhpRedisClusterConnection
-     */
-    public function connectToCluster(array $config, array $clusterOptions, array $options)
-    {
-        $options = array_merge($options, $clusterOptions, Arr::pull($config, 'options', []));
-
-        // Use native Redis clustering
-        if (Arr::get($options, 'cluster') === 'redis') {
-            return new PhpRedisClusterConnection($this->createRedisClusterInstance(
-                array_map([$this, 'buildClusterConnectionString'], $config),
-                $options
-            ));
-        }
-
-        // Use client-side sharding
-        return new PhpRedisClusterConnection($this->createRedisArrayInstance(
-            array_map([$this, 'buildRedisArrayConnectionString'], $config),
-            $options
-        ));
     }
 
     /**

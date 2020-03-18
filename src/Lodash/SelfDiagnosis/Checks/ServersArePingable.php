@@ -12,6 +12,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JJG\Ping;
 
+use function is_array;
+use function is_string;
+use function parse_url;
+
 class ServersArePingable extends BaseServersArePingable implements Check
 {
     /**

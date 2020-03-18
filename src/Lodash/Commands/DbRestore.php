@@ -8,6 +8,9 @@ use DB;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 
+use function file_exists;
+use function file_get_contents;
+
 class DbRestore extends Command
 {
     use ConfirmableTrait;

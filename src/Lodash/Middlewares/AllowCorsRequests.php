@@ -10,6 +10,12 @@ use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+use function implode;
+use function parse_url;
+use function str_replace;
+use function strpos;
+use function strtok;
+
 use const PHP_URL_HOST;
 
 class AllowCorsRequests

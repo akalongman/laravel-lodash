@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Redis;
 
+use Illuminate\Redis\Connectors\PredisConnector;
 use Illuminate\Redis\RedisManager as BaseRedisManager;
 
 class RedisManager extends BaseRedisManager
@@ -17,7 +18,7 @@ class RedisManager extends BaseRedisManager
     {
         switch ($this->driver) {
             case 'predis':
-                return new \Illuminate\Redis\Connectors\PredisConnector();
+                return new PredisConnector();
             case 'phpredis':
                 return new Connectors\PhpRedisConnector();
         }

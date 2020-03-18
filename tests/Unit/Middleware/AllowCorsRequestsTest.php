@@ -12,20 +12,6 @@ use function implode;
 
 class AllowCorsRequestsTest extends TestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        /** @var \Illuminate\Routing\Router $router */
-        $router = $app['router'];
-
-        $router->get('url1', static function () {
-            return 'ok';
-        })->middleware(AllowCorsRequests::class);
-
-        $router->options('url1', static function () {
-            return 'ok';
-        })->middleware(AllowCorsRequests::class);
-    }
-
     /** @test */
     public function it_should_return_correct_headers_on_options()
     {
@@ -117,5 +103,19 @@ class AllowCorsRequestsTest extends TestCase
         // Whitelisted origin
         $response = $this->call('GET', 'url1', [], [], [], ['HTTP_Origin' => config('app.url', 'http://localhost')]);
         $response->assertStatus(200);
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        /** @var \Illuminate\Routing\Router $router */
+        $router = $app['router'];
+
+        $router->get('url1', static function () {
+            return 'ok';
+        })->middleware(AllowCorsRequests::class);
+
+        $router->options('url1', static function () {
+            return 'ok';
+        })->middleware(AllowCorsRequests::class);
     }
 }

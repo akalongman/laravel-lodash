@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\SelfDiagnosis;
 
+use function floor;
+use function pow;
+use function sprintf;
+use function strlen;
+use function strtolower;
+use function trim;
+
 trait ParsesNumValues
 {
     private function toBytes(string $value): int

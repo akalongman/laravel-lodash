@@ -39,14 +39,14 @@ class DbDump extends Command
      */
     public function handle(): void
     {
-        $db_conn = $this->getDatabase();
-        $connection = DB::connection($db_conn);
-        $db_name = $connection->getConfig('database');
-        $filename = $db_name . '_' . Carbon::now()->format('Ymd_His') . '.sql';
+        $dbConn = $this->getDatabase();
+        $connection = DB::connection($dbConn);
+        $dbName = $connection->getConfig('database');
+        $filename = $dbName . '_' . Carbon::now()->format('Ymd_His') . '.sql';
 
         $path = $this->getPath($filename);
 
-        $process = new Process('mysqldump --host=' . $connection->getConfig('host') . ' --user=' . $connection->getConfig('username') . ' --password=' . $connection->getConfig('password') . ' ' . $db_name . ' > ' . $path);
+        $process = new Process('mysqldump --host=' . $connection->getConfig('host') . ' --user=' . $connection->getConfig('username') . ' --password=' . $connection->getConfig('password') . ' ' . $dbName . ' > ' . $path);
         $process->run();
 
         // Executes after the command finishes

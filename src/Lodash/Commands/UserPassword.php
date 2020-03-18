@@ -65,9 +65,9 @@ class UserPassword extends Command
                 $password = $this->secret('Please enter new password');
             }
         }
-        $crypted_password = bcrypt($password);
+        $cryptedPassword = bcrypt($password);
         $user->update([
-            'password' => $crypted_password,
+            'password' => $cryptedPassword,
         ]);
 
         $this->comment('User "' . $email . '" successfully updated');

@@ -14,16 +14,16 @@ trait UuidAsPrimary
     public static function generateUuid(int $version = Uuid::UUID_TYPE_RANDOM): string
     {
         switch ($version) {
-            default:
-                $uuid = Uuid::uuid4()->toString();
-                break;
-
             case 1:
                 $uuid = Uuid::uuid1()->toString();
                 break;
 
             case 3:
                 $uuid = Uuid::uuid3()->toString();
+                break;
+
+            default:
+                $uuid = Uuid::uuid4()->toString();
                 break;
         }
 
@@ -44,15 +44,15 @@ trait UuidAsPrimary
     {
         /** @var \Illuminate\Database\Eloquent\Model $model */
         static::creating(static function ($model) {
-            $key_name = $model->getKeyName();
+            $keyName = $model->getKeyName();
 
-            if (! empty($model->{$key_name})) {
+            if (! empty($model->{$keyName})) {
                 return;
             }
 
             $uuidVersion = ! empty($model->uuidVersion) ? $model->uuidVersion : Uuid::UUID_TYPE_RANDOM;
 
-            $model->attributes[$key_name] = self::generateUuid($uuidVersion);
+            $model->attributes[$keyName] = self::generateUuid($uuidVersion);
         });
     }
 }

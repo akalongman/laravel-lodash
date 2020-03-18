@@ -42,14 +42,14 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         return $this;
     }
 
-    public function createIndex(string $index_name, array $settings, array $mappings): void
+    public function createIndex(string $indexName, array $settings, array $mappings): void
     {
         if (! $this->isEnabled()) {
             return;
         }
 
         $params = [
-            'index' => $index_name,
+            'index' => $indexName,
             'body'  => [
                 'settings' => $settings,
                 'mappings' => $mappings,
@@ -94,19 +94,19 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         }
     }
 
-    public function deleteIndexesByAlias(string $alias_name): void
+    public function deleteIndexesByAlias(string $aliasName): void
     {
         if (! $this->isEnabled()) {
             return;
         }
 
         $params = [
-            'name' => $alias_name,
+            'name' => $aliasName,
         ];
 
         $response = $this->client->indices()->getAlias($params);
         if (empty($response)) {
-            throw new ElasticsearchException('Can not get alias ' . $alias_name);
+            throw new ElasticsearchException('Can not get alias ' . $aliasName);
         }
 
         $indexes = array_keys($response);
@@ -116,7 +116,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
     /**
      * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
-    public function addDocumentsToIndex(string $index_name, string $type_name, array $items)
+    public function addDocumentsToIndex(string $indexName, string $typeName, array $items)
     {
         if (! $this->isEnabled()) {
             return;
@@ -135,8 +135,8 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         foreach ($items as $id => $item) {
             $params['body'][] = [
                 'create' => [
-                    '_index' => $index_name,
-                    '_type'  => $type_name,
+                    '_index' => $indexName,
+                    '_type'  => $typeName,
                     '_id'    => $id,
                 ],
             ];
@@ -155,7 +155,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
     /**
      * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
-    public function updateDocumentsInIndex(string $index_name, string $type_name, array $items)
+    public function updateDocumentsInIndex(string $indexName, string $typeName, array $items)
     {
         if (! $this->isEnabled()) {
             return;
@@ -174,8 +174,8 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         foreach ($items as $id => $item) {
             $params['body'][] = [
                 'update' => [
-                    '_index' => $index_name,
-                    '_type'  => $type_name,
+                    '_index' => $indexName,
+                    '_type'  => $typeName,
                     '_id'    => $id,
                 ],
             ];
@@ -194,7 +194,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
     /**
      * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
-    public function addOrUpdateDocumentsInIndex(string $index_name, string $type_name, array $items)
+    public function addOrUpdateDocumentsInIndex(string $indexName, string $typeName, array $items)
     {
         if (! $this->isEnabled()) {
             return;
@@ -213,8 +213,8 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         foreach ($items as $id => $item) {
             $params['body'][] = [
                 'index' => [
-                    '_index' => $index_name,
-                    '_type'  => $type_name,
+                    '_index' => $indexName,
+                    '_type'  => $typeName,
                     '_id'    => $id,
                 ],
             ];
@@ -230,14 +230,14 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         $this->handleBulkError($responses, 'Error occurred during bulk index');
     }
 
-    public function refreshIndex(string $index_name): void
+    public function refreshIndex(string $indexName): void
     {
         if (! $this->isEnabled()) {
             return;
         }
 
         $params = [
-            'index' => $index_name,
+            'index' => $indexName,
         ];
 
         if (! empty($this->timeout)) {
@@ -267,14 +267,14 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         return $results;
     }
 
-    public function switchIndexAlias(string $alias_name, string $index_name): void
+    public function switchIndexAlias(string $aliasName, string $indexName): void
     {
         if (! $this->isEnabled()) {
             return;
         }
 
         $params = [
-            'name' => $alias_name,
+            'name' => $aliasName,
         ];
 
         $exists = $this->client->indices()->existsAlias($params);
@@ -283,12 +283,12 @@ class ElasticsearchManager implements ElasticsearchManagerContract
         // If alias already exists remove from indexes
         if ($exists) {
             $params = [
-                'name' => $alias_name,
+                'name' => $aliasName,
             ];
 
             $response = $this->client->indices()->getAlias($params);
             if (empty($response)) {
-                throw new ElasticsearchException('Can not get alias ' . $alias_name);
+                throw new ElasticsearchException('Can not get alias ' . $aliasName);
             }
 
             $indexes = array_keys($response);
@@ -297,7 +297,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
                 $actions[] = [
                     'remove' => [
                         'index' => $index,
-                        'alias' => $alias_name,
+                        'alias' => $aliasName,
                     ],
                 ];
             }
@@ -305,8 +305,8 @@ class ElasticsearchManager implements ElasticsearchManagerContract
 
         $actions[] = [
             'add' => [
-                'index' => $index_name,
-                'alias' => $alias_name,
+                'index' => $indexName,
+                'alias' => $aliasName,
             ],
         ];
 

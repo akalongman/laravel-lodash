@@ -38,7 +38,7 @@ class PhpIniOptions implements Check
     {
         $options = Arr::get($config, 'options', []);
         foreach ($options as $option => $value) {
-            $actual_value = ini_get($option);
+            $actualValue = ini_get($option);
 
             preg_match('#([><=]{0,2})(.*)#', $value, $match);
 
@@ -48,45 +48,45 @@ class PhpIniOptions implements Check
 
             $prefix = $match[1] ?? null;
             switch ($prefix) {
-                default:
-                    if ($value !== $actual_value) {
-                        $this->options[$option] = $actual_value;
-                    }
-                    break;
-
                 case '>':
-                    $actual_bytes = $this->toBytes($actual_value);
+                    $actualBytes = $this->toBytes($actualValue);
                     $bytes = $this->toBytes($match[2]);
 
-                    if (! ($actual_bytes > $bytes)) {
-                        $this->options[$option] = $actual_value;
+                    if (! ($actualBytes > $bytes)) {
+                        $this->options[$option] = $actualValue;
                     }
                     break;
 
                 case '>=':
-                    $actual_bytes = $this->toBytes($actual_value);
+                    $actualBytes = $this->toBytes($actualValue);
                     $bytes = $this->toBytes($match[2]);
 
-                    if (! ($actual_bytes >= $bytes)) {
-                        $this->options[$option] = $actual_value;
+                    if (! ($actualBytes >= $bytes)) {
+                        $this->options[$option] = $actualValue;
                     }
                     break;
 
                 case '<':
-                    $actual_bytes = $this->toBytes($actual_value);
+                    $actualBytes = $this->toBytes($actualValue);
                     $bytes = $this->toBytes($match[2]);
 
-                    if (! ($actual_bytes < $bytes)) {
-                        $this->options[$option] = $actual_value;
+                    if (! ($actualBytes < $bytes)) {
+                        $this->options[$option] = $actualValue;
                     }
                     break;
 
                 case '<=':
-                    $actual_bytes = $this->toBytes($actual_value);
+                    $actualBytes = $this->toBytes($actualValue);
                     $bytes = $this->toBytes($match[2]);
 
-                    if (! ($actual_bytes <= $bytes)) {
-                        $this->options[$option] = $actual_value;
+                    if (! ($actualBytes <= $bytes)) {
+                        $this->options[$option] = $actualValue;
+                    }
+                    break;
+
+                default:
+                    if ($value !== $actualValue) {
+                        $this->options[$option] = $actualValue;
                     }
                     break;
             }

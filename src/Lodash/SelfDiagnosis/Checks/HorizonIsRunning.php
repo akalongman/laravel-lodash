@@ -29,7 +29,8 @@ class HorizonIsRunning implements Check
 
     public function check(array $config): bool
     {
-        if (! $masters = $this->supervisorRepository->all()) {
+        $masters = $this->supervisorRepository->all();
+        if (! $masters) {
             return false;
         }
 

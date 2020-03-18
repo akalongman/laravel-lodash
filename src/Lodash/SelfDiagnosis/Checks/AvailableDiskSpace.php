@@ -38,17 +38,17 @@ class AvailableDiskSpace implements Check
         $paths = Arr::get($config, 'paths', []);
 
         foreach ($paths as $path => $value) {
-            $actual_space = disk_free_space($path);
-            if ($actual_space === false) {
+            $actualSpace = disk_free_space($path);
+            if ($actualSpace === false) {
                 throw new InvalidArgumentException('Can not get free space amount for path: ' . $path);
             }
-            $actual_space = (int) $actual_space;
+            $actualSpace = (int) $actualSpace;
             $bytes = $this->toBytes($value);
-            if ($actual_space >= $bytes) {
+            if ($actualSpace >= $bytes) {
                 continue;
             }
 
-            $this->options[$path] = $actual_space;
+            $this->options[$path] = $actualSpace;
         }
 
         return count($this->options) === 0;

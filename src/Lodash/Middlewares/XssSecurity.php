@@ -16,11 +16,11 @@ class XssSecurity
         /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
 
-        $request_uri = $request->getUri();
+        $requestUri = $request->getUri();
         $excluded = config('lodash.xss.exclude_uris');
         if (! empty($excluded)) {
             foreach ($excluded as $uri) {
-                if (strpos($request_uri, $uri) !== false) {
+                if (strpos($requestUri, $uri) !== false) {
                     return $response;
                 }
             }

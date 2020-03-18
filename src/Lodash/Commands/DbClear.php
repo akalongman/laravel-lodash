@@ -39,8 +39,8 @@ class DbClear extends Command
             return;
         }
 
-        $db_conn = $this->getDatabase();
-        $connection = DB::connection($db_conn);
+        $dbConn = $this->getDatabase();
+        $connection = DB::connection($dbConn);
 
         $database = $connection->getDatabaseName();
         $tables = $connection->select('SHOW TABLES');

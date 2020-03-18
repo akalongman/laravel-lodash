@@ -44,15 +44,15 @@ class AllowCorsRequests
             return $this->response($request, 'Origin is invalid', Response::HTTP_BAD_REQUEST);
         }
 
-        $allowed_origins = config('lodash.cors.allow_origins', []);
-        $current_app = $this->parseUrl((string) config('app.url', ''));
+        $allowedOrigins = config('lodash.cors.allow_origins', []);
+        $currentApp = $this->parseUrl((string) config('app.url', ''));
         if (! empty($host)) {
-            $allowed_origins[] = $current_app;
+            $allowedOrigins[] = $currentApp;
         }
 
         $found = false;
-        foreach ($allowed_origins as $allowed_origin) {
-            if ($host === $allowed_origin || Str::endsWith($host, '.' . $allowed_origin)) {
+        foreach ($allowedOrigins as $allowedOrigin) {
+            if ($host === $allowedOrigin || Str::endsWith($host, '.' . $allowedOrigin)) {
                 $found = true;
                 break;
             }
@@ -68,16 +68,16 @@ class AllowCorsRequests
         }
 
         if ($request->method() === Request::METHOD_OPTIONS) {
-            $allowed_headers = config('lodash.cors.allow_headers', []);
-            $allowed_methods = config('lodash.cors.allow_methods', []);
+            $allowedHeaders = config('lodash.cors.allow_headers', []);
+            $allowedMethods = config('lodash.cors.allow_methods', []);
 
             $response = $this->response($request, 'Allowed', Response::HTTP_OK);
 
             $response->headers->set('Access-Control-Allow-Origin', $origin);
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
 
-            $response->headers->set('Access-Control-Allow-Methods', implode(',', $allowed_methods));
-            $response->headers->set('Access-Control-Allow-Headers', implode(',', $allowed_headers));
+            $response->headers->set('Access-Control-Allow-Methods', implode(',', $allowedMethods));
+            $response->headers->set('Access-Control-Allow-Headers', implode(',', $allowedHeaders));
             $response->headers->set('Access-Control-Max-Age', '1728000');
 
             return $response;

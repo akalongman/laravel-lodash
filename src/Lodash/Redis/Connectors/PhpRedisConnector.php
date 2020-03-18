@@ -155,9 +155,6 @@ class PhpRedisConnector extends BasePhpRedisConnector
     protected function getSerializerFromConfig(string $serializer): int
     {
         switch ($serializer) {
-            default:
-                $flag = Redis::SERIALIZER_NONE;
-                break;
             case 'igbinary':
                 if (! defined('Redis::SERIALIZER_IGBINARY')) {
                     throw new InvalidArgumentException('Error: phpredis was not compiled with igbinary support!');
@@ -166,6 +163,9 @@ class PhpRedisConnector extends BasePhpRedisConnector
                 break;
             case 'php':
                 $flag = Redis::SERIALIZER_PHP;
+                break;
+            default:
+                $flag = Redis::SERIALIZER_NONE;
                 break;
         }
 

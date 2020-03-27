@@ -41,30 +41,6 @@ class RedisTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_predis_connection()
-    {
-        $redis = $this->createConnection('predis', [
-            'cluster' => false,
-            'default' => [
-                'host'         => getenv('REDIS_HOST') ?: '127.0.0.1',
-                'port'         => getenv('REDIS_PORT') ?: 6379,
-                'database'     => 5,
-                'options'      => ['prefix' => 'lodash:'],
-                'timeout'      => 0.5,
-                'read_timeout' => 1.5,
-            ],
-        ]);
-
-        /** @var \Predis\Client $client */
-        $client = $redis->connection()->client();
-
-        $redis->set('country_predis', 'asdfg');
-
-        $this->assertInstanceOf(Client::class, $client);
-        $this->assertEquals($redis->get('country_predis'), 'asdfg');
-    }
-
-    /** @test */
     public function it_should_set_custom_serializer_for_cluster()
     {
         $redis = $this->createConnection('phpredis', [

@@ -29,17 +29,16 @@
     ],
     "require": {
         "php": "^7.3",
-        "laravel/framework": "^6.7"
+        "laravel/framework": "^7.3"
     },
     "require-dev": {
-        "aws/aws-sdk-php": "^3.112",
+        "aws/aws-sdk-php": "^3.133",
         "elasticsearch/elasticsearch": "^6.7",
-        "beyondcode/laravel-self-diagnosis": "^1.3",
-        "longman/php-code-style": "^4.0",
-        "mockery/mockery": "~1.2",
-        "orchestra/testbench": "^4.2",
-        "phpunit/phpunit": "~8.4",
-        "predis/predis": "^1.1"
+        "beyondcode/laravel-self-diagnosis": "^1.4",
+        "longman/php-code-style": "^4.5",
+        "mockery/mockery": "~1.3",
+        "orchestra/testbench": "^5.1",
+        "phpunit/phpunit": "~8.5"
     },
     "autoload": {
         "psr-4": {

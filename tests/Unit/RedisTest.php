@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use Longman\LaravelLodash\Redis\RedisManager;
-use Predis\Client;
 use Redis;
 use RedisArray;
 

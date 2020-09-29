@@ -29,7 +29,7 @@
     ],
     "require": {
         "php": "^7.3",
-        "laravel/framework": "^7.3"
+        "laravel/framework": "^7.3|^8.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.133",

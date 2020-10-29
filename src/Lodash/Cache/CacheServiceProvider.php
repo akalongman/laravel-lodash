@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Cache;
 
 use Illuminate\Cache\MemcachedConnector;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class CacheServiceProvider extends ServiceProvider
@@ -34,6 +35,8 @@ class CacheServiceProvider extends ServiceProvider
         $this->app->singleton('memcached.connector', static function () {
             return new MemcachedConnector();
         });
+
+        $this->app->singleton(RateLimiter::class);
     }
 
     /**
@@ -47,6 +50,7 @@ class CacheServiceProvider extends ServiceProvider
             'cache',
             'cache.store',
             'memcached.connector',
+            RateLimiter::class,
         ];
     }
 }

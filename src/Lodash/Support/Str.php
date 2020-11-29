@@ -6,7 +6,6 @@ namespace Longman\LaravelLodash\Support;
 
 use ForceUTF8\Encoding;
 use Illuminate\Support\Str as BaseStr;
-
 use RuntimeException;
 
 use function class_exists;
@@ -24,9 +23,7 @@ use function sort;
 use function str_repeat;
 use function str_replace;
 use function stripslashes;
-use function strlen;
 use function strtolower;
-use function substr;
 use function trim;
 use function ucwords;
 

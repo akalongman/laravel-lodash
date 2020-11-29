@@ -103,7 +103,7 @@ class SqsFifoQueue extends SqsQueue
                 $this->sqs,
                 $response['Messages'][0],
                 $this->connectionName,
-                $queue
+                $queue,
             );
         }
     }

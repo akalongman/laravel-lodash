@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
 use function preg_match;

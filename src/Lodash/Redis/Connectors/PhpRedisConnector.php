@@ -35,14 +35,14 @@ class PhpRedisConnector extends BasePhpRedisConnector
         if (Arr::get($options, 'cluster') === 'redis') {
             return new PhpRedisClusterConnection($this->createRedisClusterInstance(
                 array_map([$this, 'buildClusterConnectionString'], $config),
-                $options
+                $options,
             ));
         }
 
         // Use client-side sharding
         return new PhpRedisClusterConnection($this->createRedisArrayInstance(
             array_map([$this, 'buildRedisArrayConnectionString'], $config),
-            $options
+            $options,
         ));
     }
 
@@ -57,7 +57,7 @@ class PhpRedisConnector extends BasePhpRedisConnector
         return tap(new Redis(), function (Redis $client) use ($config) {
             if ($client instanceof RedisFacade) {
                 throw new LogicException(
-                    'Please remove or rename the Redis facade alias in your "app" configuration file in order to avoid collision with the PHP Redis extension.'
+                    'Please remove or rename the Redis facade alias in your "app" configuration file in order to avoid collision with the PHP Redis extension.',
                 );
             }
 

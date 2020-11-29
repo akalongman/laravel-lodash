@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Http\Resources;
 
-use Longman\LaravelLodash\Http\Resources\Response\PaginatedResourceResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection as BaseResourceCollection;
+use Longman\LaravelLodash\Http\Resources\Response\PaginatedResourceResponse;
 
 use function is_null;
 

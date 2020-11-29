@@ -33,12 +33,12 @@ class SqsFifoConnector extends SqsConnector
             new SqsClient($config),
             $config['queue'],
             $config['prefix'] ?? '',
-            $options
+            $options,
         ) : new SqsQueue(
             new SqsClient($config),
             $config['queue'],
             $config['prefix'] ?? '',
-            $options
+            $options,
         );
 
         return $queue;

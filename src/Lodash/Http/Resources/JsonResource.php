@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Http\Resources;
 
-use Longman\LaravelLodash\Eloquent\UuidAsPrimaryContract;
-use Longman\LaravelLodash\Http\Resources\Response\ResourceResponse;
-use Illuminate\Database\Eloquent\Model;
-use Longman\LaravelLodash\Support\Arr;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource as BaseResource;
+use Longman\LaravelLodash\Eloquent\UuidAsPrimaryContract;
+use Longman\LaravelLodash\Http\Resources\Response\ResourceResponse;
+use Longman\LaravelLodash\Support\Arr;
 use ReflectionClass;
 
 use function array_keys;

@@ -60,7 +60,7 @@ trait ManyToManyPreload
 
         // Apply mysql variables
         $newQuery->addSelect($connection->raw(
-            "@num := if(@group = {$this->quoteColumn($queryKeyColumn)}, @num+1, 1) as `{$numAlias}`, @group := {$this->quoteColumn($queryKeyColumn)} as `{$groupAlias}`"
+            "@num := if(@group = {$this->quoteColumn($queryKeyColumn)}, @num+1, 1) as `{$numAlias}`, @group := {$this->quoteColumn($queryKeyColumn)} as `{$groupAlias}`",
         ));
 
         // Make sure first order clause is the group order

@@ -8,14 +8,14 @@ use Longman\LaravelLodash\Http\Resources\JsonResource;
 
 class UserResource extends JsonResource
 {
-    protected array $transformMapping = [
+    protected static array $transformMapping = [
         'name'             => 'name',
         'mail'             => 'mail',
         'home_address'     => 'homeAddress',
         'calculated_field' => ['calculatedField' => 'getCalculatedField'],
     ];
 
-    public function __construct(?User $resource = null)
+    public function __construct(User $resource)
     {
         $this->resource = $resource;
     }

@@ -20,16 +20,16 @@ trait TransformsData
      * In array key should be a fields name from database,
      * value can be just name (if getter exists for that name, or array [fieldName => getterMethod])
      */
-    protected array $transformMapping = [];
+    protected static array $transformMapping = [];
 
-    public function getTransformFields(): array
+    public static function getTransformFields(): array
     {
-        return $this->transformMapping;
+        return static::$transformMapping;
     }
 
-    public function transformToApi(TransformableContract $model): array
+    public static function transformToApi(TransformableContract $model): array
     {
-        $fields = $this->getTransformFields();
+        $fields = static::getTransformFields();
         $hiddenProperties = $model->getHidden();
         $transformed = [];
         foreach ($fields as $internalField => $transformValue) {
@@ -37,7 +37,7 @@ trait TransformsData
                 continue;
             }
 
-            [$key, $value] = $this->parseKeyValue($internalField, $transformValue, $model);
+            [$key, $value] = self::parseKeyValue($internalField, $transformValue, $model);
 
             $transformed[$key] = $value;
         }
@@ -45,10 +45,10 @@ trait TransformsData
         return $transformed;
     }
 
-    public function transformToInternal(array $fields): array
+    public static function transformToInternal(array $fields): array
     {
         $modelTransformedFields = [];
-        foreach ($this->getTransformFields() as $key => $transformField) {
+        foreach (self::getTransformFields() as $key => $transformField) {
             if (is_array($transformField)) {
                 $modelTransformedFields[key($transformField)] = $key;
             } else {
@@ -66,7 +66,7 @@ trait TransformsData
         return $transformed;
     }
 
-    private function parseKeyValue(string $internalField, $transformValue, TransformableContract $model): array
+    private static function parseKeyValue(string $internalField, $transformValue, TransformableContract $model): array
     {
         if (is_array($transformValue)) {
             $key = key($transformValue);

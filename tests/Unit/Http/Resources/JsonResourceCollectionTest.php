@@ -68,7 +68,7 @@ class JsonResourceCollectionTest extends TestCase
             'homeAddress'     => 'Custom Address 1',
             'calculatedField' => 7,
         ];
-        $transformed = (new UserResource())->transformToInternal($array);
+        $transformed = UserResource::transformToInternal($array);
 
         $this->assertSame([
             'name'             => 'Custom Name 1',

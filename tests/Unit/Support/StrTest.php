@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Support;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Longman\LaravelLodash\Support\Str;
 use stdClass;
 use Tests\Unit\TestCase;
@@ -13,8 +12,6 @@ use function mb_strlen;
 
 class StrTest extends TestCase
 {
-    use DatabaseTransactions;
-
     /** @test */
     public function add_zeros(): void
     {

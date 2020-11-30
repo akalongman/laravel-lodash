@@ -6,5 +6,7 @@ namespace Longman\LaravelLodash\Http\Resources;
 
 interface TransformableContract
 {
+    public function getKey();
+
     public function getHidden();
 }

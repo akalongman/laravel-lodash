@@ -15,11 +15,4 @@ class ArrayResource extends JsonResource
     {
         return $this->resource;
     }
-
-    public function withResourceType(string $resourceType): self
-    {
-        $this->resourceType = $resourceType;
-
-        return $this;
-    }
 }

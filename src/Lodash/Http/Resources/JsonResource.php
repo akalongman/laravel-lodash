@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Http\Resources;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource as BaseResource;
 use Longman\LaravelLodash\Eloquent\UuidAsPrimaryContract;
@@ -78,9 +77,16 @@ abstract class JsonResource extends BaseResource
         return (new ResourceResponse($this))->toResponse($request);
     }
 
+    public function withResourceType(string $resourceType): self
+    {
+        $this->resourceType = $resourceType;
+
+        return $this;
+    }
+
     protected function getResourceData(): array
     {
-        if ($this->resource instanceof Model) {
+        if ($this->resource instanceof TransformableContract) {
             $data = [
                 'id'         => $this->getResourceId(),
                 'type'       => $this->getResourceType(),
@@ -136,7 +142,7 @@ abstract class JsonResource extends BaseResource
 
     protected function getResourceType(): string
     {
-        if (! $this->resource instanceof Model) {
+        if (! $this->resource instanceof TransformableContract) {
             return $this->resourceType;
         }
 

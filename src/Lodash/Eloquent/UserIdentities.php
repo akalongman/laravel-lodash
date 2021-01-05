@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Eloquent;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -151,8 +152,8 @@ trait UserIdentities
             return get_class($user);
         }
 
-        if (class_exists(\App\Models\User::class)) {
-            return \App\Models\User::class;
+        if (class_exists(User::class)) {
+            return User::class;
         }
 
         throw new InvalidArgumentException('User class can not detected');

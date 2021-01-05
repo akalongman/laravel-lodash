@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Eloquent;
 
-use Illuminate\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use InvalidArgumentException;
 
+use function auth;
+use function class_exists;
+use function class_uses_recursive;
 use function get_class;
 use function in_array;
 use function is_null;
@@ -29,10 +32,10 @@ trait UserIdentities
     /**
      * Define an inverse one-to-one or many relationship.
      *
-     * @param  string $related
-     * @param  string $foreignKey
-     * @param  string $ownerKey
-     * @param  string $relation
+     * @param string $related
+     * @param string $foreignKey
+     * @param string $ownerKey
+     * @param string $relation
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     abstract public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null);
@@ -138,10 +141,20 @@ trait UserIdentities
 
     protected function getUserClass(): string
     {
-        if (get_class(auth()) === Guard::class) {
-            return auth()->getProvider()->getModel();
+        $provider = auth()->guard()->getProvider();
+        if ($provider) {
+            return $provider->getModel();
         }
 
-        return auth()->guard()->getProvider()->getModel();
+        $user = auth()->guard()->user();
+        if ($user) {
+            return get_class($user);
+        }
+
+        if (class_exists(\App\Models\User::class)) {
+            return \App\Models\User::class;
+        }
+
+        throw new InvalidArgumentException('User class can not detected');
     }
 }

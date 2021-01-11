@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 use function __;
 use function array_diff;
 use function array_keys;
+use function config;
 use function method_exists;
 use function preg_replace;
 
@@ -35,7 +36,12 @@ trait RestrictsExtraAttributes
         if (! empty($extraAttributes)) {
             $messages = [];
             foreach ($extraAttributes as $attribute) {
-                $messages[] = __('validation.restrict_extra_attributes', ['attribute' => $attribute]);
+                $message = __('validation.restrict_extra_attributes', ['attribute' => $attribute]);
+                if (config('app.debug')) {
+                    $message .= ' Request Class: ' . static::class;
+                }
+
+                $messages[] = $message;
             }
 
             throw ValidationException::withMessages($messages);

@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 
 use function __;
+use function app;
 use function array_diff;
 use function array_keys;
 use function config;
@@ -67,6 +68,8 @@ trait RestrictsExtraAttributes
             return $this->possibleAttributes();
         }
 
-        return array_keys($this->rules());
+        $rules = app()->call([$this, 'rules']);
+
+        return array_keys($rules);
     }
 }

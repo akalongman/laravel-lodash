@@ -7,6 +7,7 @@ namespace Longman\LaravelLodash\Http\Resources;
 use LogicException;
 use Longman\LaravelLodash\Support\Str;
 
+use function app;
 use function get_class;
 use function in_array;
 use function is_array;
@@ -17,8 +18,9 @@ trait TransformsData
 {
     /**
      * Fields transform mapping.
-     * In array key should be a fields name from database,
-     * value can be just name (if getter exists for that name, or array [fieldName => getterMethod])
+     * In array key should be a column name from database,
+     * value can be just name (if getter exists for that name, or array [fieldName => getterMethod]).
+     * If getterMethod is defined in the resource class, it will be called, otherwise, model's method will be used.
      */
     protected static array $transformMapping = [];
 
@@ -70,13 +72,20 @@ trait TransformsData
     {
         if (is_array($transformValue)) {
             $key = key($transformValue);
-            $value = $model->{$transformValue[$key]}();
+            $method = $transformValue[$key];
+            if (method_exists(static::class, $method)) { // Check if getter exists in the resource class
+                $value = app()->call([static::class, $method]);
+            } elseif (method_exists($model, $method)) { // Check if getter exists in the model class
+                $value = $model->$method();
+            } else {
+                throw new LogicException('Method ' . $method . ' does not available not for resource ' . static::class . ', not for model ' . get_class($model));
+            }
         } else {
             // Try to find getter for external field
             $method = 'get' . Str::snakeCaseToCamelCase($transformValue);
             if (method_exists($model, $method)) {
                 $key = $transformValue;
-                $value = $model->{$method}();
+                $value = $model->$method();
             } else {
                 // Call getter for internal field
                 $method = 'get' . Str::snakeCaseToCamelCase($internalField);
@@ -84,7 +93,7 @@ trait TransformsData
                     throw new LogicException('Field ' . $internalField . ' getter (' . $method . ') does not available for model ' . get_class($model));
                 }
                 $key = $transformValue;
-                $value = $model->{$method}();
+                $value = $model->$method();
             }
         }
 

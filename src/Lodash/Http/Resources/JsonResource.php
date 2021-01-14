@@ -132,6 +132,10 @@ abstract class JsonResource extends BaseResource
 
             /** @var \Longman\LaravelLodash\Http\Resources\JsonResource $resource */
             $resource = $this->$methodName();
+            if (is_null($resource)) {
+                continue;
+            }
+
             $resource->withRelations($remainingRelations);
 
             $relations[$currentRelation] = $resource;

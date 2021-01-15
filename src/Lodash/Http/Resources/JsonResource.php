@@ -14,6 +14,7 @@ use ReflectionClass;
 
 use function array_keys;
 use function array_merge;
+use function array_merge_recursive;
 use function is_null;
 use function method_exists;
 use function ucfirst;
@@ -80,6 +81,13 @@ abstract class JsonResource extends BaseResource
     public function withResourceType(string $resourceType): self
     {
         $this->resourceType = $resourceType;
+
+        return $this;
+    }
+
+    public function appendAdditional(array $data): self
+    {
+        $this->additional = array_merge_recursive($this->additional, $data);
 
         return $this;
     }

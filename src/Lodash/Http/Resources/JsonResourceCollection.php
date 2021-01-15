@@ -7,6 +7,7 @@ namespace Longman\LaravelLodash\Http\Resources;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection as BaseResourceCollection;
 use Longman\LaravelLodash\Http\Resources\Response\PaginatedResourceResponse;
 
+use function array_merge_recursive;
 use function is_null;
 
 class JsonResourceCollection extends BaseResourceCollection
@@ -27,6 +28,13 @@ class JsonResourceCollection extends BaseResourceCollection
         foreach ($this->collection as $item) {
             $item->withRelations($relations);
         }
+
+        return $this;
+    }
+
+    public function appendAdditional(array $data): self
+    {
+        $this->additional = array_merge_recursive($this->additional, $data);
 
         return $this;
     }

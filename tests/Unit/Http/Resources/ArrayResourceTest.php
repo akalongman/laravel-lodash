@@ -30,4 +30,22 @@ class ArrayResourceTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertSame($expected, $response->content());
     }
+
+    /** @test */
+    public function it_should_return_unecaped_json(): void
+    {
+        $resource = new ArrayResource([
+            'aa'  => 'ერთი',
+            'aa2' => 'ორი',
+            'aa3' => 'სამი',
+        ]);
+
+        $request = app(Request::class);
+        $response = $resource->additional(['custom' => '1'])->withResourceType('customType')->toResponse($request);
+
+        $expected = '{"data":{"id":null,"type":"customType","attributes":{"aa":"ერთი","aa2":"ორი","aa3":"სამი"}},"custom":"1"}';
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertSame($expected, $response->content());
+    }
 }

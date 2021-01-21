@@ -20,7 +20,7 @@ class ResourceResponse extends BaseResourceResponse
 {
     public function toResponse($request): JsonResponse
     {
-        $jsonOptions = JSON_UNESCAPED_SLASHES & JSON_UNESCAPED_UNICODE;
+        $jsonOptions = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
         return tap(response()->json(
             $this->wrap(

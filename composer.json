@@ -59,6 +59,7 @@
         "process-timeout": 3600
     },
     "suggest": {
+        "ext-json": "Needed for using resources",
         "ext-redis": "Needed for using phpredis",
         "ext-igbinary": "Needed for speed up Redis/Memcached data serialization and reduce serialized data size",
         "longman/laravel-multilang": "Adds multilanguage functional to Laravel >=5.5",

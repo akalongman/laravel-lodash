@@ -7,7 +7,7 @@ namespace Longman\LaravelLodash\Http\Resources;
 use LogicException;
 use Longman\LaravelLodash\Support\Str;
 
-use function app;
+use function call_user_func_array;
 use function get_class;
 use function in_array;
 use function is_array;
@@ -21,7 +21,6 @@ trait TransformsData
      * In array key should be a column name from database,
      * value can be just name (if getter exists for that name, or array [fieldName => getterMethod]).
      * If static getterMethod is defined in the resource class, it will be called and as a first argument will be passed TransformableContract $model,
-     * other arguments will be rsolved via dependency injection.
      * Otherwise, model's method will be used.
      */
     protected static array $transformMapping = [];
@@ -76,7 +75,7 @@ trait TransformsData
             $key = key($transformValue);
             $method = $transformValue[$key];
             if (method_exists(static::class, $method)) { // Check if getter exists in the resource class
-                $value = app()->call([static::class, $method], ['model' => $model]);
+                $value = call_user_func_array([static::class, $method], ['model' => $model]);
             } elseif (method_exists($model, $method)) { // Check if getter exists in the model class
                 $value = $model->$method();
             } else {

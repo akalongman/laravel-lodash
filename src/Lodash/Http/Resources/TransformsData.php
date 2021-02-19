@@ -25,18 +25,34 @@ trait TransformsData
      */
     protected static array $transformMapping = [];
 
+    /**
+     * Fields list for hiding in output.
+     * Array values should be a column name from database,
+     */
+    protected static array $hideInOutput = [];
+
     public static function getTransformFields(): array
     {
         return static::$transformMapping;
+    }
+
+    public static function getHideInOutput(): array
+    {
+        return static::$hideInOutput;
     }
 
     public static function transformToApi(TransformableContract $model): array
     {
         $fields = static::getTransformFields();
         $hiddenProperties = $model->getHidden();
+        $hideInOutput = static::getHideInOutput();
         $transformed = [];
         foreach ($fields as $internalField => $transformValue) {
             if (in_array($internalField, $hiddenProperties, true)) {
+                continue;
+            }
+
+            if (in_array($internalField, $hideInOutput, true)) {
                 continue;
             }
 

@@ -10,209 +10,247 @@ use Tests\Unit\TestCase;
 class DeclensionsTest extends TestCase
 {
     /**
-     * @dataProvider dataForDeclension3()
+     * @dataProvider dataForDeclensions()
      * @test
      */
-    public function turn_words_declension3(string $word, string $turned): void
+    public function turn_words_declensions(string $word, array $declensions): void
     {
-        $this->assertSame($turned, Declensions::applyDeclension($word, Declensions::DECLENSION_3));
-    }
-
-    /**
-     * @dataProvider dataForDeclension4()
-     * @test
-     */
-    public function turn_words_declension4(string $word, string $turned): void
-    {
-        $this->assertSame($turned, Declensions::applyDeclension($word, Declensions::DECLENSION_4));
+        foreach ($declensions as $declension => $turned) {
+            $this->assertSame($turned, Declensions::applyDeclension($word, $declension));
+        }
     }
 
     /**
      * Data provider
      *
-     * @see turn_words_declension3()
+     * @see turn_words_declensions()
      */
-    public function dataForDeclension3(): array
+    public function dataForDeclensions(): array
     {
         return [
-            'ად' => [
+            'მოჰამმად'        => [
                 'word'   => 'მოჰამმად',
-                'turned' => 'მოჰამმადს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'მოჰამმადს',
+                    Declensions::DECLENSION_4 => 'მოჰამმადის',
+                ],
             ],
-            'ან' => [
+            'მარქარიან'       => [
                 'word'   => 'მარქარიან',
-                'turned' => 'მარქარიანს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'მარქარიანს',
+                    Declensions::DECLENSION_4 => 'მარქარიანის',
+                ],
             ],
-            'დე' => [
+            'მენაბდე'         => [
                 'word'   => 'მენაბდე',
-                'turned' => 'მენაბდეს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'მენაბდეს',
+                    Declensions::DECLENSION_4 => 'მენაბდის',
+                ],
             ],
-            'დი' => [
+            'მაჰდი'           => [
                 'word'   => 'მაჰდი',
-                'turned' => 'მაჰდის',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'მაჰდის',
+                    Declensions::DECLENSION_4 => 'მაჰდის',
+                ],
             ],
-            'ვა' => [
+            'სიჭინავა'        => [
                 'word'   => 'სიჭინავა',
-                'turned' => 'სიჭინავას',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'სიჭინავას',
+                    Declensions::DECLENSION_4 => 'სიჭინავას',
+                ],
             ],
-            'ვი' => [
+            'ბარნოვი'         => [
                 'word'   => 'ბარნოვი',
-                'turned' => 'ბარნოვს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ბარნოვს',
+                    Declensions::DECLENSION_4 => 'ბარნოვის',
+                ],
             ],
-            'ია' => [
+            'დანელია'         => [
                 'word'   => 'დანელია',
-                'turned' => 'დანელიას',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'დანელიას',
+                    Declensions::DECLENSION_4 => 'დანელიას',
+                ],
             ],
-            'კა' => [
+            'ოდინაკა'         => [
                 'word'   => 'ოდინაკა',
-                'turned' => 'ოდინაკას',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ოდინაკას',
+                    Declensions::DECLENSION_4 => 'ოდინაკას',
+                ],
             ],
-            'კი' => [
+            'კანდელაკი'       => [
                 'word'   => 'კანდელაკი',
-                'turned' => 'კანდელაკს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'კანდელაკს',
+                    Declensions::DECLENSION_4 => 'კანდელაკის',
+                ],
             ],
-            'კო' => [
+            'ბოიჩენკო'        => [
                 'word'   => 'ბოიჩენკო',
-                'turned' => 'ბოიჩენკოს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ბოიჩენკოს',
+                    Declensions::DECLENSION_4 => 'ბოიჩენკოს',
+                ],
             ],
-            'ლი' => [
+            'ქევხიშვილი'      => [
                 'word'   => 'ქევხიშვილი',
-                'turned' => 'ქევხიშვილს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ქევხიშვილს',
+                    Declensions::DECLENSION_4 => 'ქევხიშვილის',
+                ],
             ],
-            'ნი' => [
+            'გელბახიანი'      => [
                 'word'   => 'გელბახიანი',
-                'turned' => 'გელბახიანს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'გელბახიანს',
+                    Declensions::DECLENSION_4 => 'გელბახიანის',
+                ],
             ],
-            'რი' => [
+            'თაბაგარი'        => [
                 'word'   => 'თაბაგარი',
-                'turned' => 'თაბაგარს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'თაბაგარს',
+                    Declensions::DECLENSION_4 => 'თაბაგარის',
+                ],
             ],
-            'სი' => [
+            'მეღვინეთუხუცესი' => [
                 'word'   => 'მეღვინეთუხუცესი',
-                'turned' => 'მეღვინეთუხუცესს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'მეღვინეთუხუცესს',
+                    Declensions::DECLENSION_4 => 'მეღვინეთუხუცესის',
+                ],
             ],
-            'ტი' => [
+            'ღლონტი'          => [
                 'word'   => 'ღლონტი',
-                'turned' => 'ღლონტს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ღლონტს',
+                    Declensions::DECLENSION_4 => 'ღლონტის',
+                ],
             ],
-            'უა' => [
+            'თოდუა'           => [
                 'word'   => 'თოდუა',
-                'turned' => 'თოდუას',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'თოდუას',
+                    Declensions::DECLENSION_4 => 'თოდუას',
+                ],
             ],
-            'ში' => [
+            'ტუღუში'          => [
                 'word'   => 'ტუღუში',
-                'turned' => 'ტუღუშს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ტუღუშს',
+                    Declensions::DECLENSION_4 => 'ტუღუშის',
+                ],
             ],
-            'ცი' => [
+            'ახალკაცი'        => [
                 'word'   => 'ახალკაცი',
-                'turned' => 'ახალკაცს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ახალკაცს',
+                    Declensions::DECLENSION_4 => 'ახალკაცის',
+                ],
             ],
-            'ძე' => [
+            'კიკაბიძე'        => [
                 'word'   => 'კიკაბიძე',
-                'turned' => 'კიკაბიძეს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'კიკაბიძეს',
+                    Declensions::DECLENSION_4 => 'კიკაბიძის',
+                ],
             ],
-            'ხი' => [
+            'მესხი'           => [
                 'word'   => 'მესხი',
-                'turned' => 'მესხს',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'მესხს',
+                    Declensions::DECLENSION_4 => 'მესხის',
+                ],
             ],
-            '*'  => [
+            'ბჰაილალბჰაი'     => [
                 'word'   => 'ბჰაილალბჰაი',
-                'turned' => 'ბჰაილალბჰაის',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ბჰაილალბჰაის',
+                    Declensions::DECLENSION_4 => 'ბჰაილალბჰაის',
+                ],
             ],
-        ];
-    }
-
-    /**
-     * Data provider
-     *
-     * @see turn_words_declension4()
-     */
-    public function dataForDeclension4(): array
-    {
-        return [
-            'ად' => [
-                'word'   => 'მოჰამმად',
-                'turned' => 'მოჰამმადის',
+            'ადმინისტრაცია'   => [
+                'word'   => 'ადმინისტრაცია',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ადმინისტრაციას',
+                    Declensions::DECLENSION_4 => 'ადმინისტრაციის',
+                ],
             ],
-            'ან' => [
-                'word'   => 'მარქარიან',
-                'turned' => 'მარქარიანის',
+            'თანამშრომელი'    => [
+                'word'   => 'თანამშრომელი',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'თანამშრომელს',
+                    Declensions::DECLENSION_4 => 'თანამშრომლის',
+                ],
             ],
-            'დე' => [
-                'word'   => 'მენაბდე',
-                'turned' => 'მენაბდის',
+            'თანაშემწე'       => [
+                'word'   => 'თანაშემწე',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'თანაშემწეს',
+                    Declensions::DECLENSION_4 => 'თანაშემწის',
+                ],
             ],
-            'დი' => [
-                'word'   => 'მაჰდი',
-                'turned' => 'მაჰდის',
+            'ინჟინერი'        => [
+                'word'   => 'ინჟინერი',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ინჟინერს',
+                    Declensions::DECLENSION_4 => 'ინჟინრის',
+                ],
             ],
-            'ვა' => [
-                'word'   => 'სიჭინავა',
-                'turned' => 'სიჭინავას',
+            'ოფიცერი'         => [
+                'word'   => 'ოფიცერი',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ოფიცერს',
+                    Declensions::DECLENSION_4 => 'ოფიცრის',
+                ],
             ],
-            'ვი' => [
-                'word'   => 'ბარნოვი',
-                'turned' => 'ბარნოვის',
+            'ბიბლიოთეკა'      => [
+                'word'   => 'ბიბლიოთეკა',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ბიბლიოთეკას',
+                    Declensions::DECLENSION_4 => 'ბიბლიოთეკის',
+                ],
             ],
-            'ია' => [
-                'word'   => 'დანელია',
-                'turned' => 'დანელიას',
+            'სკოლა'           => [
+                'word'   => 'სკოლა',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'სკოლას',
+                    Declensions::DECLENSION_4 => 'სკოლის',
+                ],
             ],
-            'კა' => [
-                'word'   => 'ოდინაკა',
-                'turned' => 'ოდინაკას',
+            'მოადგილე'        => [
+                'word'   => 'მოადგილე',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'მოადგილეს',
+                    Declensions::DECLENSION_4 => 'მოადგილის',
+                ],
             ],
-            'კი' => [
-                'word'   => 'კანდელაკი',
-                'turned' => 'კანდელაკის',
+            'გამგე'           => [
+                'word'   => 'გამგე',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'გამგეს',
+                    Declensions::DECLENSION_4 => 'გამგის',
+                ],
             ],
-            'კო' => [
-                'word'   => 'ბოიჩენკო',
-                'turned' => 'ბოიჩენკოს',
+            'დამლაგებელი'     => [
+                'word'   => 'დამლაგებელი',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'დამლაგებელს',
+                    Declensions::DECLENSION_4 => 'დამლაგებლის',
+                ],
             ],
-            'ლი' => [
-                'word'   => 'ქევხიშვილი',
-                'turned' => 'ქევხიშვილის',
-            ],
-            'ნი' => [
-                'word'   => 'გელბახიანი',
-                'turned' => 'გელბახიანის',
-            ],
-            'რი' => [
-                'word'   => 'თაბაგარი',
-                'turned' => 'თაბაგარის',
-            ],
-            'სი' => [
-                'word'   => 'მეღვინეთუხუცესი',
-                'turned' => 'მეღვინეთუხუცესის',
-            ],
-            'ტი' => [
-                'word'   => 'ღლონტი',
-                'turned' => 'ღლონტის',
-            ],
-            'უა' => [
-                'word'   => 'თოდუა',
-                'turned' => 'თოდუას',
-            ],
-            'ში' => [
-                'word'   => 'ტუღუში',
-                'turned' => 'ტუღუშის',
-            ],
-            'ცი' => [
-                'word'   => 'ახალკაცი',
-                'turned' => 'ახალკაცის',
-            ],
-            'ძე' => [
-                'word'   => 'კიკაბიძე',
-                'turned' => 'კიკაბიძის',
-            ],
-            'ხი' => [
-                'word'   => 'მესხი',
-                'turned' => 'მესხის',
-            ],
-            '*'  => [
-                'word'   => 'ბჰაილალბჰაი',
-                'turned' => 'ბჰაილალბჰაის',
+            'ბუღალტერი'       => [
+                'word'   => 'ბუღალტერი',
+                'turned' => [
+                    Declensions::DECLENSION_3 => 'ბუღალტერს',
+                    Declensions::DECLENSION_4 => 'ბუღალტრის',
+                ],
             ],
         ];
     }

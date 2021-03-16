@@ -108,7 +108,7 @@ abstract class JsonResource extends BaseResource
             ];
         } else {
             $data = [
-                'id'         => null,
+                'id'         => $this->getResourceId(),
                 'type'       => $this->getResourceType(),
                 'attributes' => $this->getTransformed(),
             ];
@@ -163,12 +163,16 @@ abstract class JsonResource extends BaseResource
         return $reflection->getShortName();
     }
 
-    protected function getResourceId(): string
+    protected function getResourceId(): ?string
     {
         if ($this->resource instanceof UuidAsPrimaryContract) {
             return $this->resource->getUidString();
         }
 
-        return (string) $this->resource->getKey();
+        if ($this->resource instanceof TransformableContract) {
+            return (string) $this->resource->getKey();
+        }
+
+        return null;
     }
 }

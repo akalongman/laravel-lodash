@@ -33,7 +33,7 @@
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.133",
-        "beyondcode/laravel-self-diagnosis": "^1.4",
+        "beyondcode/laravel-self-diagnosis": "dev-master",
         "elasticsearch/elasticsearch": "^6.7",
         "longman/php-code-style": "^5.0",
         "mockery/mockery": "~1.3",

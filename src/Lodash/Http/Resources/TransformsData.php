@@ -67,7 +67,7 @@ trait TransformsData
     public static function transformToInternal(array $fields): array
     {
         $modelTransformedFields = [];
-        foreach (self::getTransformFields() as $key => $transformField) {
+        foreach (static::getTransformFields() as $key => $transformField) {
             if (is_array($transformField)) {
                 $modelTransformedFields[key($transformField)] = $key;
             } else {

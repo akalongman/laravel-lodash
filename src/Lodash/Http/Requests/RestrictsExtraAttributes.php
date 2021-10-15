@@ -55,7 +55,7 @@ trait RestrictsExtraAttributes
 
         $return = [];
         foreach ($data as $key => $value) {
-            $key = preg_replace('#\.\d+#', '.*', $key);
+            $key = preg_replace('#\.\d+#', '.*', (string) $key);
             $return[] = $key;
         }
 

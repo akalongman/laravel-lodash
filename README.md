@@ -24,6 +24,7 @@ __Note:__ For Laravel older than 5.8 use the package version 1.*
         - [Redis client side sharding](#redis-client-side-sharding)
         - [AWS SQS Fifo Queue](#aws-sqs-fifo-queue)
         - [Elasticsearch Integration](#elasticsearch-integration)
+        - [Check if installed packages are in sync with composer.lock](#check-if-installed-packages-are-in-sync-with-composer.lock)
     - [Helper Functions](#helper-functions)
     - [Extended Classes](#extended-classes)
         - [Request Class](#request-class)
@@ -305,6 +306,32 @@ implement `ElasticsearchQueryContract` and you can pass object to `performSearch
     $results = $elasticsearch_manager->performSearch($query); 
 
 ```
+
+## Check if installed packages are in sync with composer.lock
+
+For development purposes, it is recommended to check if vendor folder is in sync with composer.lock file.
+
+For this, in composer.json you have to add script `ComposerScripts::createPackageHash`:
+```json
+    . . .
+    "post-autoload-dump": [
+        "Longman\\LaravelLodash\\Composer\\ComposerScripts::createPackageHash",
+        . . .
+    ],
+    . . .
+```
+
+And in the `AppServiceProvider::boot` add these lines:
+
+```php
+    . . .
+    if (config('app.debug')) {
+        $checker = new ComposerChecker(base_path());
+        $checker->checkHash();
+    }
+    . . .
+```
+
 
 ### Helper Functions
 

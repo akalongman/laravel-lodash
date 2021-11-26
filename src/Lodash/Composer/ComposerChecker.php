@@ -40,6 +40,10 @@ class ComposerChecker
 
     public function validateHash(): bool
     {
+        if (! file_exists($this->getHashPath())) {
+            return false;
+        }
+
         $hash = $this->getContent($this->getHashPath());
         $currentHash = $this->getHash($this->getContent($this->getJsonPath()));
 

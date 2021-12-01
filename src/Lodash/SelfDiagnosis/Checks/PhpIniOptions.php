@@ -11,8 +11,11 @@ use Longman\LaravelLodash\SelfDiagnosis\ParsesNumValues;
 
 use function count;
 use function implode;
+use function in_array;
 use function ini_get;
 use function preg_match;
+
+use function trans;
 
 use const PHP_EOL;
 
@@ -39,6 +42,7 @@ class PhpIniOptions implements Check
         $options = Arr::get($config, 'options', []);
         foreach ($options as $option => $value) {
             $actualValue = ini_get($option);
+            $isMemoryMeasurement = in_array($option, ['memory_limit'], true);
 
             preg_match('#([><=]{0,2})(.*)#', $value, $match);
 
@@ -49,7 +53,7 @@ class PhpIniOptions implements Check
             $prefix = $match[1] ?? null;
             switch ($prefix) {
                 case '>':
-                    $actualBytes = $this->toBytes($actualValue);
+                    $actualBytes = $this->toBytes($actualValue, $isMemoryMeasurement);
                     $bytes = $this->toBytes($match[2]);
 
                     if (! ($actualBytes > $bytes)) {
@@ -58,7 +62,7 @@ class PhpIniOptions implements Check
                     break;
 
                 case '>=':
-                    $actualBytes = $this->toBytes($actualValue);
+                    $actualBytes = $this->toBytes($actualValue, $isMemoryMeasurement);
                     $bytes = $this->toBytes($match[2]);
 
                     if (! ($actualBytes >= $bytes)) {
@@ -67,7 +71,7 @@ class PhpIniOptions implements Check
                     break;
 
                 case '<':
-                    $actualBytes = $this->toBytes($actualValue);
+                    $actualBytes = $this->toBytes($actualValue, $isMemoryMeasurement);
                     $bytes = $this->toBytes($match[2]);
 
                     if (! ($actualBytes < $bytes)) {
@@ -76,7 +80,7 @@ class PhpIniOptions implements Check
                     break;
 
                 case '<=':
-                    $actualBytes = $this->toBytes($actualValue);
+                    $actualBytes = $this->toBytes($actualValue, $isMemoryMeasurement);
                     $bytes = $this->toBytes($match[2]);
 
                     if (! ($actualBytes <= $bytes)) {

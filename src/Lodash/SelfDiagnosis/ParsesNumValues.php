@@ -4,18 +4,30 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\SelfDiagnosis;
 
+use JetBrains\PhpStorm\ArrayShape;
+
+use function explode;
+use function file_get_contents;
 use function floor;
 use function pow;
 use function sprintf;
+use function str_replace;
 use function strlen;
 use function strtolower;
 use function trim;
 
 trait ParsesNumValues
 {
-    private function toBytes(string $value): int
+    private function toBytes(string $value, bool $measuringMemory = false): int
     {
         $value = trim($value);
+        if ($measuringMemory && $value === '-1') {
+            $info = $this->getSystemMemInfo();
+            if ($info) {
+                $value = $info['MemTotal'];
+            }
+        }
+
         $last = strtolower($value[strlen($value) - 1]);
 
         $value = (int) $value;
@@ -32,6 +44,27 @@ trait ParsesNumValues
         }
 
         return $value;
+    }
+
+    #[ArrayShape(['MemTotal' => 'string', 'MemFree' => 'string', 'MemAvailable' => 'string'])]
+    private function getSystemMemInfo(): ?array
+    {
+        $meminfo = @file_get_contents('/proc/meminfo');
+        if (! $meminfo) {
+            return null;
+        }
+        $data = explode("\n", $meminfo);
+        $meminfo = [];
+        foreach ($data as $line) {
+            if (empty($line)) {
+                continue;
+            }
+
+            [$key, $val] = explode(':', $line);
+            $meminfo[$key] = str_replace(['B', ' '], '', trim($val));
+        }
+
+        return $meminfo;
     }
 
     private function fromBytes(int $bytes, int $decimals = 2): string

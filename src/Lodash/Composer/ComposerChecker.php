@@ -34,7 +34,7 @@ class ComposerChecker
     public function checkHash(): void
     {
         if (! $this->validateHash()) {
-            throw new RuntimeException('The lock file is not up to date with the vendor folder, it is recommended that you run `composer install`.');
+            throw new RuntimeException('The vendor folder is not in sync with the composer.lock file, it is recommended that you run `composer install`.');
         }
     }
 

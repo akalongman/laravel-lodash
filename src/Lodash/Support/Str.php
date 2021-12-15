@@ -74,7 +74,7 @@ class Str extends BaseStr
         return $string;
     }
 
-    public static function substrReplace(string $string, string $replacement, int $start, ?int $length = null): string
+    public static function substrReplaceUnicode(string $string, string $replacement, int $start, ?int $length = null): string
     {
         $strLength = self::length($string);
 
@@ -105,7 +105,7 @@ class Str extends BaseStr
             return $value;
         }
 
-        return self::substrReplace($value, $separator, $limit / 2, $length - $limit);
+        return self::substrReplaceUnicode($value, $separator, $limit / 2, $length - $limit);
     }
 
     public static function toDotNotation(string $value): string

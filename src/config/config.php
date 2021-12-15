@@ -7,26 +7,6 @@ return [
         'ips' => explode(',', env('DEBUG_IP_LIST', '')), // IP list for enabling debug mode
     ],
 
-    'cors' => [
-        'allow_origins' => explode(',', env('CORS_ALLOW_ORIGINS', '')), // Allowed domains
-        'allow_methods' => [ // Allowed request methods
-            'HEAD',
-            'GET',
-            'POST',
-            'OPTIONS',
-            'PUT',
-            'PATCH',
-            'DELETE',
-        ],
-        'allow_headers' => [ // Allowed headers
-            'Origin',
-            'X-Requested-With',
-            'Content-Type',
-            'Accept',
-            'Authorization',
-        ],
-    ],
-
     'xss' => [
         'exclude_uris'           => [], // Excluded URI's for Xss middleware
         'x_frame_options'        => 'DENY', // X-Frame-Options header value

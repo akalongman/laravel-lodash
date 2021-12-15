@@ -19,14 +19,4 @@ class Arr extends BaseArr
 
         return $ret;
     }
-
-    public static function undot($array): array
-    {
-        $result = [];
-        foreach ($array as $item) {
-            static::set($result, $item, []);
-        }
-
-        return $result;
-    }
 }

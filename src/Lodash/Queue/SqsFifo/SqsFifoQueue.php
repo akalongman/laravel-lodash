@@ -16,8 +16,7 @@ use function sha1;
 
 class SqsFifoQueue extends SqsQueue
 {
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Create a new Amazon SQS queue instance.

@@ -6,12 +6,13 @@ namespace Longman\LaravelLodash\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-use function strpos;
+use function str_contains;
 
 class XssSecurity
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
@@ -20,7 +21,7 @@ class XssSecurity
         $excluded = config('lodash.xss.exclude_uris');
         if (! empty($excluded)) {
             foreach ($excluded as $uri) {
-                if (strpos($requestUri, $uri) !== false) {
+                if (str_contains($requestUri, $uri)) {
                     return $response;
                 }
             }

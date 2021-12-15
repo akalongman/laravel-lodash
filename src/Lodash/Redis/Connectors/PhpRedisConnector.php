@@ -19,15 +19,7 @@ use function defined;
 
 class PhpRedisConnector extends BasePhpRedisConnector
 {
-    /**
-     * Create a new clustered PhpRedis connection.
-     *
-     * @param  array $config
-     * @param  array $clusterOptions
-     * @param  array $options
-     * @return \Illuminate\Redis\Connections\PhpRedisClusterConnection
-     */
-    public function connectToCluster(array $config, array $clusterOptions, array $options)
+    public function connectToCluster(array $config, array $clusterOptions, array $options): PhpRedisClusterConnection
     {
         $options = array_merge($options, $clusterOptions, Arr::pull($config, 'options', []));
 
@@ -46,13 +38,7 @@ class PhpRedisConnector extends BasePhpRedisConnector
         ));
     }
 
-    /**
-     * Create the Redis client instance.
-     *
-     * @param  array $config
-     * @return \Redis
-     */
-    protected function createClient(array $config)
+    protected function createClient(array $config): Redis
     {
         return tap(new Redis(), function (Redis $client) use ($config) {
             if ($client instanceof RedisFacade) {
@@ -90,25 +76,12 @@ class PhpRedisConnector extends BasePhpRedisConnector
         });
     }
 
-    /**
-     * Build a PhpRedis hosts array.
-     *
-     * @param  array $server
-     * @return string
-     */
-    protected function buildRedisArrayConnectionString(array $server)
+    protected function buildRedisArrayConnectionString(array $server): string
     {
         return $server['host'] . ':' . $server['port'];
     }
 
-    /**
-     * Create a new redis array instance.
-     *
-     * @param  array $servers
-     * @param  array $options
-     * @return \RedisArray
-     */
-    protected function createRedisArrayInstance(array $servers, array $options)
+    protected function createRedisArrayInstance(array $servers, array $options): RedisArray
     {
         $client = new RedisArray($servers, Arr::only($options, [
             'function',
@@ -145,13 +118,6 @@ class PhpRedisConnector extends BasePhpRedisConnector
         return $client;
     }
 
-    /**
-     * Resolve serializer
-     *
-     * @param  string $serializer
-     * @return int
-     * @throws \InvalidArgumentException
-     */
     protected function getSerializerFromConfig(string $serializer): int
     {
         switch ($serializer) {

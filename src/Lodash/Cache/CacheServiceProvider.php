@@ -15,7 +15,7 @@ class CacheServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    protected $defer = true;
+    protected bool $defer = true;
 
     /**
      * Register the service provider.
@@ -44,7 +44,7 @@ class CacheServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [
             'cache',

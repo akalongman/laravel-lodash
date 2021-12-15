@@ -8,7 +8,7 @@ use Exception;
 
 class ElasticsearchException extends Exception
 {
-    protected $errors = [];
+    protected array $errors = [];
 
     public function __construct(string $message = '', array $errors = [])
     {

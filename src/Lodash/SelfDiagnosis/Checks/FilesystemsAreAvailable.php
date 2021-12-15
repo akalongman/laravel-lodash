@@ -19,11 +19,8 @@ use const PHP_EOL;
 
 class FilesystemsAreAvailable implements Check
 {
-    /** @var \Illuminate\Filesystem\FilesystemManager */
-    private $filesystemManager;
-
-    /** @var array */
-    private $options = [];
+    private FilesystemManager $filesystemManager;
+    private array $options = [];
 
     public function name(array $config): string
     {

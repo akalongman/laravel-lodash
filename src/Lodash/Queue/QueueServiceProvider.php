@@ -16,7 +16,7 @@ class QueueServiceProvider extends BaseQueueServiceProvider
      * @param  \Illuminate\Queue\QueueManager $manager
      * @return void
      */
-    public function registerConnectors($manager)
+    public function registerConnectors($manager): void
     {
         foreach (['Null', 'Sync', 'Database', 'Redis', 'Beanstalkd', 'Sqs', 'SqsFifo'] as $connector) {
             $this->{"register{$connector}Connector"}($manager);

@@ -25,10 +25,10 @@ use function is_null;
  */
 trait UserIdentities
 {
-    protected $userIdentities = true;
-    protected $columnCreatedBy = 'created_by';
-    protected $columnUpdatedBy = 'updated_by';
-    protected $columnDeletedBy = 'deleted_by';
+    protected bool $userIdentities = true;
+    protected string $columnCreatedBy = 'created_by';
+    protected string $columnUpdatedBy = 'updated_by';
+    protected string $columnDeletedBy = 'deleted_by';
 
     /**
      * Define an inverse one-to-one or many relationship.

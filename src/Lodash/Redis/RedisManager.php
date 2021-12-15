@@ -6,6 +6,8 @@ namespace Longman\LaravelLodash\Redis;
 
 use Illuminate\Redis\Connectors\PredisConnector;
 use Illuminate\Redis\RedisManager as BaseRedisManager;
+use InvalidArgumentException;
+use Longman\LaravelLodash\Redis\Connectors\PhpRedisConnector;
 
 class RedisManager extends BaseRedisManager
 {
@@ -14,13 +16,12 @@ class RedisManager extends BaseRedisManager
      *
      * @return \Longman\LaravelLodash\Redis\Connectors\PhpRedisConnector|\Illuminate\Redis\Connectors\PredisConnector
      */
-    protected function connector()
+    protected function connector(): PredisConnector|PhpRedisConnector
     {
-        switch ($this->driver) {
-            case 'predis':
-                return new PredisConnector();
-            case 'phpredis':
-                return new Connectors\PhpRedisConnector();
-        }
+        return match ($this->driver) {
+            'predis'   => new PredisConnector(),
+            'phpredis' => new PhpRedisConnector(),
+            default    => throw new InvalidArgumentException('Redis driver ' . $this->driver . ' does not exists'),
+        };
     }
 }

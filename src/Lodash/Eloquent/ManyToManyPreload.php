@@ -12,6 +12,7 @@ use function explode;
 use function str_replace;
 
 /**
+ * @mixin \Illuminate\Database\Eloquent\Model
  * @method $this limitPerGroupViaSubQuery(int $limit = 10)
  * @method $this limitPerGroupViaUnion(int $limit = 10, array $pivotColumns = [])
  */

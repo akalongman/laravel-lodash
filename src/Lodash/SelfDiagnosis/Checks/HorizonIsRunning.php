@@ -12,10 +12,7 @@ use function trans;
 
 class HorizonIsRunning implements Check
 {
-    /**
-     * @var \Laravel\Horizon\Contracts\MasterSupervisorRepository
-     */
-    private $supervisorRepository;
+    private MasterSupervisorRepository $supervisorRepository;
 
     public function __construct(MasterSupervisorRepository $supervisorRepository)
     {

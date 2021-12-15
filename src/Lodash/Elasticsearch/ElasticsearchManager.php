@@ -13,14 +13,9 @@ use function reset;
 
 class ElasticsearchManager implements ElasticsearchManagerContract
 {
-    /** @var \Elasticsearch\Client */
-    protected $client;
-
-    /** @var bool */
-    protected $enabled;
-
-    /** @var int|null */
-    protected $timeout;
+    protected Client $client;
+    protected bool $enabled;
+    protected ?int $timeout = null;
 
     public function __construct(Client $client, bool $enabled = false)
     {
@@ -368,7 +363,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
     /**
      * @throws \Longman\LaravelLodash\Elasticsearch\ElasticsearchException
      */
-    protected function handleBulkError(array $responses, string $message)
+    protected function handleBulkError(array $responses, string $message): void
     {
         $errors = [];
         foreach ($responses['items'] as $item) {

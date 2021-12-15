@@ -21,7 +21,7 @@ use function trim;
 
 class LodashServiceProvider extends ServiceProvider
 {
-    protected $commands = [
+    protected array $commands = [
         'command.lodash.clear-all'     => ClearAll::class,
         'command.lodash.db.clear'      => DbClear::class,
         'command.lodash.db.dump'       => DbDump::class,

@@ -13,7 +13,7 @@ use Throwable;
 
 class RedisCanBeAccessed implements Check
 {
-    private $message;
+    private ?string $message;
 
     /**
      * The name of the check.

@@ -8,9 +8,9 @@
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This package adds lot of useful functionality to the Laravel >=5.8 project
+This package adds lot of useful functionality to the Laravel >=8.0 project
 
-__Note:__ For Laravel older than 5.8 use the package version 1.*
+__Note:__ For Laravel older than 5.8 use the package version 1.*, for older than 8.0 - version 4.*
 
 ## Table of Contents
 - [Installation](#installation)
@@ -30,7 +30,6 @@ __Note:__ For Laravel older than 5.8 use the package version 1.*
         - [Request Class](#request-class)
     - [Artisan Commands](#artisan-commands)
     - [Middleware List](#middleware-list)
-        - [AllowCorsRequests](#allowcorsrequests)
         - [XssSecurity](#xsssecurity)
         - [SimpleBasicAuth](#simplebasicauth)
     - [Blade Directives](#blade-directives)
@@ -46,21 +45,7 @@ __Note:__ For Laravel older than 5.8 use the package version 1.*
 
 Install this package through [Composer](https://getcomposer.org/).
 
-Edit your project's `composer.json` file to require `longman/laravel-lodash`
-
-Create *composer.json* file:
-```json
-{
-    "name": "yourproject/yourproject",
-    "type": "project",
-    "require": {
-        "longman/laravel-lodash": "^2.0"
-    }
-}
-```
-And run composer update
-
-**Or** run a command in your command line:
+Run a command in your command line:
 
     composer require longman/laravel-lodash
 
@@ -372,10 +357,6 @@ Command  | Description
 
 
 ### Middleware List
-
-#### AllowCorsRequests
-
-Allows cross origin requests. Can be configured allowed hosts, methods and headers in the `config/lodash.php` file
 
 #### XssSecurity
 

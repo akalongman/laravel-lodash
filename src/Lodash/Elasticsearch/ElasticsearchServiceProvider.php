@@ -49,7 +49,7 @@ class ElasticsearchServiceProvider extends ServiceProvider implements Deferrable
         });
     }
 
-    public function provides()
+    public function provides(): array
     {
         return [Client::class, ElasticsearchManagerContract::class];
     }

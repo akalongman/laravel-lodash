@@ -23,8 +23,7 @@ class PhpIniOptions implements Check
 {
     use ParsesNumValues;
 
-    /** @var array */
-    private $options = [];
+    private array $options = [];
 
     /**
      * The name of the check.

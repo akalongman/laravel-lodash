@@ -8,7 +8,6 @@ use LogicException;
 use Longman\LaravelLodash\Support\Str;
 
 use function call_user_func_array;
-use function get_class;
 use function in_array;
 use function is_array;
 use function key;
@@ -95,7 +94,7 @@ trait TransformsData
             } elseif (method_exists($model, $method)) { // Check if getter exists in the model class
                 $value = $model->$method();
             } else {
-                throw new LogicException('Method ' . $method . ' does not available not for resource ' . static::class . ', not for model ' . get_class($model));
+                throw new LogicException('Method ' . $method . ' does not available not for resource ' . static::class . ', not for model ' . $model::class);
             }
         } else {
             // Try to find getter for external field
@@ -107,7 +106,7 @@ trait TransformsData
                 // Call getter for internal field
                 $method = 'get' . Str::snakeCaseToCamelCase($internalField);
                 if (! method_exists($model, $method)) {
-                    throw new LogicException('Field ' . $internalField . ' getter (' . $method . ') does not available for model ' . get_class($model));
+                    throw new LogicException('Field ' . $internalField . ' getter (' . $method . ') does not available for model ' . $model::class);
                 }
                 $key = $transformValue;
                 $value = $model->$method();

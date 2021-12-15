@@ -13,7 +13,6 @@ use InvalidArgumentException;
 use function auth;
 use function class_exists;
 use function class_uses_recursive;
-use function get_class;
 use function in_array;
 use function is_null;
 
@@ -149,7 +148,7 @@ trait UserIdentities
 
         $user = auth()->guard()->user();
         if ($user) {
-            return get_class($user);
+            return $user::class;
         }
 
         if (class_exists(User::class)) {

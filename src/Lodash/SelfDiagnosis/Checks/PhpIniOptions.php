@@ -14,7 +14,6 @@ use function implode;
 use function in_array;
 use function ini_get;
 use function preg_match;
-
 use function trans;
 
 use const PHP_EOL;

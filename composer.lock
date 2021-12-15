@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a4c6d9ceb1df91de1d725780f5601cba",
+    "content-hash": "c3032c24eecfb3c8ac257ccce833a761",
     "packages": [
         {
             "name": "brick/math",
@@ -5532,6 +5532,48 @@
             "time": "2020-07-09T08:09:16+00:00"
         },
         {
+            "name": "jetbrains/phpstorm-attributes",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JetBrains/phpstorm-attributes.git",
+                "reference": "a7a83ae5df4dd3c0875484483de19de8edf60a9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-attributes/zipball/a7a83ae5df4dd3c0875484483de19de8edf60a9f",
+                "reference": "a7a83ae5df4dd3c0875484483de19de8edf60a9f",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JetBrains\\PhpStorm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "JetBrains",
+                    "homepage": "https://www.jetbrains.com"
+                }
+            ],
+            "description": "PhpStorm specific attributes",
+            "keywords": [
+                "attributes",
+                "jetbrains",
+                "phpstorm"
+            ],
+            "support": {
+                "issues": "https://youtrack.jetbrains.com/newIssue?project=WI",
+                "source": "https://github.com/JetBrains/phpstorm-attributes/tree/1.0"
+            },
+            "time": "2020-11-17T11:09:47+00:00"
+        },
+        {
             "name": "laravel/horizon",
             "version": "v5.7.17",
             "source": {
@@ -5610,21 +5652,21 @@
         },
         {
             "name": "longman/php-code-style",
-            "version": "5.0.4",
+            "version": "6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/akalongman/php-code-style.git",
-                "reference": "92cd80e432098be7dd0f79bdef3527ed7322f01e"
+                "reference": "47287dcd65b90e163c9127b603d5abba27121ac4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/akalongman/php-code-style/zipball/92cd80e432098be7dd0f79bdef3527ed7322f01e",
-                "reference": "92cd80e432098be7dd0f79bdef3527ed7322f01e",
+                "url": "https://api.github.com/repos/akalongman/php-code-style/zipball/47287dcd65b90e163c9127b603d5abba27121ac4",
+                "reference": "47287dcd65b90e163c9127b603d5abba27121ac4",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1|^8.0",
-                "slevomat/coding-standard": "^6.1"
+                "slevomat/coding-standard": "^6.0"
             },
             "require-dev": {
                 "symfony/var-dumper": "^5.0"
@@ -5642,9 +5684,9 @@
             "description": "Longish Code style configurations",
             "support": {
                 "issues": "https://github.com/akalongman/php-code-style/issues",
-                "source": "https://github.com/akalongman/php-code-style/tree/5.0.4"
+                "source": "https://github.com/akalongman/php-code-style/tree/6.0.1"
             },
-            "time": "2021-01-13T23:04:36+00:00"
+            "time": "2021-05-10T14:12:25+00:00"
         },
         {
             "name": "mockery/mockery",

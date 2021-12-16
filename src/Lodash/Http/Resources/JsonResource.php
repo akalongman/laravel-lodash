@@ -125,7 +125,7 @@ abstract class JsonResource extends BaseResource
 
         $relations = [];
 
-        $relationsChain = Arr::undot($this->includedRelations);
+        $relationsChain = self::undot($this->includedRelations);
         foreach ($relationsChain as $currentRelation => $remainingRelationChain) {
             $methodName = 'include' . ucfirst($currentRelation);
 
@@ -174,5 +174,15 @@ abstract class JsonResource extends BaseResource
         }
 
         return null;
+    }
+
+    private static function undot(array $array): array
+    {
+        $result = [];
+        foreach ($array as $item) {
+            Arr::set($result, $item, []);
+        }
+
+        return $result;
     }
 }

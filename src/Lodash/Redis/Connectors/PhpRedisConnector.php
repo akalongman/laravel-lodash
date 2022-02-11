@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Redis as RedisFacade;
 use InvalidArgumentException;
 use LogicException;
+use Longman\LaravelLodash\Redis\Connections\PhpRedisArrayConnection;
 use Redis;
 use RedisArray;
 
@@ -19,7 +20,7 @@ use function defined;
 
 class PhpRedisConnector extends BasePhpRedisConnector
 {
-    public function connectToCluster(array $config, array $clusterOptions, array $options): PhpRedisClusterConnection
+    public function connectToCluster(array $config, array $clusterOptions, array $options): PhpRedisClusterConnection|PhpRedisArrayConnection
     {
         $options = array_merge($options, $clusterOptions, Arr::pull($config, 'options', []));
 
@@ -32,7 +33,7 @@ class PhpRedisConnector extends BasePhpRedisConnector
         }
 
         // Use client-side sharding
-        return new PhpRedisClusterConnection($this->createRedisArrayInstance(
+        return new PhpRedisArrayConnection($this->createRedisArrayInstance(
             array_map([$this, 'buildRedisArrayConnectionString'], $config),
             $options,
         ));

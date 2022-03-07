@@ -58,7 +58,7 @@ class DbClear extends Command
             }
 
             foreach ($tables as $table) {
-                foreach ($table as $key => $value) {
+                foreach ($table as $value) {
                     $stm = 'DROP TABLE IF EXISTS `' . $value . '`';
                     if ($pretend) {
                         $this->line("{$stm}");

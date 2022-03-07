@@ -174,13 +174,15 @@ Config example:
         
         'clusters' => [
             'options' => [
-                'lazy_connect'    => true,
-                'connect_timeout' => 1,
-                'read_timeout'    => 3,
-                'password'        => env('REDIS_PASSWORD', null),
-                'database'        => env('REDIS_DATABASE', 0),
-                'prefix'          => env('REDIS_PREFIX'),
-                'serializer'      => 'igbinary',
+                'lazy_connect'      => true,
+                'connect_timeout'   => 1,
+                'read_timeout'      => 3,
+                'password'          => env('REDIS_PASSWORD', null),
+                'database'          => env('REDIS_DATABASE', 0),
+                'prefix'            => env('REDIS_PREFIX'),
+                'serializer'        => Redis::SERIALIZER_IGBINARY,
+                'compression'       => Redis::COMPRESSION_ZSTD,
+                'compression_level' => Redis::COMPRESSION_ZSTD_DEFAULT,
             ],
 
             'default' => [

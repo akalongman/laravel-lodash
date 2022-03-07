@@ -6,6 +6,9 @@ namespace Longman\LaravelLodash\Redis\Connections;
 
 use Illuminate\Redis\Connections\PhpRedisConnection;
 
+use function func_get_args;
+use function strtoupper;
+
 class PhpRedisArrayConnection extends PhpRedisConnection
 {
     /**

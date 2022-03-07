@@ -14,9 +14,10 @@ use Longman\LaravelLodash\Redis\Connections\PhpRedisArrayConnection;
 use Redis;
 use RedisArray;
 
+use function array_key_exists;
 use function array_map;
 use function array_merge;
-use function defined;
+use function tap;
 
 class PhpRedisConnector extends BasePhpRedisConnector
 {
@@ -66,9 +67,16 @@ class PhpRedisConnector extends BasePhpRedisConnector
                 $client->setOption(Redis::OPT_READ_TIMEOUT, (string) $config['read_timeout']);
             }
 
-            if (! empty($config['serializer'])) {
-                $serializer = $this->getSerializerFromConfig($config['serializer']);
-                $client->setOption(Redis::OPT_SERIALIZER, (string) $serializer);
+            if (array_key_exists('serializer', $config)) {
+                $client->setOption(Redis::OPT_SERIALIZER, (string) $config['serializer']);
+            }
+
+            if (array_key_exists('compression', $config)) {
+                $client->setOption(Redis::OPT_COMPRESSION, (string) $config['compression']);
+            }
+
+            if (array_key_exists('compression_level', $config)) {
+                $client->setOption(Redis::OPT_COMPRESSION_LEVEL, (string) $config['compression_level']);
             }
 
             if (empty($config['scan'])) {
@@ -111,31 +119,18 @@ class PhpRedisConnector extends BasePhpRedisConnector
             $client->setOption(Redis::OPT_PREFIX, (string) $options['prefix']);
         }
 
-        if (! empty($options['serializer'])) {
-            $serializer = $this->getSerializerFromConfig($options['serializer']);
-            $client->setOption(Redis::OPT_SERIALIZER, (string) $serializer);
+        if (array_key_exists('serializer', $options)) {
+            $client->setOption(Redis::OPT_SERIALIZER, (string) $options['serializer']);
+        }
+
+        if (array_key_exists('compression', $options)) {
+            $client->setOption(Redis::OPT_COMPRESSION, (string) $options['compression']);
+        }
+
+        if (array_key_exists('compression_level', $options)) {
+            $client->setOption(Redis::OPT_COMPRESSION_LEVEL, (string) $options['compression_level']);
         }
 
         return $client;
-    }
-
-    protected function getSerializerFromConfig(string $serializer): int
-    {
-        switch ($serializer) {
-            case 'igbinary':
-                if (! defined('Redis::SERIALIZER_IGBINARY')) {
-                    throw new InvalidArgumentException('Error: phpredis was not compiled with igbinary support!');
-                }
-                $flag = Redis::SERIALIZER_IGBINARY;
-                break;
-            case 'php':
-                $flag = Redis::SERIALIZER_PHP;
-                break;
-            default:
-                $flag = Redis::SERIALIZER_NONE;
-                break;
-        }
-
-        return $flag;
     }
 }

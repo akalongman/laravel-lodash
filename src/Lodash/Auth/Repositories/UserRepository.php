@@ -6,7 +6,7 @@ namespace Longman\LaravelLodash\Auth\Repositories;
 
 use Longman\LaravelLodash\Auth\Contracts\UserContract;
 use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
-use Models\User;
+use App\Models\User;
 use Exception;
 use Google_Service_Oauth2;
 use Illuminate\Database\Connection;
@@ -81,7 +81,7 @@ class UserRepository implements UserRepositoryContract
 
         $query->where('email', '=', $login);
 
-        /** @var \Models\User $user */
+        /** @var \App\Models\User $user */
         $user = $query->first();
         if (! $user) {
             return null;

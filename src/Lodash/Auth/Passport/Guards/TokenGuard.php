@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Passport\Guards;
+namespace Longman\LaravelLodash\Auth\Passport\Guards;
 
-use App\Longman\LaravelLodash\Auth\Contracts\ClientRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\ClientRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Laravel\Passport\Guards\TokenGuard as BaseTokenGuard;
 use Laravel\Passport\PassportUserProvider;

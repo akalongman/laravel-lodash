@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Events;
+namespace Longman\LaravelLodash\Auth\Events;
 
-use App\Longman\LaravelLodash\Auth\Contracts\UserContract;
+use Longman\LaravelLodash\Auth\Contracts\UserContract;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;

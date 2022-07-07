@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Contracts;
+namespace Longman\LaravelLodash\Auth\Contracts;
 
 use Laravel\Passport\RefreshToken;
 

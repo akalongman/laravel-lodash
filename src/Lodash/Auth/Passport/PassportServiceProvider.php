@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Passport;
+namespace Longman\LaravelLodash\Auth\Passport;
 
-use App\Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
-use App\Longman\LaravelLodash\Auth\Contracts\ClientRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Passport\Grants\EmulateUserGrant;
-use App\Longman\LaravelLodash\Auth\Passport\Grants\GoogleAccessTokenGrant;
-use App\Longman\LaravelLodash\Auth\Passport\Grants\GoogleIdTokenGrant;
-use App\Longman\LaravelLodash\Auth\Passport\Grants\InternalGrant;
-use App\Longman\LaravelLodash\Auth\Passport\Grants\InternalRefreshTokenGrant;
-use App\Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
-use App\Longman\LaravelLodash\Auth\Passport\Guards\TokenGuard;
-use App\Longman\LaravelLodash\Auth\Repositories\ClientRepository;
-use App\Longman\LaravelLodash\Auth\Repositories\RefreshTokenBridgeRepository;
-use App\Longman\LaravelLodash\Auth\Repositories\RefreshTokenRepository;
-use App\Longman\LaravelLodash\Auth\Repositories\TokenRepository;
-use App\Longman\LaravelLodash\Auth\Repositories\UserRepository;
-use App\Longman\LaravelLodash\Auth\Services\AuthService;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Contracts\ClientRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
+use Longman\LaravelLodash\Auth\Passport\Grants\EmulateUserGrant;
+use Longman\LaravelLodash\Auth\Passport\Grants\GoogleAccessTokenGrant;
+use Longman\LaravelLodash\Auth\Passport\Grants\GoogleIdTokenGrant;
+use Longman\LaravelLodash\Auth\Passport\Grants\InternalGrant;
+use Longman\LaravelLodash\Auth\Passport\Grants\InternalRefreshTokenGrant;
+use Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
+use Longman\LaravelLodash\Auth\Passport\Guards\TokenGuard;
+use Longman\LaravelLodash\Auth\Repositories\ClientRepository;
+use Longman\LaravelLodash\Auth\Repositories\RefreshTokenBridgeRepository;
+use Longman\LaravelLodash\Auth\Repositories\RefreshTokenRepository;
+use Longman\LaravelLodash\Auth\Repositories\TokenRepository;
+use Longman\LaravelLodash\Auth\Repositories\UserRepository;
+use Longman\LaravelLodash\Auth\Services\AuthService;
 use DateInterval;
 use Illuminate\Http\Request;
 use Laravel\Passport\Passport;

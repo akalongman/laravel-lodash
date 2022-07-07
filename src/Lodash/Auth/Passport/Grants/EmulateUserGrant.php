@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Passport\Grants;
+namespace Longman\LaravelLodash\Auth\Passport\Grants;
 
-use App\Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
-use App\Longman\LaravelLodash\Auth\Events\StartEmulateEvent;
-use App\Longman\LaravelLodash\Auth\Events\StopEmulateEvent;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Events\StartEmulateEvent;
+use Longman\LaravelLodash\Auth\Events\StopEmulateEvent;
 use DateInterval;
 use Illuminate\Support\Arr;
 use Laravel\Passport\Bridge\AccessToken;

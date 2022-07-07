@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Passport\Grants;
+namespace Longman\LaravelLodash\Auth\Passport\Grants;
 
-use App\Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
-use App\Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
 use DateInterval;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Repositories;
+namespace Longman\LaravelLodash\Auth\Repositories;
 
-use App\Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
 use Laravel\Passport\RefreshTokenRepository as BaseRefreshTokenRepository;
 
 class RefreshTokenRepository extends BaseRefreshTokenRepository implements RefreshTokenRepositoryContract

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth;
+namespace Longman\LaravelLodash\Auth;
 
-use App\Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as LaravelUserProvider;
 

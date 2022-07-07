@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Passport\Grants;
+namespace Longman\LaravelLodash\Auth\Passport\Grants;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;

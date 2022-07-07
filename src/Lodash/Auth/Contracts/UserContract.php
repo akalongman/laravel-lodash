@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Contracts;
+namespace Longman\LaravelLodash\Auth\Contracts;
 
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable;

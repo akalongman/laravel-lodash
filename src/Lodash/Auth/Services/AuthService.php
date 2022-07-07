@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Longman\LaravelLodash\Auth\Services;
+namespace Longman\LaravelLodash\Auth\Services;
 
-use App\Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
-use App\Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Contracts\UserContract;
-use App\Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
-use App\Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\UserContract;
+use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
+use Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Events\Dispatcher;

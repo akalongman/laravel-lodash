@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Repositories;
 
-use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
 use Laravel\Passport\TokenRepository as BaseTokenRepository;
+use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
 
 class TokenRepository extends BaseTokenRepository implements TokenRepositoryContract
 {

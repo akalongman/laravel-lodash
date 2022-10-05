@@ -51,9 +51,9 @@ class SqsFifoQueue extends SqsQueue
      * @see http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/general-recommendations.html
      * @see http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queue-recommendations.html
      *
-     * @param  string $payload
-     * @param  string $queue
-     * @param  array $options
+     * @param string $payload
+     * @param string $queue
+     * @param array $options
      * @return mixed
      */
     public function pushRaw($payload, $queue = null, array $options = [])
@@ -84,7 +84,7 @@ class SqsFifoQueue extends SqsQueue
     /**
      * Pop the next job off of the queue.
      *
-     * @param  string $queue
+     * @param string $queue
      * @return \Illuminate\Contracts\Queue\Job|null
      */
     public function pop($queue = null)

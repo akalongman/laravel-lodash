@@ -13,7 +13,7 @@ class QueueServiceProvider extends BaseQueueServiceProvider
     /**
      * Register the connectors on the queue manager.
      *
-     * @param  \Illuminate\Queue\QueueManager $manager
+     * @param \Illuminate\Queue\QueueManager $manager
      * @return void
      */
     public function registerConnectors($manager): void

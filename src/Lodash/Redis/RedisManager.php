@@ -16,7 +16,7 @@ class RedisManager extends BaseRedisManager
      *
      * @return \Longman\LaravelLodash\Redis\Connectors\PhpRedisConnector|\Illuminate\Redis\Connectors\PredisConnector
      */
-    protected function connector(): PredisConnector|PhpRedisConnector
+    protected function connector(): PredisConnector | PhpRedisConnector
     {
         return match ($this->driver) {
             'predis'   => new PredisConnector(),

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Passport\Grants;
 
-use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
-use Longman\LaravelLodash\Auth\Events\StartEmulateEvent;
-use Longman\LaravelLodash\Auth\Events\StopEmulateEvent;
 use DateInterval;
 use Illuminate\Support\Arr;
 use Laravel\Passport\Bridge\AccessToken;
@@ -17,6 +14,9 @@ use League\OAuth2\Server\Grant\AbstractGrant;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\RequestEvent;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Events\StartEmulateEvent;
+use Longman\LaravelLodash\Auth\Events\StopEmulateEvent;
 use Psr\Http\Message\ServerRequestInterface;
 
 use function event;

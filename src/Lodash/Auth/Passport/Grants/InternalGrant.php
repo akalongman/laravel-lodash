@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Passport\Grants;
 
-use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
-use Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
 use DateInterval;
 use Laravel\Passport\Bridge\AccessToken;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -14,6 +12,8 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Grant\AbstractGrant;
 use League\OAuth2\Server\RequestEvent;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Events;
 
-use Longman\LaravelLodash\Auth\Contracts\UserContract;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Longman\LaravelLodash\Auth\Contracts\UserContract;
 
 class StartEmulateEvent
 {
@@ -24,7 +24,7 @@ class StartEmulateEvent
         //
     }
 
-    public function broadcastOn(): Channel|array
+    public function broadcastOn(): Channel | array
     {
         return new PrivateChannel('channel-name');
     }

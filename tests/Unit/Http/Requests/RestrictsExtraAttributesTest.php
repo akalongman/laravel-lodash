@@ -23,7 +23,7 @@ class RestrictsExtraAttributesTest extends TestCase
     public function it_should_throw_validation_error_on_extra_arguments(
         array $rules,
         array $attributes,
-        array $errorAttributes
+        array $errorAttributes,
     ): void {
         $formRequest = $this->createValidator($rules, $attributes);
 

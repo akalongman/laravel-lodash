@@ -13,6 +13,7 @@ class ElasticsearchException extends Exception
     public function __construct(string $message = '', array $errors = [])
     {
         parent::__construct($message);
+
         $this->errors = $errors;
     }
 

@@ -62,7 +62,6 @@ class LodashServiceProvider extends ServiceProvider
     {
         // Display relative time
         app('blade.compiler')->directive('datetime', static function ($expression) {
-
             return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
                 . '\' title=\'' . $expression . '\'>'
                 . with({$expression})->diffForHumans() . '</time>' ?>";
@@ -80,22 +79,18 @@ class LodashServiceProvider extends ServiceProvider
     protected function registerRequestMacros(): void
     {
         Request::macro('getInt', function (string $name, int $default = 0): int {
-
             return (int) $this->get($name, $default);
         });
 
         Request::macro('getBool', function (string $name, bool $default = false): bool {
-
             return (bool) $this->get($name, $default);
         });
 
         Request::macro('getFloat', function (string $name, float $default = 0): float {
-
             return (float) $this->get($name, $default);
         });
 
         Request::macro('getString', function (string $name, string $default = ''): string {
-
             return (string) $this->get($name, $default);
         });
     }

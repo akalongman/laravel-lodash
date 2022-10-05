@@ -17,7 +17,7 @@ class Attributes implements Arrayable
     private const RELATION_MARKER = 'relations:';
     private array $params;
     private array $attributes = [];
-    /** @var self[] */
+    /** @var array<self> */
     private array $relations = [];
     private string $relationName;
     private int $count;
@@ -32,13 +32,11 @@ class Attributes implements Arrayable
 
     public function getAttributes(array $extraAttrs = []): array
     {
-
         return array_replace_recursive($this->attributes, $extraAttrs);
     }
 
     public function hasAttribute(string $name): bool
     {
-
         return array_key_exists($name, $this->attributes);
     }
 
@@ -47,7 +45,6 @@ class Attributes implements Arrayable
      */
     public function getAttribute(string $name, $default = null)
     {
-
         return $this->attributes[$name] ?? $default;
     }
 
@@ -58,13 +55,11 @@ class Attributes implements Arrayable
 
     public function getCount(): int
     {
-
         return $this->count;
     }
 
     public function getRelationName(): string
     {
-
         return $this->relationName;
     }
 

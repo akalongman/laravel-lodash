@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Passport;
 
+use DateInterval;
+use Illuminate\Http\Request;
+use Laravel\Passport\Passport;
+use Laravel\Passport\PassportServiceProvider as BasePassportServiceProvider;
+use Laravel\Passport\PassportUserProvider;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\ResourceServer;
 use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
 use Longman\LaravelLodash\Auth\Contracts\ClientRepositoryContract;
 use Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
@@ -23,13 +30,6 @@ use Longman\LaravelLodash\Auth\Repositories\RefreshTokenRepository;
 use Longman\LaravelLodash\Auth\Repositories\TokenRepository;
 use Longman\LaravelLodash\Auth\Repositories\UserRepository;
 use Longman\LaravelLodash\Auth\Services\AuthService;
-use DateInterval;
-use Illuminate\Http\Request;
-use Laravel\Passport\Passport;
-use Laravel\Passport\PassportServiceProvider as BasePassportServiceProvider;
-use Laravel\Passport\PassportUserProvider;
-use League\OAuth2\Server\AuthorizationServer;
-use League\OAuth2\Server\ResourceServer;
 
 use function tap;
 

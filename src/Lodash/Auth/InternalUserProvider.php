@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth;
 
-use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as LaravelUserProvider;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
 
 class InternalUserProvider implements LaravelUserProvider
 {

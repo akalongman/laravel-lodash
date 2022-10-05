@@ -10,9 +10,10 @@ use Illuminate\Http\Resources\Json\ResourceResponse as BaseResourceResponse;
 use function response;
 use function tap;
 
-// phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
+
+// phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 
 // phpcs:enable
 

@@ -11,7 +11,7 @@ class CacheManager extends BaseCacheManager
     /**
      * Create an instance of the Redis cache driver.
      *
-     * @param  array  $config
+     * @param array $config
      * @return \Longman\LaravelLodash\Cache\RedisStore
      */
     protected function createRedisDriver(array $config)

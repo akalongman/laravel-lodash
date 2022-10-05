@@ -179,7 +179,6 @@ trait ManyToManyPreload
 
     private function quoteColumn(string $column): string
     {
-
         return '`' . str_replace('.', '`.`', $column) . '`';
     }
 }

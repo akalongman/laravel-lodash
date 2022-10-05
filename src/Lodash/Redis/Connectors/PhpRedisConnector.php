@@ -21,7 +21,7 @@ use function tap;
 
 class PhpRedisConnector extends BasePhpRedisConnector
 {
-    public function connectToCluster(array $config, array $clusterOptions, array $options): PhpRedisClusterConnection|PhpRedisArrayConnection
+    public function connectToCluster(array $config, array $clusterOptions, array $options): PhpRedisClusterConnection | PhpRedisArrayConnection
     {
         $options = array_merge($options, $clusterOptions, Arr::pull($config, 'options', []));
 

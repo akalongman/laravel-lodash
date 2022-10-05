@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Services;
 
-use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
-use Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
-use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
-use Longman\LaravelLodash\Auth\Contracts\UserContract;
-use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
-use Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\ItemNotFoundException;
 use InvalidArgumentException;
+use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
+use Longman\LaravelLodash\Auth\Contracts\UserContract;
+use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
+use Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
 
 use function is_null;
 

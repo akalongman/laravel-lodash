@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Repositories;
 
-use Longman\LaravelLodash\Auth\Contracts\UserContract;
-use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
 use App\Models\User;
 use Exception;
 use Google_Service_Oauth2;
 use Illuminate\Database\Connection;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use Longman\LaravelLodash\Auth\Contracts\UserContract;
+use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
 use RuntimeException;
 use Throwable;
 

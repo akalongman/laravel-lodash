@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Eloquent;
 
+use Ramsey\Uuid\Exception\InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
-
-use function preg_match;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
@@ -15,7 +14,13 @@ trait UsesUuidAsPrimary
 {
     public function isUuidBinary(string $value): bool
     {
-        return isset($value[0]) && ! preg_match('//u', $value);
+        try {
+            Uuid::fromBytes($value);
+        } catch (InvalidArgumentException) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getIncrementing(): bool

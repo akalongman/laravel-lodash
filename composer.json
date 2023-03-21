@@ -29,7 +29,7 @@
         }
     ],
     "require": {
-        "php": "^8.2.0",
+        "php": "^8.1|^8.2",
         "laravel/framework": "^8.0|^9.0|^10.0"
     },
     "require-dev": {
@@ -40,7 +40,7 @@
         "longman/php-code-style": "^9.0",
         "mockery/mockery": "~1.3",
         "neitanod/forceutf8": "^2.0",
-        "orchestra/testbench": "^7.4",
+        "orchestra/testbench": "^8.0",
         "phpunit/phpunit": "~9.0"
     },
     "autoload": {

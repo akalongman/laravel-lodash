@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Support;
 
 use Longman\LaravelLodash\Support\Declensions;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 class DeclensionsTest extends TestCase
 {
-    /**
-     * @dataProvider dataForDeclensions()
-     * @test
-     */
+    #[Test()]
+    #[DataProvider('dataForDeclensions')]
     public function turn_words_declensions(string $word, array $declensions): void
     {
         foreach ($declensions as $declension => $turned) {
@@ -20,12 +20,7 @@ class DeclensionsTest extends TestCase
         }
     }
 
-    /**
-     * Data provider
-     *
-     * @see turn_words_declensions()
-     */
-    public function dataForDeclensions(): array
+    public static function dataForDeclensions(): array
     {
         return [
             'მოჰამმად'        => [

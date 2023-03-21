@@ -5,23 +5,22 @@ declare(strict_types=1);
 namespace Tests\Unit\Testing;
 
 use Illuminate\Testing\Assert as PHPUnit;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 use function is_array;
 
 class DataStructuresBuilderTest extends TestCase
 {
-    /**
-     * @test
-     *
-     * @dataProvider provideData
-     */
+    #[Test()]
+    #[DataProvider('provideData')]
     public function it_should_return_corrct_data_structures(array $structure, array $data): void
     {
         $this->assertStructure($structure, $data);
     }
 
-    public function provideData(): array
+    public static function provideData(): array
     {
         $provider = new ItemStructuresProvider();
 

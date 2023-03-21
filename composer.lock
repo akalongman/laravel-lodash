@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d02de80bebf2deef6b536ce300d8af8",
+    "content-hash": "f4c4a10486793b2fcd9f07918b9f83f6",
     "packages": [
         {
             "name": "brick/math",
@@ -660,12 +660,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "c5a5d1c5374c8ee90fefd2ec79f81338e2762dc6"
+                "reference": "aad9b2a7421888be614f6d3d134a292239f4c696"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/c5a5d1c5374c8ee90fefd2ec79f81338e2762dc6",
-                "reference": "c5a5d1c5374c8ee90fefd2ec79f81338e2762dc6",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/aad9b2a7421888be614f6d3d134a292239f4c696",
+                "reference": "aad9b2a7421888be614f6d3d134a292239f4c696",
                 "shasum": ""
             },
             "require": {
@@ -853,7 +853,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-03-20T12:42:52+00:00"
+            "time": "2023-03-21T12:15:29+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -9154,7 +9154,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1|^8.2"
+        "php": ">=8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"

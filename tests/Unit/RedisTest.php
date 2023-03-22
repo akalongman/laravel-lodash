@@ -22,7 +22,10 @@ class RedisTest extends TestCase
                 'host'         => getenv('REDIS_HOST') ?: '127.0.0.1',
                 'port'         => getenv('REDIS_PORT') ?: 6379,
                 'database'     => 5,
-                'options'      => ['prefix' => 'lodash:'],
+                'options'      => [
+                    'prefix'     => 'lodash:',
+                    'serializer' => REDIS::SERIALIZER_IGBINARY,
+                ],
                 'timeout'      => 0.5,
                 'read_timeout' => 1.5,
                 'serializer'   => 'igbinary',
@@ -51,7 +54,7 @@ class RedisTest extends TestCase
                     'password'        => getenv('REDIS_PASSWORD') ?: null,
                     'database'        => 5,
                     'prefix'          => 'lodash:',
-                    'serializer'      => 'igbinary',
+                    'serializer'      => REDIS::SERIALIZER_IGBINARY,
                 ],
 
                 'default' => [

@@ -9,17 +9,16 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 use function strpos;
 
 class RestrictsExtraAttributesTest extends TestCase
 {
-    /**
-     * @test
-     *
-     * @dataProvider provideData
-     */
+    #[Test()]
+    #[DataProvider('provideData')]
     public function it_should_throw_validation_error_on_extra_arguments(
         array $rules,
         array $attributes,
@@ -49,7 +48,7 @@ class RestrictsExtraAttributesTest extends TestCase
         $this->assertInstanceOf(CustomRequest::class, $formRequest);
     }
 
-    public function provideData(): array
+    public static function provideData(): array
     {
         return [
             [

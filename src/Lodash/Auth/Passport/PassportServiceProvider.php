@@ -75,7 +75,8 @@ class PassportServiceProvider extends BasePassportServiceProvider
                 $this->app->make(TokenRepositoryContract::class),
                 $this->app->make(ClientRepositoryContract::class),
                 $this->app->make('encrypter'),
-            ))->user($request);
+                $request,
+            ))->user();
         }, $this->app['request']);
     }
 

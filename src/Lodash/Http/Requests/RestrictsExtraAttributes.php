@@ -42,7 +42,7 @@ trait RestrictsExtraAttributes
                     $message .= ' Request Class: ' . static::class;
                 }
 
-                $messages[] = $message;
+                $messages[$attribute] = $message;
             }
 
             throw ValidationException::withMessages($messages);

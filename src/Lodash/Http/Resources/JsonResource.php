@@ -19,6 +19,9 @@ use function is_null;
 use function method_exists;
 use function ucfirst;
 
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
+
 abstract class JsonResource extends BaseResource
 {
     use TransformsData;
@@ -184,5 +187,10 @@ abstract class JsonResource extends BaseResource
         }
 
         return $result;
+    }
+
+    public function jsonOptions(): int
+    {
+        return JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
     }
 }

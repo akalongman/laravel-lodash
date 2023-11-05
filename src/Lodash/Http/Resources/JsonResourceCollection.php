@@ -10,6 +10,9 @@ use Longman\LaravelLodash\Http\Resources\Response\PaginatedResourceResponse;
 use function array_merge_recursive;
 use function is_null;
 
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
+
 class JsonResourceCollection extends BaseResourceCollection
 {
     public function toArray($request): array
@@ -48,5 +51,10 @@ class JsonResourceCollection extends BaseResourceCollection
         }
 
         return (new PaginatedResourceResponse($this))->toResponse($request);
+    }
+
+    public function jsonOptions(): int
+    {
+        return JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
     }
 }

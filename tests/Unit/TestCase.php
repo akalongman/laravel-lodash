@@ -7,7 +7,7 @@ namespace Tests\Unit;
 use Longman\LaravelLodash\Cache\CacheServiceProvider;
 use Longman\LaravelLodash\Debug\DebugServiceProvider;
 use Longman\LaravelLodash\Elasticsearch\ElasticsearchServiceProvider;
-use Longman\LaravelLodash\LodashServiceProvider;
+use Longman\LaravelLodash\ServiceProvider;
 use Longman\LaravelLodash\Queue\QueueServiceProvider;
 use Longman\LaravelLodash\Redis\RedisServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -17,7 +17,7 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            LodashServiceProvider::class,
+            ServiceProvider::class,
             CacheServiceProvider::class,
             DebugServiceProvider::class,
             ElasticsearchServiceProvider::class,

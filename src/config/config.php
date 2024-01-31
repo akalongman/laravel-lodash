@@ -13,4 +13,12 @@ return [
         'x_content_type_options' => 'nosniff', // X-Content-Type-Options header value
         'x_xss_protection'       => '1; mode=block', // X-XSS-Protection header value
     ],
+
+    'register' => [
+        'blade_directives' => false,
+        'request_macros'   => false,
+        'translations'     => true,
+        'validation_rules' => true,
+        'commands'         => true,
+    ],
 ];

@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use Longman\LaravelLodash\Commands\ClearAll;
 use Longman\LaravelLodash\Commands\DbClear;
 use Longman\LaravelLodash\Commands\DbDump;
@@ -13,13 +14,16 @@ use Longman\LaravelLodash\Commands\DbRestore;
 use Longman\LaravelLodash\Commands\LogClear;
 use Longman\LaravelLodash\Commands\UserAdd;
 use Longman\LaravelLodash\Commands\UserPassword;
+use Longman\LaravelLodash\Validation\StrictTypesValidator;
 
 use function array_keys;
 use function array_pad;
+use function config;
 use function preg_split;
+use function str_replace;
 use function trim;
 
-class LodashServiceProvider extends ServiceProvider
+class ServiceProvider extends LaravelServiceProvider
 {
     protected array $commands = [
         'command.lodash.clear-all'     => ClearAll::class,
@@ -40,6 +44,8 @@ class LodashServiceProvider extends ServiceProvider
         $this->registerBladeDirectives();
 
         $this->loadTranslations();
+
+        $this->loadValidations();
     }
 
     public function register(): void
@@ -51,6 +57,10 @@ class LodashServiceProvider extends ServiceProvider
 
     protected function registerCommands(): void
     {
+        if (! config('lodash.register.commands')) {
+            return;
+        }
+
         foreach ($this->commands as $name => $class) {
             $this->app->singleton($name, $class);
         }
@@ -60,6 +70,10 @@ class LodashServiceProvider extends ServiceProvider
 
     protected function registerBladeDirectives(): void
     {
+        if (! config('lodash.register.blade_directives')) {
+            return;
+        }
+
         // Display relative time
         app('blade.compiler')->directive('datetime', static function ($expression) {
             return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
@@ -78,6 +92,10 @@ class LodashServiceProvider extends ServiceProvider
 
     protected function registerRequestMacros(): void
     {
+        if (! config('lodash.register.request_macros')) {
+            return;
+        }
+
         Request::macro('getInt', function (string $name, int $default = 0): int {
             return (int) $this->get($name, $default);
         });
@@ -97,10 +115,32 @@ class LodashServiceProvider extends ServiceProvider
 
     protected function loadTranslations(): void
     {
+        if (! config('lodash.register.translations')) {
+            return;
+        }
+
         $this->loadTranslationsFrom(__DIR__ . '/../translations', 'lodash');
 
         $this->publishes([
             __DIR__ . '/../translations' => resource_path('lang/vendor/lodash'),
         ]);
+    }
+
+    protected function loadValidations(): void
+    {
+        if (! config('lodash.register.validation_rules')) {
+            return;
+        }
+
+        Validator::extend('type', function ($attribute, $value, $parameters, $validator): bool {
+            $validator->addReplacer('type', function ($message, $attribute, $rule, $parameters): string {
+                return str_replace(':type', $parameters[0], $message);
+            });
+
+            /** @var \Longman\LaravelLodash\Validation\StrictTypesValidator $validator */
+            $customValidator = $this->app->make(StrictTypesValidator::class);
+
+            return $customValidator->validate($attribute, $value, $parameters);
+        }, 'The :attribute must be of type :type');
     }
 }

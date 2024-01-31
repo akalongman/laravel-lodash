@@ -57,7 +57,7 @@ Add `LodashServiceProvider` to your service providers list in the `app.php`
     /*
      * Package Service Providers...
      */
-    Longman\LaravelLodash\LodashServiceProvider::class,
+    Longman\LaravelLodash\ServiceProvider::class,
     . . .
 ],
 ```

@@ -14,7 +14,7 @@
         "tools"
     ],
     "license": "MIT",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "homepage": "https://github.com/akalongman/laravel-lodash",
     "support": {
         "issues": "https://github.com/akalongman/laravel-lodash/issues",
@@ -29,12 +29,12 @@
         }
     ],
     "require": {
-        "php": "^8.1|^8.2",
+        "php": "^8.2",
         "laravel/framework": "^10.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.133",
-        "elasticsearch/elasticsearch": "^6.7",
+        "elasticsearch/elasticsearch": "^8.10",
         "jetbrains/phpstorm-attributes": "^1.0",
         "laravel/horizon": "^5.7",
         "longman/php-code-style": "^9.0",
@@ -60,7 +60,15 @@
         "sort-packages": true,
         "process-timeout": 3600,
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Longman\\LaravelLodash\\ServiceProvider"
+            ]
         }
     },
     "suggest": {

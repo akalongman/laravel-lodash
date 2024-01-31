@@ -16,10 +16,13 @@ use Longman\LaravelLodash\Commands\UserAdd;
 use Longman\LaravelLodash\Commands\UserPassword;
 use Longman\LaravelLodash\Validation\StrictTypesValidator;
 
+use function app;
 use function array_keys;
 use function array_pad;
 use function config;
+use function config_path;
 use function preg_split;
+use function resource_path;
 use function str_replace;
 use function trim;
 
@@ -50,6 +53,8 @@ class ServiceProvider extends LaravelServiceProvider
 
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'lodash');
+
         $this->registerCommands();
 
         $this->registerRequestMacros();

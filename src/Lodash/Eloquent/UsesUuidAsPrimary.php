@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Eloquent;
 
-use Ramsey\Uuid\Exception\InvalidArgumentException;
+use Longman\LaravelLodash\Support\Uuid as UuidHelper;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -14,13 +14,7 @@ trait UsesUuidAsPrimary
 {
     public function isUuidBinary(string $value): bool
     {
-        try {
-            Uuid::fromBytes($value);
-        } catch (InvalidArgumentException) {
-            return false;
-        }
-
-        return true;
+        return UuidHelper::isBinary($value);
     }
 
     public function getIncrementing(): bool

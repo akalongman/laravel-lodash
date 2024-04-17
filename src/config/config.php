@@ -3,6 +3,25 @@
 declare(strict_types=1);
 
 return [
+    'locales' => [
+        'en' => [
+            'name'             => 'English',
+            'native_name'      => 'English',
+            'flag'             => 'gb',
+            'locale'           => 'en',
+            'canonical_locale' => 'en_GB',
+            'full_locale'      => 'en_GB.UTF-8',
+        ],
+        'ka' => [
+            'name'             => 'Georgian',
+            'native_name'      => 'ქართული',
+            'flag'             => 'ge',
+            'locale'           => 'ka',
+            'canonical_locale' => 'ka_GE',
+            'full_locale'      => 'ka_GE.UTF-8',
+        ],
+    ],
+
     'debug' => [
         'ips' => explode(',', env('DEBUG_IP_LIST', '')), // IP list for enabling debug mode
     ],

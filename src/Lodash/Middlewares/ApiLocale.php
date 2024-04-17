@@ -6,6 +6,7 @@ namespace Longman\LaravelLodash\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use function app;
 use function array_keys;
@@ -16,7 +17,7 @@ use const LC_ALL;
 
 class ApiLocale
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         if ($request->wantsJson()) {
             $locales = config('lodash.locales', []);

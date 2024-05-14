@@ -138,7 +138,7 @@ class ServiceProvider extends LaravelServiceProvider
         }
 
         Validator::extend('type', function ($attribute, $value, $parameters, $validator): bool {
-            $validator->addReplacer('type', function ($message, $attribute, $rule, $parameters): string {
+            $validator->addReplacer('type', static function ($message, $attribute, $rule, $parameters): string {
                 return str_replace(':type', $parameters[0], $message);
             });
 

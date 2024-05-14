@@ -42,6 +42,11 @@ class JsonResourceCollection extends BaseResourceCollection
         return $this;
     }
 
+    public function jsonOptions(): int
+    {
+        return JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    }
+
     protected function preparePaginatedResponse($request)
     {
         if ($this->preserveAllQueryParameters) {
@@ -51,10 +56,5 @@ class JsonResourceCollection extends BaseResourceCollection
         }
 
         return (new PaginatedResourceResponse($this))->toResponse($request);
-    }
-
-    public function jsonOptions(): int
-    {
-        return JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
     }
 }

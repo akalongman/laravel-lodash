@@ -95,6 +95,11 @@ abstract class JsonResource extends BaseResource
         return $this;
     }
 
+    public function jsonOptions(): int
+    {
+        return JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    }
+
     protected function getResourceData(): array
     {
         if ($this->resource instanceof TransformableContract) {
@@ -187,10 +192,5 @@ abstract class JsonResource extends BaseResource
         }
 
         return $result;
-    }
-
-    public function jsonOptions(): int
-    {
-        return JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
     }
 }

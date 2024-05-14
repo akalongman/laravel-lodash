@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Validation;
 
+use function gettype;
+use function in_array;
+
 readonly class StrictTypesValidator
 {
     protected const NATIVE_TYPE_INT = 'integer';

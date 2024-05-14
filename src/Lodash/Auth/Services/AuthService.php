@@ -171,6 +171,17 @@ class AuthService implements AuthServiceContract
         return $this->hasher->check($password, $user->getAuthPassword());
     }
 
+    public function rehashPasswordIfRequired(UserContract $user, array $credentials, bool $force = false): void
+    {
+        if (! $this->hasher->needsRehash($user->getAuthPassword()) && ! $force) {
+            return;
+        }
+
+        $user->forceFill([
+            $user->getAuthPasswordName() => $this->hasher->make($credentials['password']),
+        ])->save();
+    }
+
     public function canUserEmulateOtherUser(UserContract $emulatorUser, UserContract $emulatedUser): bool
     {
         // Should be override in subclass

@@ -19,30 +19,35 @@ class InternalUserProvider implements LaravelUserProvider
         $this->config = $config;
     }
 
-    public function retrieveById($identifier)
+    public function retrieveById($identifier): ?Authenticatable
     {
         return $this->authService->retrieveUserById((int) $identifier);
     }
 
-    public function retrieveByToken($identifier, $token)
+    public function retrieveByToken($identifier, $token): ?Authenticatable
     {
         return $this->authService->retrieveUserByToken((int) $identifier, $token);
     }
 
-    public function updateRememberToken(Authenticatable $user, $token)
+    public function updateRememberToken(Authenticatable $user, $token): void
     {
         $this->authService->updateRememberToken($user, $token);
     }
 
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
         return $this->authService->retrieveByCredentials($credentials);
     }
 
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         $plain = $credentials['password'];
 
         return $this->authService->validateCredentials($user, $plain);
+    }
+
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
+    {
+        $this->authService->rehashPasswordIfRequired($user, $credentials, $force);
     }
 }

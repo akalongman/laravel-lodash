@@ -34,6 +34,8 @@ interface AuthServiceContract
 
     public function validateCredentials(UserContract $user, string $password): bool;
 
+    public function rehashPasswordIfRequired(UserContract $user, array $credentials, bool $force = false): void;
+
     public function canUserEmulateOtherUser(UserContract $emulatorUser, UserContract $emulatedUser): bool;
 
     public function getGoogleUserByAccessToken(string $googleToken): ?UserContract;

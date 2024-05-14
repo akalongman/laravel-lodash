@@ -24,24 +24,24 @@
         {
             "name": "Avtandil Kikabidze aka LONGMAN",
             "email": "akalongman@gmail.com",
-            "homepage": "http://longman.me",
+            "homepage": "https://longman.me",
             "role": "Maintainer, Developer"
         }
     ],
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^10.0"
+        "laravel/framework": "^11.0"
     },
     "require-dev": {
-        "aws/aws-sdk-php": "^3.133",
-        "elasticsearch/elasticsearch": "^8.10",
+        "aws/aws-sdk-php": "^3.306",
+        "elasticsearch/elasticsearch": "^8.13",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "laravel/horizon": "^5.7",
-        "longman/php-code-style": "^9.0",
-        "mockery/mockery": "~1.3",
+        "laravel/horizon": "^5.24",
+        "longman/php-code-style": "^10.1",
+        "mockery/mockery": "^1.3",
         "neitanod/forceutf8": "^2.0",
-        "orchestra/testbench": "^8.0",
-        "phpunit/phpunit": "^10.0"
+        "orchestra/testbench": "^9.0",
+        "phpunit/phpunit": "^11.0"
     },
     "autoload": {
         "psr-4": {

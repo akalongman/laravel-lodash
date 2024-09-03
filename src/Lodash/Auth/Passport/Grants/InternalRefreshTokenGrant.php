@@ -90,7 +90,7 @@ class InternalRefreshTokenGrant extends RefreshTokenGrant
             }
         }
 
-        // when emulated user requests mew access token. set emulator user id.
+        // when emulated user requests new access token. set emulator user id.
         $oldAccessToken = $this->tokenRepository->find($oldRefreshToken['access_token_id']);
         if ($oldAccessToken->emulator_user_id) {
             $this->authService->updateAccessToken($accessToken->getIdentifier(), $oldAccessToken->emulator_user_id);

@@ -8,12 +8,12 @@ use DateInterval;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
-use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\RequestAccessTokenEvent;
 use League\OAuth2\Server\RequestEvent;
 use League\OAuth2\Server\RequestRefreshTokenEvent;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
+use Longman\LaravelLodash\Auth\Contracts\RefreshTokenBridgeRepositoryContract;
 use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -27,7 +27,7 @@ class InternalRefreshTokenGrant extends RefreshTokenGrant
     private readonly AuthServiceContract $authService;
 
     public function __construct(
-        RefreshTokenRepositoryInterface $refreshTokenRepository,
+        RefreshTokenBridgeRepositoryContract $refreshTokenRepository,
         TokenRepositoryContract $tokenRepository,
         AuthServiceContract $authService,
     ) {

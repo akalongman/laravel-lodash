@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PassportServiceProvider as BasePassportServiceProvider;
 use Laravel\Passport\PassportUserProvider;
-use Laravel\Passport\TokenRepository as PassportTokenRepository;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\ResourceServer;
 use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
@@ -107,7 +106,7 @@ class PassportServiceProvider extends BasePassportServiceProvider
     {
         $grant = new InternalRefreshTokenGrant(
             $this->app->make(RefreshTokenBridgeRepositoryContract::class),
-            $this->app->make(PassportTokenRepository::class),
+            $this->app->make(TokenRepositoryContract::class),
             $this->app->make(AuthServiceContract::class),
         );
 

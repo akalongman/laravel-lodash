@@ -104,9 +104,11 @@ class PassportServiceProvider extends BasePassportServiceProvider
 
     protected function makeInternalRefreshTokenGrant(): InternalRefreshTokenGrant
     {
-        $repository = $this->app->make(RefreshTokenBridgeRepositoryContract::class);
-
-        $grant = new InternalRefreshTokenGrant($repository);
+        $grant = new InternalRefreshTokenGrant(
+            $this->app->make(RefreshTokenBridgeRepositoryContract::class),
+            $this->app->make(TokenRepositoryContract::class),
+            $this->app->make(AuthServiceContract::class),
+        );
 
         $grant->setRefreshTokenTTL(new DateInterval('P1Y'));
 

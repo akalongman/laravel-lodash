@@ -13,6 +13,7 @@ use function html_entity_decode;
 use function is_array;
 use function is_null;
 use function is_object;
+use function lcfirst;
 use function max;
 use function mb_substr;
 use function number_format;
@@ -53,9 +54,23 @@ class Str extends BaseStr
         return $amount;
     }
 
-    public static function snakeCaseToCamelCase(string $string): string
+    public static function snakeCaseToPascalCase(string $string): string
     {
         $str = str_replace('_', '', ucwords($string, '_'));
+
+        return $str;
+    }
+
+    public static function pascalCaseToSnakeCase(string $string): string
+    {
+        $string = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $string));
+
+        return $string;
+    }
+
+    public static function snakeCaseToCamelCase(string $string): string
+    {
+        $str = lcfirst(str_replace('_', '', ucwords($string, '_')));
 
         return $str;
     }

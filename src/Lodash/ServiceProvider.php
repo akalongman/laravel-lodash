@@ -81,9 +81,9 @@ class ServiceProvider extends LaravelServiceProvider
 
         // Display relative time
         app('blade.compiler')->directive('datetime', static function ($expression) {
-            return "<?php echo '<time datetime=\'' . with({$expression})->toIso8601String()
+            return "<?php echo '<time datetime=\'' . with($expression)->toIso8601String()
                 . '\' title=\'' . $expression . '\'>'
-                . with({$expression})->diffForHumans() . '</time>' ?>";
+                . with($expression)->diffForHumans() . '</time>' ?>";
         });
 
         // Pluralization helper

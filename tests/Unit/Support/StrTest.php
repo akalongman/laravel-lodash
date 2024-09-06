@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Support;
 
 use Longman\LaravelLodash\Support\Str;
+use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use Tests\Unit\TestCase;
 
@@ -12,7 +13,7 @@ use function mb_strlen;
 
 class StrTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function add_zeros(): void
     {
         $string = '12345678';
@@ -21,7 +22,7 @@ class StrTest extends TestCase
         $this->assertSame('1234567800', Str::addZeros($string, 10, 'right'));
     }
 
-    /** @test */
+    #[Test]
     public function format_balance(): void
     {
         $int = 12345;
@@ -30,15 +31,15 @@ class StrTest extends TestCase
         $this->assertSame('123.450', Str::formatBalance($int, 3));
     }
 
-    /** @test */
-    public function snake_case_to_camel_case(): void
+    #[Test]
+    public function snake_case_to_pascal_case(): void
     {
         $string = 'Lorem_ipsum_dolores';
-        $this->assertSame('LoremIpsumDolores', Str::snakeCaseToCamelCase($string));
+        $this->assertSame('LoremIpsumDolores', Str::snakeCaseToPascalCase($string));
     }
 
-    /** @test */
-    public function camel_case_to_snake_case(): void
+    #[Test]
+    public function pascal_case_to_snake_case(): void
     {
         $string = 'LoremIpsumDolores';
         $this->assertSame('lorem_ipsum_dolores', Str::camelCaseToSnakeCase($string));
@@ -47,7 +48,24 @@ class StrTest extends TestCase
         $this->assertSame('არჩევანისგარემოსუზრუნველყოფისსისტემა', Str::camelCaseToSnakeCase($string));
     }
 
-    /** @test */
+    #[Test]
+    public function snake_case_to_camel_case(): void
+    {
+        $string = 'Lorem_ipsum_dolores';
+        $this->assertSame('loremIpsumDolores', Str::snakeCaseToCamelCase($string));
+    }
+
+    #[Test]
+    public function camel_case_to_snake_case(): void
+    {
+        $string = 'loremIpsumDolores';
+        $this->assertSame('lorem_ipsum_dolores', Str::camelCaseToSnakeCase($string));
+
+        $string = 'არჩევანისგარემოსუზრუნველყოფისსისტემა';
+        $this->assertSame('არჩევანისგარემოსუზრუნველყოფისსისტემა', Str::camelCaseToSnakeCase($string));
+    }
+
+    #[Test]
     public function convert_spaces_to_dashes(): void
     {
         $string = 'Lorem Ipsum Dolores';
@@ -57,7 +75,7 @@ class StrTest extends TestCase
         $this->assertSame('არჩევანის-გარემოს-უზრუნველყოფის-სისტემა', Str::convertSpacesToDashes($string));
     }
 
-    /** @test */
+    #[Test]
     public function limit_middle(): void
     {
         $string = 'არჩევანის გარემოს უზრუნველყოფის სისტემა';
@@ -66,7 +84,7 @@ class StrTest extends TestCase
         $this->assertSame(23, mb_strlen(Str::limitMiddle($string, 20, '...')));
     }
 
-    /** @test */
+    #[Test]
     public function hash(): void
     {
         $data = ['aa' => 1, 'bb' => 2, 'cc' => 3];
@@ -82,7 +100,7 @@ class StrTest extends TestCase
         $this->assertSame('eef19c54306daa69eda49c0272623bdb5e2b341f', Str::hash($data));
     }
 
-    /** @test */
+    #[Test]
     public function to_dot_notation(): void
     {
         $string = 'data[first][]';
@@ -98,7 +116,7 @@ class StrTest extends TestCase
         $this->assertSame('data.first.second.0', Str::toDotNotation($string));
     }
 
-    /** @test */
+    #[Test]
     public function convert_to_utf8(): void
     {
         $data = 'hello žš, გამარჯობა';

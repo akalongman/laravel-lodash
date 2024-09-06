@@ -17,7 +17,7 @@ use function strpos;
 
 class RestrictsExtraAttributesTest extends TestCase
 {
-    #[Test()]
+    #[Test]
     #[DataProvider('provideData')]
     public function it_should_throw_validation_error_on_extra_arguments(
         array $rules,

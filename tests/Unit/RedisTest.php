@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use Longman\LaravelLodash\Redis\RedisManager;
+use PHPUnit\Framework\Attributes\Test;
 use Redis;
 use RedisArray;
 
@@ -13,7 +14,7 @@ use function version_compare;
 
 class RedisTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_set_custom_serializer()
     {
         $redis = $this->createConnection('phpredis', [
@@ -42,7 +43,7 @@ class RedisTest extends TestCase
         $this->assertEquals($redis->get('country'), $data);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_set_custom_serializer_for_cluster()
     {
         $redis = $this->createConnection('phpredis', [

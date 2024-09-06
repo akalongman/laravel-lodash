@@ -7,13 +7,14 @@ namespace Tests\Unit\Http\Resources;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Longman\LaravelLodash\Http\Resources\ErrorResource;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 use function app;
 
 class ErrorResourceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_transform_array(): void
     {
         $resource = new ErrorResource([

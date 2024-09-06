@@ -11,7 +11,7 @@ use Tests\Unit\TestCase;
 
 class DeclensionsTest extends TestCase
 {
-    #[Test()]
+    #[Test]
     #[DataProvider('dataForDeclensions')]
     public function turn_words_declensions(string $word, array $declensions): void
     {

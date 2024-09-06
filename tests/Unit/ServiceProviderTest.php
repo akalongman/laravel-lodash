@@ -6,12 +6,13 @@ namespace Tests\Unit;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\Test;
 
 use function array_keys;
 
 class ServiceProviderTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function check_if_commands_registered()
     {
         $commands = [
@@ -31,7 +32,7 @@ class ServiceProviderTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function check_if_request_has_macros()
     {
         $this->assertTrue(Request::hasMacro('getInt'));
@@ -40,7 +41,7 @@ class ServiceProviderTest extends TestCase
         $this->assertTrue(Request::hasMacro('getString'));
     }
 
-    /** @test */
+    #[Test]
     public function check_blade_directives()
     {
         $directives = [

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Middleware;
 
 use Longman\LaravelLodash\Middlewares\SimpleBasicAuth;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 use function config;
 
 class SimpleBasicAuthTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_return_access_denied_on_empty_credentials()
     {
         config()->set('auth.simple', [
@@ -24,7 +25,7 @@ class SimpleBasicAuthTest extends TestCase
         $response->assertStatus(401);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_return_access_denied_on_wrong_credentials()
     {
         config()->set('auth.simple', [
@@ -37,7 +38,7 @@ class SimpleBasicAuthTest extends TestCase
         $response->assertStatus(401);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_return_ok_on_disabled_auth()
     {
         config()->set('auth.simple', [
@@ -51,7 +52,7 @@ class SimpleBasicAuthTest extends TestCase
         $response->assertSeeText('ok');
     }
 
-    /** @test */
+    #[Test]
     public function it_should_return_ok_with_credentials()
     {
         config()->set('auth.simple', [

@@ -61,7 +61,7 @@ class DbClear extends Command
                 foreach ($table as $value) {
                     $stm = 'DROP TABLE IF EXISTS `' . $value . '`';
                     if ($pretend) {
-                        $this->line("{$stm}");
+                        $this->line($stm);
                     } else {
                         $connection->statement($stm);
                         $this->comment('Table `' . $value . '` dropped');

@@ -7,13 +7,14 @@ namespace Tests\Unit\Http\Resources;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Longman\LaravelLodash\Http\Resources\ArrayResource;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 use function app;
 
 class ArrayResourceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_transform_array(): void
     {
         $resource = new ArrayResource([
@@ -31,7 +32,7 @@ class ArrayResourceTest extends TestCase
         $this->assertSame($expected, $response->content());
     }
 
-    /** @test */
+    #[Test]
     public function it_should_return_unecaped_json(): void
     {
         $resource = new ArrayResource([

@@ -98,13 +98,13 @@ trait TransformsData
             }
         } else {
             // Try to find getter for external field
-            $method = 'get' . Str::snakeCaseToCamelCase($transformValue);
+            $method = 'get' . Str::snakeCaseToPascalCase($transformValue);
             if (method_exists($model, $method)) {
                 $key = $transformValue;
                 $value = $model->$method();
             } else {
                 // Call getter for internal field
-                $method = 'get' . Str::snakeCaseToCamelCase($internalField);
+                $method = 'get' . Str::snakeCaseToPascalCase($internalField);
                 if (! method_exists($model, $method)) {
                     throw new LogicException('Field ' . $internalField . ' getter (' . $method . ') does not available for model ' . $model::class);
                 }

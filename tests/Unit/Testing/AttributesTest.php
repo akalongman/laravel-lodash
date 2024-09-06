@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Testing;
 
 use Longman\LaravelLodash\Testing\Attributes;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 class AttributesTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_parse_attributes(): void
     {
         $attributes = [

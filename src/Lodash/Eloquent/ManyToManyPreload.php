@@ -60,9 +60,11 @@ trait ManyToManyPreload
         $numAlias = $table . '_rn';
 
         // Apply mysql variables
-        $newQuery->addSelect($connection->raw(
-            "@num := if(@group = {$this->quoteColumn($queryKeyColumn)}, @num+1, 1) as `{$numAlias}`, @group := {$this->quoteColumn($queryKeyColumn)} as `{$groupAlias}`",
-        ));
+        $newQuery->addSelect(
+            $connection->raw(
+                "@num := if(@group = " . $this->quoteColumn($queryKeyColumn) . ", @num+1, 1) as `" . $numAlias . "`, @group := " . $this->quoteColumn($queryKeyColumn) . " as `" . $groupAlias . "`",
+            ),
+        );
 
         // Make sure first order clause is the group order
         $newQuery->getQuery()->orders = (array) $query->getQuery()->orders;
@@ -73,14 +75,14 @@ trait ManyToManyPreload
 
         if ($join) {
             $leftKey = explode('.', $queryKeyColumn)[1];
-            $leftKeyColumn = "`{$table}`.`{$leftKey}`";
+            $leftKeyColumn = "`" . $table . "`.`" . $leftKey . "`";
             $newQuery->addSelect($queryKeyColumn);
             $newQuery->mergeBindings($query->getQuery());
             $newQuery->getQuery()->joins = (array) $query->getQuery()->joins;
-            $query->whereRaw("{$leftKeyColumn} = {$this->quoteColumn($queryKeyColumn)}");
+            $query->whereRaw($leftKeyColumn . ' = ' . $this->quoteColumn($queryKeyColumn));
         }
 
-        $query->from($connection->raw("({$newQuery->toSql()}) as `{$table}`"))
+        $query->from($connection->raw("(" . $newQuery->toSql() . ") as `" . $table . "`"))
             ->where($numAlias, '<=', $limit);
 
         return $this;

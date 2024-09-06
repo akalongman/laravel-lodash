@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Tests\Unit\Eloquent;
 
 use Longman\LaravelLodash\Eloquent\UsesUuidAsPrimary;
+use PHPUnit\Framework\Attributes\Test;
 use Ramsey\Uuid\Uuid;
 use Tests\Unit\TestCase;
 
 class UsesUuidAsPrimaryTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_check_uuid_is_valid_binary(): void
     {
         $mock = $this->getMockForTrait(UsesUuidAsPrimary::class);
@@ -22,7 +23,7 @@ class UsesUuidAsPrimaryTest extends TestCase
         $this->assertTrue($mock->isUuidBinary($uuidBinary));
     }
 
-    /** @test */
+    #[Test]
     public function it_should_check_uuid_is_invalid_binary(): void
     {
         $mock = $this->getMockForTrait(UsesUuidAsPrimary::class);

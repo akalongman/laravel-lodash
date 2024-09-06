@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Longman\LaravelLodash\Http\Resources\ArrayResource;
 use Longman\LaravelLodash\Http\Resources\JsonResourceCollection;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
 use function app;
@@ -19,7 +20,7 @@ class JsonResourceCollectionTest extends TestCase
 {
     use WithFaker;
 
-    /** @test */
+    #[Test]
     public function it_should_transform_collection_of_arrays(): void
     {
         $collection = new Collection(array_fill(0, 3, [
@@ -38,7 +39,7 @@ class JsonResourceCollectionTest extends TestCase
         $this->assertSame($expected, $response->content());
     }
 
-    /** @test */
+    #[Test]
     public function it_should_transform_collection_of_models(): void
     {
         $models = [];
@@ -78,7 +79,7 @@ class JsonResourceCollectionTest extends TestCase
         ], $transformed);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_transform_collection_of_models_with_hidden_properties(): void
     {
         $models = [];
@@ -120,7 +121,7 @@ class JsonResourceCollectionTest extends TestCase
         ], $transformed);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_transform_collection_of_models_with_hidden_properties_in_output(): void
     {
         $models = [];

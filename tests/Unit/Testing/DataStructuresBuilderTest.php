@@ -13,7 +13,7 @@ use function is_array;
 
 class DataStructuresBuilderTest extends TestCase
 {
-    #[Test()]
+    #[Test]
     #[DataProvider('provideData')]
     public function it_should_return_corrct_data_structures(array $structure, array $data): void
     {

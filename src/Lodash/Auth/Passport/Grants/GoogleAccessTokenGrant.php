@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Auth\Passport\Grants;
 
 use DateInterval;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Grant\AbstractGrant;
 use League\OAuth2\Server\RequestEvent;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
@@ -18,15 +16,14 @@ use Throwable;
 
 use function is_null;
 
-class GoogleAccessTokenGrant extends AbstractGrant
+class GoogleAccessTokenGrant extends Grant
 {
-    protected readonly AuthServiceContract $authService;
+    public const string IDENTIFIER = 'google_access_token';
 
     public function __construct(
-        AuthServiceContract $authService,
+        protected readonly AuthServiceContract $authService,
         RefreshTokenBridgeRepositoryContract $refreshTokenRepository,
     ) {
-        $this->authService = $authService;
         $this->setRefreshTokenRepository($refreshTokenRepository);
         $this->refreshTokenTTL = new DateInterval('P1M');
     }
@@ -35,7 +32,7 @@ class GoogleAccessTokenGrant extends AbstractGrant
         ServerRequestInterface $request,
         ResponseTypeInterface $responseType,
         DateInterval $accessTokenTtl,
-    ) {
+    ): ResponseTypeInterface {
         // Validate request
         $client = $this->validateClient($request);
         $scopes = $this->validateScopes($this->getRequestParameter('scope', $request));
@@ -56,31 +53,6 @@ class GoogleAccessTokenGrant extends AbstractGrant
         $this->authService->fireLoginEvent('api', $user);
 
         return $responseType;
-    }
-
-    public function getIdentifier(): string
-    {
-        return 'google_access_token';
-    }
-
-    protected function validateClient(ServerRequestInterface $request): ClientEntityInterface
-    {
-        [$basicAuthUser,] = $this->getBasicAuthCredentials($request);
-
-        $clientId = $this->getRequestParameter('client_id', $request, $basicAuthUser);
-        if (is_null($clientId)) {
-            throw OAuthServerException::invalidRequest('client_id');
-        }
-
-        // Get client without validating secret
-        $client = $this->clientRepository->getClientEntity($clientId);
-
-        if ($client instanceof ClientEntityInterface === false) {
-            $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
-            throw OAuthServerException::invalidClient($request);
-        }
-
-        return $client;
     }
 
     protected function validateUser(ServerRequestInterface $request): UserEntityInterface

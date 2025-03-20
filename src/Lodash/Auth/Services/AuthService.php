@@ -19,7 +19,7 @@ use Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
 
 use function is_null;
 
-class AuthService implements AuthServiceContract
+readonly class AuthService implements AuthServiceContract
 {
     public function __construct(
         protected RefreshTokenRepositoryContract $refreshTokenRepositoryContract,

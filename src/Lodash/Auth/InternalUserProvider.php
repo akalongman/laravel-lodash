@@ -8,15 +8,11 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as LaravelUserProvider;
 use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
 
-class InternalUserProvider implements LaravelUserProvider
+readonly class InternalUserProvider implements LaravelUserProvider
 {
-    protected AuthServiceContract $authService;
-    protected array $config;
-
-    public function __construct(AuthServiceContract $authService, array $config)
+    public function __construct(protected AuthServiceContract $authService, protected array $config)
     {
-        $this->authService = $authService;
-        $this->config = $config;
+        //
     }
 
     public function retrieveById($identifier): ?Authenticatable

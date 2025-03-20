@@ -1,7 +1,7 @@
 {
     "name": "longman/laravel-lodash",
     "type": "library",
-    "description": "Add more functional to Laravel >=8.0",
+    "description": "Add more functional to Laravel",
     "keywords": [
         "lodash",
         "laravel",
@@ -30,7 +30,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0|^12.0"
+        "laravel/framework": "^12.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.306",

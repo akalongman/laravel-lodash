@@ -6,6 +6,7 @@ namespace Longman\LaravelLodash\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 
 use function array_unshift;
 use function explode;
@@ -62,7 +63,7 @@ trait ManyToManyPreload
         // Apply mysql variables
         $newQuery->addSelect(
             $connection->raw(
-                "@num := if(@group = " . $this->quoteColumn($queryKeyColumn) . ", @num+1, 1) as `" . $numAlias . "`, @group := " . $this->quoteColumn($queryKeyColumn) . " as `" . $groupAlias . "`",
+                '@num := if(@group = ' . $this->quoteColumn($queryKeyColumn) . ', @num+1, 1) as `' . $numAlias . '`, @group := ' . $this->quoteColumn($queryKeyColumn) . ' as `' . $groupAlias . '`',
             ),
         );
 
@@ -75,14 +76,14 @@ trait ManyToManyPreload
 
         if ($join) {
             $leftKey = explode('.', $queryKeyColumn)[1];
-            $leftKeyColumn = "`" . $table . "`.`" . $leftKey . "`";
+            $leftKeyColumn = '`' . $table . '`.`' . $leftKey . '`';
             $newQuery->addSelect($queryKeyColumn);
             $newQuery->mergeBindings($query->getQuery());
             $newQuery->getQuery()->joins = (array) $query->getQuery()->joins;
             $query->whereRaw($leftKeyColumn . ' = ' . $this->quoteColumn($queryKeyColumn));
         }
 
-        $query->from($connection->raw("(" . $newQuery->toSql() . ") as `" . $table . "`"))
+        $query->from($connection->raw('(' . $newQuery->toSql() . ') as `' . $table . '`'))
             ->where($numAlias, '<=', $limit);
 
         return $this;

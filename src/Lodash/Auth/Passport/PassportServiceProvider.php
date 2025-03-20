@@ -30,11 +30,13 @@ use Longman\LaravelLodash\Auth\Repositories\RefreshTokenRepository;
 use Longman\LaravelLodash\Auth\Repositories\TokenRepository;
 use Longman\LaravelLodash\Auth\Repositories\UserRepository;
 use Longman\LaravelLodash\Auth\Services\AuthService;
+use Override;
 
 use function tap;
 
 class PassportServiceProvider extends BasePassportServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         parent::register();
@@ -42,27 +44,34 @@ class PassportServiceProvider extends BasePassportServiceProvider
         $this->registerCustomRepositories();
     }
 
+    #[Override]
     protected function registerAuthorizationServer(): void
     {
         $this->app->singleton(AuthorizationServer::class, function () {
             return tap($this->makeAuthorizationServer(), function (AuthorizationServer $server) {
-                $accessTokenTtl = new DateInterval('PT1H');
-
-                $server->setDefaultScope(Passport::$defaultScope);
-
-                $server->enableGrantType($this->makeInternalGrant(), $accessTokenTtl);
-
-                $server->enableGrantType($this->makeInternalRefreshTokenGrant(), $accessTokenTtl);
-
-                $server->enableGrantType($this->makeGoogleAccessTokenGrant(), $accessTokenTtl);
-
-                $server->enableGrantType($this->makeGoogleIdTokenGrant(), $accessTokenTtl);
-
-                $server->enableGrantType($this->makeEmulateGrant(), $accessTokenTtl);
+                $this->enableGrants($server);
             });
         });
     }
 
+    protected function enableGrants(AuthorizationServer $server): void
+    {
+        $accessTokenTtl = new DateInterval('PT1H');
+
+        $server->setDefaultScope(Passport::$defaultScope);
+
+        $server->enableGrantType($this->makeInternalGrant(), $accessTokenTtl);
+
+        $server->enableGrantType($this->makeInternalRefreshTokenGrant(), $accessTokenTtl);
+
+        $server->enableGrantType($this->makeGoogleAccessTokenGrant(), $accessTokenTtl);
+
+        $server->enableGrantType($this->makeGoogleIdTokenGrant(), $accessTokenTtl);
+
+        $server->enableGrantType($this->makeEmulateGrant(), $accessTokenTtl);
+    }
+
+    #[Override]
     protected function makeGuard(array $config): RequestGuard
     {
         return new RequestGuard(function (Request $request) use ($config) {

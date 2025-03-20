@@ -29,10 +29,11 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "laravel/framework": "^12.0"
     },
     "require-dev": {
+        "google/apiclient": "^2.18",
         "aws/aws-sdk-php": "^3.306",
         "elasticsearch/elasticsearch": "^8.17",
         "jetbrains/phpstorm-attributes": "^1.0",

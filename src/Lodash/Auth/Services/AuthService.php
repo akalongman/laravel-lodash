@@ -10,6 +10,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\ItemNotFoundException;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Deprecated;
 use Longman\LaravelLodash\Auth\Contracts\AuthServiceContract;
 use Longman\LaravelLodash\Auth\Contracts\RefreshTokenRepositoryContract;
 use Longman\LaravelLodash\Auth\Contracts\TokenRepositoryContract;
@@ -19,6 +20,7 @@ use Longman\LaravelLodash\Auth\Passport\Guards\RequestGuard;
 
 use function is_null;
 
+#[Deprecated('Use custom implementation')]
 readonly class AuthService implements AuthServiceContract
 {
     public function __construct(

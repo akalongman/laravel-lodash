@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Auth\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -28,7 +27,7 @@ class StopEmulateEvent
         //
     }
 
-    public function broadcastOn(): Channel | array
+    public function broadcastOn(): PrivateChannel
     {
         return new PrivateChannel('channel-name');
     }

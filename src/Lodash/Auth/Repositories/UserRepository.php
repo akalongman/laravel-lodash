@@ -8,12 +8,14 @@ use App\Models\User;
 use Exception;
 use Google_Service_Oauth2;
 use Illuminate\Database\Connection;
+use JetBrains\PhpStorm\Deprecated;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Longman\LaravelLodash\Auth\Contracts\UserContract;
 use Longman\LaravelLodash\Auth\Contracts\UserRepositoryContract;
 use RuntimeException;
 use Throwable;
 
+#[Deprecated('Use custom implementation')]
 class UserRepository implements UserRepositoryContract
 {
     protected Connection $database;

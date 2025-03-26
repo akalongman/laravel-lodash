@@ -13,20 +13,13 @@ use function str_contains;
 use function str_starts_with;
 use function trim;
 
-abstract class DataStructuresBuilder
+abstract class DataStructuresProvider
 {
-    /**
-     * Caller object instance, where defined data structure getters like caller::getUserStructure()
-     */
-    protected static object $caller;
-
-    public static function includeNestedRelations(object $caller, array &$item, array $relations): void
+    protected static function includeNestedRelations(array &$item, array $relations): void
     {
         if (empty($relations)) {
             return;
         }
-
-        self::setCallerObject($caller);
 
         foreach ($relations as $relation) {
             $parentRelations = explode('.', $relation);
@@ -71,22 +64,11 @@ abstract class DataStructuresBuilder
 
     protected static function getItemStructure(string $relationItem): array
     {
-        $caller = self::getCallerObject();
         $method = 'get' . $relationItem . 'Structure';
-        if (! is_callable([$caller, $method])) {
+        if (! is_callable(['static', $method])) {
             throw new InvalidArgumentException('Getter method for structure "' . $relationItem . '" does not exists');
         }
 
-        return $caller->$method();
-    }
-
-    protected static function setCallerObject(object $caller): void
-    {
-        self::$caller = $caller;
-    }
-
-    protected static function getCallerObject(): object
-    {
-        return self::$caller;
+        return static::$method();
     }
 }

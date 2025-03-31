@@ -12,7 +12,7 @@ interface AuthServiceContract
 
     public function retrieveUserById(int | string $id): ?UserContract;
 
-    public function updateAccessToken(string $accessTokenIdentifier, int $userId): void;
+    public function updateAccessToken(string $accessTokenIdentifier, int | string $userId): void;
 
     public function updateRememberToken(UserContract $user, string $token): void;
 

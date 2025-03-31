@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Testing;
 
 use Arr;
-use Illuminate\Testing\Assert;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 use function __;
+use function array_merge;
 use function json_decode;
 
 class Response extends TestResponse
@@ -81,17 +81,48 @@ class Response extends TestResponse
         return $this;
     }
 
-    public function assertJsonErrorStructure(): self
+    public function assertJsonErrorStructure(?string $message = null, bool $includeMeta = false): self
     {
-        $this->assertJsonStructure(self::$errorResponseStructure);
+        $structure = self::$errorResponseStructure;
+        if (! $includeMeta) {
+            $structure = Arr::except($structure, 'meta');
+        }
+        $this->assertJsonStructure($structure);
+        $this->assertJson(['status' => 'error']);
+        if ($message) {
+            $this->assertJson(['message' => $message]);
+        }
 
         return $this;
     }
 
-    public function assertJsonSuccessStructure(string $message = 'ok'): self
+    public function assertJsonValidationErrorStructure(array $errors = [], bool $includeMeta = false): self
     {
-        $this->assertJsonStructure(self::$successResponseStructure);
-        $this->assertJson(['status' => $message]);
+        $structure = self::$errorResponseStructure;
+        if (! $includeMeta) {
+            $structure = Arr::except($structure, 'meta');
+        }
+        $structure = array_merge($structure, ['errors']);
+        $this->assertJsonStructure($structure);
+        $this->assertJson(['message' => __('validation.error'), 'status' => 'error']);
+        if ($errors) {
+            $this->assertJsonValidationErrors($errors);
+        }
+
+        return $this;
+    }
+
+    public function assertJsonSuccessStructure(?string $message = null, bool $includeMeta = false): self
+    {
+        $structure = self::$successResponseStructure;
+        if (! $includeMeta) {
+            $structure = Arr::except($structure, 'meta');
+        }
+        $this->assertJsonStructure($structure);
+        $this->assertJson(['status' => 'ok']);
+        if ($message) {
+            $this->assertJson(['message' => $message]);
+        }
 
         return $this;
     }
@@ -117,52 +148,9 @@ class Response extends TestResponse
     {
         parent::assertNotFound();
 
-        //$this->assertJsonErrorStructure();
         $this->assertJson(['status' => 'error', 'message' => __('app.item_not_found')]);
 
         return $this;
-    }
-
-    public function assertIsInvalidItem(): Response
-    {
-        Assert::assertTrue(
-            $this->isInvalidData(),
-            'Response status code [' . $this->getStatusCode() . '] is not a invalid data status code.',
-        );
-
-        return $this;
-    }
-
-    public function assertInvalidData(): Response
-    {
-        Assert::assertTrue(
-            $this->isInvalidData(),
-            'Response status code [' . $this->getStatusCode() . '] is not a invalid data status code.',
-        );
-        $this->assertJsonErrorStructure();
-
-        return $this;
-    }
-
-    public function isInvalidData(): bool
-    {
-        return $this->getStatusCode() === 422;
-    }
-
-    public function assertIsError(): void
-    {
-        $this->assertJsonStructure(self::$errorResponseStructure);
-        $this->assertJson(['status' => 'error']);
-    }
-
-    public function assertIsOk(string $message = 'ok', bool $includeMeta = false): void
-    {
-        $structure = self::$successResponseStructure;
-        if (! $includeMeta) {
-            $structure = Arr::except($structure, 'meta');
-        }
-        $this->assertJsonStructure($structure);
-        $this->assertJson(['status' => $message]);
     }
 
     public function assertOk(): Response

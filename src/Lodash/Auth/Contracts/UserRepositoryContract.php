@@ -8,7 +8,7 @@ use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
 interface UserRepositoryContract extends UserRepositoryInterface
 {
-    public function findOneForAuth(int $id): ?UserContract;
+    public function findOneForAuth(int | string $id): ?UserContract;
 
     public function getGoogleUserByAccessToken(string $googleToken): ?array;
 
@@ -16,7 +16,7 @@ interface UserRepositoryContract extends UserRepositoryInterface
 
     public function retrieveByCredentials(array $credentials): ?UserContract;
 
-    public function retrieveUserByToken(int $identifier, string $token): ?UserContract;
+    public function retrieveUserByToken(int | string $identifier, string $token): ?UserContract;
 
     public function updateRememberToken(UserContract $user, string $token): void;
 }

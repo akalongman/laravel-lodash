@@ -6,11 +6,11 @@ namespace Longman\LaravelLodash\Auth\Contracts;
 
 interface AuthServiceContract
 {
-    public function findOneForAuth(int $id): ?UserContract;
+    public function findOneForAuth(int | string $id): ?UserContract;
 
-    public function findOneForAuthOrFail(int $id): UserContract;
+    public function findOneForAuthOrFail(int | string $id): UserContract;
 
-    public function retrieveUserById(int $id): ?UserContract;
+    public function retrieveUserById(int | string $id): ?UserContract;
 
     public function updateAccessToken(string $accessTokenIdentifier, int $userId): void;
 
@@ -30,7 +30,7 @@ interface AuthServiceContract
 
     public function retrieveByCredentials(array $credentials): ?UserContract;
 
-    public function retrieveUserByToken(int $identifier, string $token): ?UserContract;
+    public function retrieveUserByToken(int | string $identifier, string $token): ?UserContract;
 
     public function validateCredentials(UserContract $user, string $password): bool;
 

@@ -48,7 +48,7 @@ class Response extends TestResponse
     {
         $response = $this->getDecodedContent();
 
-        PHPUnit::assertEquals($data['page'], $response['meta']['pagination']['currentPage']);
+        PHPUnit::assertEquals($data['currentPage'], $response['meta']['pagination']['currentPage']);
         PHPUnit::assertEquals($data['perPage'], $response['meta']['pagination']['perPage']);
         PHPUnit::assertEquals($data['count'], $response['meta']['pagination']['count']);
         PHPUnit::assertEquals($data['total'], $response['meta']['pagination']['total']);
@@ -66,6 +66,8 @@ class Response extends TestResponse
                 'pagination' => self::$pagerMetaStructure,
             ];
         }
+
+        PHPUnit::assertNotEmpty($this->getDecodedContent()['data'], 'Data collection is empty.');
 
         $this->assertJsonStructure($struct);
 

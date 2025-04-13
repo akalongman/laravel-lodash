@@ -14,7 +14,8 @@ use function str_starts_with;
 
 class Attributes implements Arrayable
 {
-    private const RELATION_MARKER = 'relations:';
+    private const string RELATION_MARKER = 'relations:';
+    private const string DYNAMIC_COUNT_MARKER = '*';
     private array $params;
     private array $attributes = [];
     /** @var array<self> */
@@ -97,7 +98,7 @@ class Attributes implements Arrayable
         $attributes = [];
         $relations = [];
         foreach ($params as $key => $data) {
-            if (str_starts_with($key, self::RELATION_MARKER)) {
+            if (str_starts_with((string) $key, self::RELATION_MARKER)) {
                 $ex = explode(':', $key);
                 if (! isset($ex[1])) {
                     throw new InvalidArgumentException('Relation is empty');
@@ -106,9 +107,9 @@ class Attributes implements Arrayable
                 $relName = $ex[1];
                 $count = 1;
                 if (isset($ex[2])) {
-                    $count = (int) $ex[2];
+                    $count = $ex[2] === self::DYNAMIC_COUNT_MARKER ? count($data) : (int) $ex[2];
                 }
-                $attrs = $params[$key];
+                $attrs = $data;
 
                 $relations[$relName] = new self($attrs, $relName, $count);
             } else {

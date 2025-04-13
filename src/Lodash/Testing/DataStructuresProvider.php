@@ -5,16 +5,35 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Testing;
 
 use InvalidArgumentException;
+use Longman\LaravelLodash\Support\Str;
 
 use function array_shift;
+use function call_user_func_array;
 use function explode;
+use function get_called_class;
 use function is_callable;
+use function lcfirst;
+use function property_exists;
 use function str_contains;
 use function str_starts_with;
 use function trim;
 
 abstract class DataStructuresProvider
 {
+    public static function __callStatic(string $name, array $arguments): mixed
+    {
+        $property = lcfirst(Str::substr($name, 3));
+        if (! property_exists(get_called_class(), $property)) {
+            throw new InvalidArgumentException('Property "' . $property . '" does not exists');
+        }
+        $structure = static::$$property;
+
+        $parameters = [&$structure, $arguments[0] ?? []];
+        call_user_func_array([get_called_class(), 'includeNestedRelations'], $parameters);
+
+        return $structure;
+    }
+
     protected static function includeNestedRelations(array &$item, array $relations): void
     {
         if (empty($relations)) {

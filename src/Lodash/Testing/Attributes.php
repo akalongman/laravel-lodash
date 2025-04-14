@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Testing;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
 use function array_key_exists;
@@ -31,9 +32,11 @@ class Attributes implements Arrayable
         $this->parseParameters($params);
     }
 
-    public function getAttributes(array $extraAttrs = []): array
+    public function getAttributes(array $extraAttrs = [], array $except = []): array
     {
-        return array_replace_recursive($this->attributes, $extraAttrs);
+        $array = array_replace_recursive($this->attributes, $extraAttrs);
+
+        return Arr::except($array, $except);
     }
 
     public function hasAttribute(string $name): bool
@@ -88,9 +91,11 @@ class Attributes implements Arrayable
         $this->params = array_replace_recursive($this->params, [self::RELATION_MARKER . $name . ':' . $count => $data]);
     }
 
-    public function toArray(array $extraParams = []): array
+    public function toArray(array $extraParams = [], array $except = []): array
     {
-        return array_replace_recursive($this->params, $extraParams);
+        $array = array_replace_recursive($this->params, $extraParams);
+
+        return Arr::except($array, $except);
     }
 
     private function parseParameters(array $params): void

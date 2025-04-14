@@ -44,10 +44,7 @@ class Attributes implements Arrayable
         return array_key_exists($name, $this->attributes);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAttribute(string $name, $default = null)
+    public function getAttribute(string $name, mixed $default = null): mixed
     {
         return $this->attributes[$name] ?? $default;
     }

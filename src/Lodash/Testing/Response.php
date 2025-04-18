@@ -135,41 +135,4 @@ class Response extends TestResponse
 
         return json_decode($content, true);
     }
-
-    public function assertForbidden(): Response
-    {
-        parent::assertForbidden();
-
-        //$this->assertJsonErrorStructure();
-        //$this->assertJson(['message' => 'This action is unauthorized.']);
-
-        return $this;
-    }
-
-    public function assertNotFound(): Response
-    {
-        parent::assertNotFound();
-
-        $this->assertJson(['status' => 'error', 'message' => __('app.item_not_found')]);
-
-        return $this;
-    }
-
-    public function assertOk(): Response
-    {
-        parent::assertOk();
-
-        $this->assertJsonSuccessStructure();
-
-        return $this;
-    }
-
-    public function assertCreated(): Response
-    {
-        parent::assertCreated();
-
-        $this->assertJsonSuccessStructure();
-
-        return $this;
-    }
 }

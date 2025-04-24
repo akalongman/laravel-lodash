@@ -12,6 +12,7 @@ use function app;
 use function array_diff;
 use function array_keys;
 use function config;
+use function in_array;
 use function method_exists;
 use function preg_replace;
 
@@ -20,15 +21,38 @@ use function preg_replace;
  */
 trait RestrictsExtraAttributes
 {
+    protected bool $checkForExtraProperties = true;
+    protected bool $checkForEmptyPayload = true;
+    protected array $methodsForEmptyPayload = ['PATCH'];
+
     protected function prepareForValidation(): void
     {
         $this->checkForNotAllowedProperties();
 
+        $this->checkForEmptyPayload();
+
         parent::prepareForValidation();
+    }
+
+    private function checkForEmptyPayload(): void
+    {
+        if (! $this->checkForEmptyPayload) {
+            return;
+        }
+
+        if (in_array($this->method(), $this->methodsForEmptyPayload, true)) {
+            if (empty($this->input())) {
+                throw ValidationException::withMessages(['general' => [__('validation.payload_is_empty')]]);
+            }
+        }
     }
 
     private function checkForNotAllowedProperties(): void
     {
+        if (! $this->checkForExtraProperties) {
+            return;
+        }
+
         $extraAttributes = array_diff(
             $this->getValidationData(),
             $this->getAllowedAttributes(),

@@ -23,7 +23,7 @@ trait RestrictsExtraAttributes
 {
     protected bool $checkForExtraProperties = true;
     protected bool $checkForEmptyPayload = true;
-    protected array $methodsForEmptyPayload = ['PATCH'];
+    protected array $methodsForEmptyPayload = ['PATCH', 'POST', 'PUT'];
 
     protected function prepareForValidation(): void
     {

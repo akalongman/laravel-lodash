@@ -11,6 +11,7 @@ use function __;
 use function app;
 use function array_diff;
 use function array_keys;
+use function array_search;
 use function config;
 use function in_array;
 use function method_exists;
@@ -22,6 +23,7 @@ use function preg_replace;
 trait RestrictsExtraAttributes
 {
     protected bool $checkForExtraProperties = true;
+    protected array $ignoreExtraProperties = [];
     protected bool $checkForEmptyPayload = true;
     protected array $methodsForEmptyPayload = ['PATCH', 'POST', 'PUT'];
 
@@ -53,8 +55,19 @@ trait RestrictsExtraAttributes
             return;
         }
 
+        $validationData = $this->getValidationData();
+
+        // Ignore marked properties
+        if (! empty($this->ignoreExtraProperties)) {
+            foreach ($this->ignoreExtraProperties as $deleleValue) {
+                if (($key = array_search($deleleValue, $validationData)) !== false) {
+                    unset($validationData[$key]);
+                }
+            }
+        }
+
         $extraAttributes = array_diff(
-            $this->getValidationData(),
+            $validationData,
             $this->getAllowedAttributes(),
         );
 

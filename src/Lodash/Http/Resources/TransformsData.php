@@ -7,6 +7,7 @@ namespace Longman\LaravelLodash\Http\Resources;
 use LogicException;
 use Longman\LaravelLodash\Support\Str;
 
+use function array_replace;
 use function call_user_func_array;
 use function in_array;
 use function is_array;
@@ -17,22 +18,33 @@ trait TransformsData
 {
     /**
      * Fields transform mapping.
-     * In array key should be a column name from database,
+     * In array key should be a column name from the database,
      * value can be just name (if getter exists for that name, or array [fieldName => getterMethod]).
      * If static getterMethod is defined in the resource class, it will be called and as a first argument will be passed TransformableContract $model,
-     * Otherwise, model's method will be used.
+     * Otherwise, the model's method will be used.
      */
     protected static array $transformMapping = [];
 
     /**
+     * Fields list for merging with general mapping during transformation o internal. Used for updating some fields.
+     * Array values should be a column name from the database.
+     */
+    protected static array $internalMapping = [];
+
+    /**
      * Fields list for hiding in output.
-     * Array values should be a column name from database,
+     * Array values should be a column name from the database.
      */
     protected static array $hideInOutput = [];
 
     public static function getTransformFields(): array
     {
         return static::$transformMapping;
+    }
+
+    public static function getInternalFields(): array
+    {
+        return static::$internalMapping;
     }
 
     public static function getHideInOutput(): array
@@ -65,8 +77,11 @@ trait TransformsData
 
     public static function transformToInternal(array $fields): array
     {
+        $transformFields = static::getTransformFields();
+        $transformFields = array_replace($transformFields, static::getInternalFields());
+
         $modelTransformedFields = [];
-        foreach (static::getTransformFields() as $key => $transformField) {
+        foreach ($transformFields as $key => $transformField) {
             if (is_array($transformField)) {
                 $modelTransformedFields[key($transformField)] = $key;
             } else {

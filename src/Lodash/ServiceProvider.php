@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash;
 
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use InvalidArgumentException;
 use Longman\LaravelLodash\Commands\ClearAll;
@@ -16,6 +16,7 @@ use Longman\LaravelLodash\Commands\LogClear;
 use Longman\LaravelLodash\Commands\UserAdd;
 use Longman\LaravelLodash\Commands\UserPassword;
 use Longman\LaravelLodash\Validation\StrictTypeValidator;
+use Longman\LaravelLodash\Validation\Validator;
 
 use function app;
 use function array_keys;
@@ -45,11 +46,39 @@ class ServiceProvider extends LaravelServiceProvider
             __DIR__ . '/../config/config.php' => config_path('lodash.php'),
         ]);
 
+        // Validator and rules
+        $this->app['validator']
+            ->resolver(
+                function (Translator $translator, array $data, array $rules, array $messages): Validator {
+                    $validator = new Validator(
+                        $translator,
+                        $data,
+                        $rules,
+                        $messages,
+                    );
+
+                    $validator->addExtension('strict', function (string $attribute, mixed $value, array $parameters, Validator $validator): bool {
+                        if (empty($parameters[0])) {
+                            throw new InvalidArgumentException('Strict rule requires an type argument');
+                        }
+
+                        $validator->addReplacer('strict', static function (string $message, string $attribute, string $rule, array $parameters): string {
+                            return str_replace(':type', $parameters[0], $message);
+                        });
+
+                        $customValidator = $this->app->make(StrictTypeValidator::class);
+
+                        return $customValidator->validate($attribute, $value, $parameters);
+                    });
+
+                    return $validator;
+                },
+            );
+
         $this->registerBladeDirectives();
 
         $this->loadTranslations();
-
-        $this->loadValidations();
+        //$this->loadValidations();
     }
 
     public function register(): void
@@ -130,26 +159,5 @@ class ServiceProvider extends LaravelServiceProvider
         $this->publishes([
             __DIR__ . '/../translations' => resource_path('lang/vendor/lodash'),
         ]);
-    }
-
-    protected function loadValidations(): void
-    {
-        if (! config('lodash.register.validation_rules')) {
-            return;
-        }
-
-        Validator::extend('strict', function (string $attribute, mixed $value, array $parameters, Validator $validator): bool {
-            if (empty($parameters[0])) {
-                throw new InvalidArgumentException('Strict rule requires an type argument');
-            }
-
-            $validator->addReplacer('strict', static function (string $message, string $attribute, string $rule, array $parameters): string {
-                return str_replace(':type', $parameters[0], $message);
-            });
-
-            $customValidator = $this->app->make(StrictTypeValidator::class);
-
-            return $customValidator->validate($attribute, $value, $parameters);
-        }, 'The :attribute must be of type :type');
     }
 }

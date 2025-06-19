@@ -7,13 +7,13 @@ namespace Longman\LaravelLodash\Validation;
 use function gettype;
 use function in_array;
 
-readonly class StrictTypesValidator
+readonly class StrictTypeValidator
 {
-    protected const NATIVE_TYPE_INT = 'integer';
-    protected const NATIVE_TYPE_FLOAT = 'double';
-    protected const NATIVE_TYPE_BOOL = 'boolean';
+    protected const string NATIVE_TYPE_INT = 'integer';
+    protected const string NATIVE_TYPE_FLOAT = 'double';
+    protected const string NATIVE_TYPE_BOOL = 'boolean';
 
-    protected const TYPE_MAP = [
+    protected const array TYPE_MAP = [
         'int'     => self::NATIVE_TYPE_INT,
         'integer' => self::NATIVE_TYPE_INT,
         'float'   => self::NATIVE_TYPE_FLOAT,
@@ -22,14 +22,14 @@ readonly class StrictTypesValidator
         'boolean' => self::NATIVE_TYPE_BOOL,
     ];
 
-    public function validate($attribute, $value, $parameters): bool
+    public function validate(string $attribute, mixed $value, array $parameters): bool
     {
         if (empty($parameters)) {
             return false;
         }
 
         $valueType = gettype($value);
-        $requiredType = $parameters[0];
+        $requiredType = (string) $parameters[0];
 
         if (empty(static::TYPE_MAP[$requiredType]) || $this->isNativeTypeString($requiredType)) {
             return $valueType === $requiredType;
@@ -44,6 +44,6 @@ readonly class StrictTypesValidator
             static::NATIVE_TYPE_INT,
             static::NATIVE_TYPE_FLOAT,
             static::NATIVE_TYPE_BOOL,
-        ]);
+        ], true);
     }
 }

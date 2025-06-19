@@ -7,6 +7,7 @@ namespace Longman\LaravelLodash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use InvalidArgumentException;
 use Longman\LaravelLodash\Commands\ClearAll;
 use Longman\LaravelLodash\Commands\DbClear;
 use Longman\LaravelLodash\Commands\DbDump;
@@ -14,7 +15,7 @@ use Longman\LaravelLodash\Commands\DbRestore;
 use Longman\LaravelLodash\Commands\LogClear;
 use Longman\LaravelLodash\Commands\UserAdd;
 use Longman\LaravelLodash\Commands\UserPassword;
-use Longman\LaravelLodash\Validation\StrictTypesValidator;
+use Longman\LaravelLodash\Validation\StrictTypeValidator;
 
 use function app;
 use function array_keys;
@@ -137,13 +138,16 @@ class ServiceProvider extends LaravelServiceProvider
             return;
         }
 
-        Validator::extend('type', function ($attribute, $value, $parameters, $validator): bool {
-            $validator->addReplacer('type', static function ($message, $attribute, $rule, $parameters): string {
+        Validator::extend('strict', function (string $attribute, mixed $value, array $parameters, Validator $validator): bool {
+            if (empty($parameters[0])) {
+                throw new InvalidArgumentException('Strict rule requires an type argument');
+            }
+
+            $validator->addReplacer('strict', static function (string $message, string $attribute, string $rule, array $parameters): string {
                 return str_replace(':type', $parameters[0], $message);
             });
 
-            /** @var \Longman\LaravelLodash\Validation\StrictTypesValidator $validator */
-            $customValidator = $this->app->make(StrictTypesValidator::class);
+            $customValidator = $this->app->make(StrictTypeValidator::class);
 
             return $customValidator->validate($attribute, $value, $parameters);
         }, 'The :attribute must be of type :type');

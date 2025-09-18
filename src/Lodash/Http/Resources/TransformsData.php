@@ -99,6 +99,16 @@ trait TransformsData
         return $transformed;
     }
 
+    public static function transformCollectionToInternal(iterable $items): array
+    {
+        $return = [];
+        foreach ($items as $item) {
+            $return[] = static::transformToInternal($item);
+        }
+
+        return $return;
+    }
+
     private static function parseKeyValue(string $internalField, $transformValue, TransformableContract $model): array
     {
         if (is_array($transformValue)) {

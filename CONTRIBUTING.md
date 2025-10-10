@@ -16,7 +16,7 @@ Which should give you no failures or errors. You can ignore any skipped tests as
 Pushing
 -------
 
-Development is based on the git flow branching model (see http://nvie.com/posts/a-successful-git-branching-model/ )
+Development is based on the git flow branching model (see http://nvie.com/posts/a-successful-git-branching-model/)
 If you fix a bug please push in hotfix branch.
 If you develop a new feature please create a new branch.
 

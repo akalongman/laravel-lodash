@@ -60,7 +60,8 @@ trait RestrictsExtraAttributes
         // Ignore marked properties
         if (! empty($this->ignoreExtraProperties)) {
             foreach ($this->ignoreExtraProperties as $deleleValue) {
-                if (($key = array_search($deleleValue, $validationData)) !== false) {
+                $key = array_search($deleleValue, $validationData);
+                if ($key !== false) {
                     unset($validationData[$key]);
                 }
             }

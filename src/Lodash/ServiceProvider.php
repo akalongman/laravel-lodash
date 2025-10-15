@@ -18,15 +18,11 @@ use Longman\LaravelLodash\Commands\UserPassword;
 use Longman\LaravelLodash\Validation\StrictTypeValidator;
 use Longman\LaravelLodash\Validation\Validator;
 
-use function app;
 use function array_keys;
-use function array_pad;
 use function config;
 use function config_path;
-use function preg_split;
 use function resource_path;
 use function str_replace;
-use function trim;
 
 class ServiceProvider extends LaravelServiceProvider
 {
@@ -75,8 +71,6 @@ class ServiceProvider extends LaravelServiceProvider
                 },
             );
 
-        $this->registerBladeDirectives();
-
         $this->loadTranslations();
         //$this->loadValidations();
     }
@@ -101,28 +95,6 @@ class ServiceProvider extends LaravelServiceProvider
         }
 
         $this->commands(array_keys($this->commands));
-    }
-
-    protected function registerBladeDirectives(): void
-    {
-        if (! config('lodash.register.blade_directives')) {
-            return;
-        }
-
-        // Display relative time
-        app('blade.compiler')->directive('datetime', static function ($expression) {
-            return "<?php echo '<time datetime=\'' . with($expression)->toIso8601String()
-                . '\' title=\'' . $expression . '\'>'
-                . with($expression)->diffForHumans() . '</time>' ?>";
-        });
-
-        // Pluralization helper
-        app('blade.compiler')->directive('plural', static function ($expression) {
-            $expression = trim($expression, '()');
-            [$count, $str, $spacer] = array_pad(preg_split('/,\s*/', $expression), 3, "' '");
-
-            return "<?php echo $count . $spacer . str_plural($str, $count) ?>";
-        });
     }
 
     protected function registerRequestMacros(): void

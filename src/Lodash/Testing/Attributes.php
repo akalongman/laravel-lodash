@@ -10,6 +10,7 @@ use InvalidArgumentException;
 
 use function array_key_exists;
 use function array_replace_recursive;
+use function count;
 use function explode;
 use function str_starts_with;
 

@@ -34,7 +34,6 @@ return [
     ],
 
     'register' => [
-        'blade_directives' => false,
         'request_macros'   => false,
         'translations'     => true,
         'validation_rules' => true,

@@ -36,15 +36,38 @@ abstract class JsonResource extends BaseResource
     public function getTransformed(): array
     {
         if ($this->resource instanceof TransformableContract) {
-            return $this->transformToApi($this->resource);
+            return static::transformToApi($this->resource);
         }
 
         return [];
     }
 
+    public function setWith(array $data): self
+    {
+        $this->with = $data;
+
+        return $this;
+    }
+
+    public function getWith(): array
+    {
+        return $this->with;
+    }
+
+    public function appendWith(array $data): self
+    {
+        $this->with = array_merge_recursive($this->with, $data);
+
+        return $this;
+    }
+
     public function toArray($request): array
     {
         $data = $this->getResourceData();
+
+        if (! empty($this->with)) {
+            $data += Arr::except($this->with, ['id', 'type', 'attributes']);
+        }
 
         $relationsData = $this->getRelationsData();
 

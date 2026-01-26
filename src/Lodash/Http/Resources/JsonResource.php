@@ -189,7 +189,11 @@ abstract class JsonResource extends BaseResource
             return $this->resourceType;
         }
 
-        $reflection = new ReflectionClass($this->resource->getModel());
+        if (method_exists($this->resource, 'getModel')) {
+            $reflection = new ReflectionClass($this->resource->getModel());
+        } else {
+            $reflection = new ReflectionClass($this->resource);
+        }
 
         return $reflection->getShortName();
     }

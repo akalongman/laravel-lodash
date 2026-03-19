@@ -24,6 +24,18 @@ class Response extends TestResponse
         'totalPages',
         'links',
     ];
+    protected static array $cursorMetaStructure = [
+        'count',
+        'perPage',
+        'cursor' => [
+            'next',
+            'previous',
+        ],
+        'links' => [
+            'next',
+            'previous',
+        ],
+    ];
 
     public static function setSuccessResponseStructure(array $structure): void
     {
@@ -56,7 +68,19 @@ class Response extends TestResponse
         return $this;
     }
 
-    public function assertJsonDataCollectionStructure(array $data, bool $includePagerMeta = true): self
+    public function assertJsonDataCursor(array $data): self
+    {
+        $response = $this->getDecodedContent();
+
+        PHPUnit::assertEquals($data['count'], $response['meta']['pagination']['count']);
+        PHPUnit::assertEquals($data['perPage'], $response['meta']['pagination']['perPage']);
+        PHPUnit::assertEquals($data['cursor'], $response['meta']['pagination']['cursor']);
+        PHPUnit::assertEquals($data['links'], $response['meta']['pagination']['links']);
+
+        return $this;
+    }
+
+    public function assertJsonDataCollectionStructure(array $data, bool $includePagerMeta = true, bool $includeCursorMeta = false): self
     {
         $struct = self::$successResponseStructure;
         $struct['data'] = [$data];
@@ -64,6 +88,12 @@ class Response extends TestResponse
         if ($includePagerMeta) {
             $struct['meta'] = [
                 'pagination' => self::$pagerMetaStructure,
+            ];
+        }
+
+        if ($includeCursorMeta) {
+            $struct['meta'] = [
+                'pagination' => self::$cursorMetaStructure,
             ];
         }
 

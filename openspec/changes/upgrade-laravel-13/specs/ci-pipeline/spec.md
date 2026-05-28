@@ -27,12 +27,13 @@ The workflow SHALL set up PHP explicitly via `shivammathur/setup-php@v2` rather 
 
 ### Requirement: Current Action versions
 
-The workflow SHALL pin third-party Actions to current major versions: `actions/checkout@v4` and `actions/cache@v4`. The workflow MUST NOT pin to deprecated `@v2` or older versions.
+The workflow SHALL pin third-party Actions to a major version whose JavaScript runtime is still supported by GitHub Actions runners. At the time of writing, that means `actions/checkout@v6` (Node 24) and `actions/cache@v5` (Node 24). The workflow MUST NOT pin to majors whose Node runtime has been deprecated by GitHub (`@v4` and earlier for these two actions, which are on Node 20).
 
-#### Scenario: Workflow uses current Action versions
+#### Scenario: Workflow uses Action majors supported by the current runner runtime
 
 - **WHEN** a contributor reads `.github/workflows/php.yml`
-- **THEN** every third-party Action reference SHALL pin to its current major (at least `@v4` for `actions/checkout` and `actions/cache`)
+- **THEN** every third-party Action reference SHALL pin to a major version whose JavaScript runtime is still supported by the GitHub Actions runner (currently Node 24)
+- **AND** when GitHub announces a future runner-runtime deprecation, the affected Action majors SHALL be bumped to a successor version before the deprecation date
 
 ### Requirement: Composer validation, install, lint, and test sequence
 

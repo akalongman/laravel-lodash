@@ -13,26 +13,26 @@
 
 ## 3. Handle stuck dev-deps
 
-- [ ] 3.1 For each dev-dep that has no L13-compatible release, pin it to the highest version composer can resolve against L13.
-- [ ] 3.2 For each pinned dev-dep, add a follow-up entry below in section 11 naming the dep and the revisit condition.
-- [ ] 3.3 If a stuck dev-dep is used only for diagnostics (no usages in `src/` or `tests/`), drop it from `require-dev` instead of pinning; record the drop in `CHANGELOG.md`.
+- [x] 3.1 For each dev-dep that has no L13-compatible release, pin it to the highest version composer can resolve against L13. *(No-op: all dev-deps resolved to L13-compatible versions cleanly.)*
+- [x] 3.2 For each pinned dev-dep, add a follow-up entry below in section 11 naming the dep and the revisit condition. *(No-op: no pins needed.)*
+- [x] 3.3 If a stuck dev-dep is used only for diagnostics (no usages in `src/` or `tests/`), drop it from `require-dev` instead of pinning; record the drop in `CHANGELOG.md`. *(No-op: no stuck deps.)*
 
 ## 4. Audit extended providers and connectors against L13 parents
 
-- [ ] 4.1 `src/Lodash/Cache/CacheServiceProvider.php` and any `Cache/*` manager/store: compare method signatures against Laravel 13's parent classes; update overrides where the parent changed.
-- [ ] 4.2 `src/Lodash/Redis/RedisServiceProvider.php`, `RedisManager`, and any `Redis/Connections|Connectors/*`: compare against Laravel 13 Redis internals; preserve igbinary and client-side sharding behavior.
-- [ ] 4.3 `src/Lodash/Queue/SqsFifo/*` driver, connector, and job: compare against Laravel 13 queue internals; update `pushRaw`, `later`, and connector signatures as needed.
-- [ ] 4.4 `src/Lodash/Elasticsearch/*` manager and contracts: verify compatibility with the bumped `elasticsearch/elasticsearch` major.
-- [ ] 4.5 `src/Lodash/Debug/*` provider: verify against Laravel 13 boot order and request lifecycle.
+- [x] 4.1 `src/Lodash/Cache/CacheServiceProvider.php` and any `Cache/*` manager/store: compare method signatures against Laravel 13's parent classes; update overrides where the parent changed. *(No changes: `createRedisDriver`, `serialize`, `unserialize` all match L13 parent signatures.)*
+- [x] 4.2 `src/Lodash/Redis/RedisServiceProvider.php`, `RedisManager`, and any `Redis/Connections|Connectors/*`: compare against Laravel 13 Redis internals; preserve igbinary and client-side sharding behavior. *(No changes: `connector()` deliberately narrows the parent to predis/phpredis with throw-on-unknown.)*
+- [x] 4.3 `src/Lodash/Queue/SqsFifo/*` driver, connector, and job: compare against Laravel 13 queue internals; update `pushRaw`, `later`, and connector signatures as needed. *(Replaced `str_random()` with `Str::random()` in `SqsFifoQueue`. Constructor narrowing is safe because the child sets properties directly without `parent::__construct` and the connector controls call sites.)*
+- [x] 4.4 `src/Lodash/Elasticsearch/*` manager and contracts: verify compatibility with the bumped `elasticsearch/elasticsearch` major. *(Migrated `Elasticsearch\Client`/`ClientBuilder` to `Elastic\Elasticsearch\*`. Added `->asArray()` / `->asBool()` calls at SDK response sites so downstream array access works. Fixed `ping()` to call `->asBool()`.)*
+- [x] 4.5 `src/Lodash/Debug/*` provider: verify against Laravel 13 boot order and request lifecycle. *(No changes: the provider only reads config and rewrites `app.debug` in boot; framework-independent.)*
 
 ## 5. Audit framework-extending classes
 
-- [ ] 5.1 `src/Lodash/ServiceProvider.php`: confirm `register()` and `boot()` signatures, validator extension API, and request macro registration still match L13.
-- [ ] 5.2 `src/Lodash/Http/Requests/*` and the extended `Request` class: verify against L13's `Illuminate\Http\Request`; update typed accessor macros and any overridden methods.
-- [ ] 5.3 `src/Lodash/Http/Resources/*` (`ArrayResource`, `JsonResource`, `ErrorResource`, `SuccessResource`, `ResourceResponse`, `PaginatedResourceResponse`): verify against L13 resource internals, including cursor pagination response shape.
-- [ ] 5.4 `src/Lodash/Validation/Validator.php` and `StrictTypeValidator`: verify the validator resolver API still works in L13.
-- [ ] 5.5 `src/Lodash/Middlewares/*`: verify each middleware against L13's `Middleware` contract.
-- [ ] 5.6 `src/Lodash/Auth/*` (including `InternalUserProvider` and Passport-touching code): verify against L13 auth and the bumped `laravel/passport` major.
+- [x] 5.1 `src/Lodash/ServiceProvider.php`: confirm `register()` and `boot()` signatures, validator extension API, and request macro registration still match L13. *(No changes: validator resolver constructor signature unchanged in L13.)*
+- [x] 5.2 `src/Lodash/Http/Requests/*` and the extended `Request` class: verify against L13's `Illuminate\Http\Request`; update typed accessor macros and any overridden methods. *(No changes: extended `Request` only adds non-overriding methods; `RestrictsExtraAttributes` calls `parent::prepareForValidation()` which is unchanged in L13.)*
+- [x] 5.3 `src/Lodash/Http/Resources/*` (`ArrayResource`, `JsonResource`, `ErrorResource`, `SuccessResource`, `ResourceResponse`, `PaginatedResourceResponse`): verify against L13 resource internals, including cursor pagination response shape. *(No changes: `toArray($request)`, `toResponse($request)`, `paginationInformation`, `meta` all signature-compatible with L13 parents.)*
+- [x] 5.4 `src/Lodash/Validation/Validator.php` and `StrictTypeValidator`: verify the validator resolver API still works in L13. *(No changes: `presentOrRuleIsImplicit($rule, $attribute, $value)` parent signature matches at `vendor/laravel/framework/src/Illuminate/Validation/Validator.php:839`.)*
+- [x] 5.5 `src/Lodash/Middlewares/*`: verify each middleware against L13's `Middleware` contract. *(No changes: each middleware is `handle(Request, Closure): Response` which is L13-compatible.)*
+- [x] 5.6 `src/Lodash/Auth/*` (including `InternalUserProvider` and Passport-touching code): verify against L13 auth and the bumped `laravel/passport` major. *(One pre-existing bug surfaced and DEFERRED: `PassportServiceProvider::makeGuard(): RequestGuard` is LSP-incompatible with passport's parent return type `: TokenGuard` and fatals on class autoload. Pre-dates this upgrade (Passport 12 had the same parent signature). Fixing requires removing the override + `RequestGuard` class + 3 `AuthService` references; that's a separate change. See section 11.2. `InternalUserProvider` is clean — already implements L11's `rehashPasswordIfRequired`.)*
 
 ## 6. Sweep for L12-deprecated APIs
 

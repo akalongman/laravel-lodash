@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Longman\LaravelLodash\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class UserAdd extends Command
 {
@@ -51,7 +52,7 @@ class UserAdd extends Command
         $password = $this->argument('password');
         if (! $password) {
             if ($this->confirm('Let system generate password?', true)) {
-                $password = str_random(16);
+                $password = Str::random(16);
             } else {
                 $password = $this->secret('Please enter new password');
             }

@@ -6,14 +6,75 @@ context: |
     for tech stack, architecture, and conventions.
 
     # Project summary
-    TBD
+    longman/laravel-lodash is a Laravel utility package (requires PHP ^8.4 and laravel/framework ^12.0),
+    distributed on Packagist as `longman/laravel-lodash`. It augments a host Laravel application
+    with opt-in extensions: extended Cache and Redis providers (igbinary serialization, client-side
+    sharding), an SQS FIFO queue driver, an Elasticsearch wrapper, Eloquent traits and casts,
+    HTTP request and resource extensions (including cursor-paginated responses), middlewares
+    (XSS, basic auth, request context, API locale), a `strict` validation rule, artisan housekeeping
+    commands, and testing helpers. The main `ServiceProvider` is intentionally minimal; feature
+    providers (`Cache`, `Redis`, `Queue`, `Elasticsearch`, `Debug`) are wired in explicitly by the
+    host application via `config/app.php`. Tests run against a bootstrapped Laravel instance via
+    `orchestra/testbench`.
 
     # Capability map
-    TBD
+
+    ## Package bootstrap
+    - service-provider: Main package provider with opt-in `lodash.register.*` flags wiring commands,
+      request macros, the `strict` validator, and translations.
+    - helpers-global: Global helper functions autoloaded via Composer (`p`, `get_db_query`,
+      `get_db_queries`, etc.).
+
+    ## Persistence
+    - eloquent-traits: `UserIdentities`, `UsesUuidAsPrimary`, and `ManyToManyPreload`
+      (`limitPerGroupViaUnion` / `limitPerGroupViaSubQuery`).
+    - eloquent-casts: Custom Eloquent attribute casts under `Eloquent/Casts`.
+
+    ## Infrastructure
+    - cache-redis-stack: Extended `CacheManager`, Redis-backed cache store, and `RedisManager` /
+      `RedisServiceProvider` adding igbinary serialization and client-side sharding via custom
+      connections and connectors.
+    - queue-sqs-fifo: SQS FIFO queue driver, connector, and job handling under `Queue/SqsFifo`.
+    - elasticsearch-manager: Wrapper around the official Elasticsearch SDK behind
+      `ElasticsearchManagerContract` and `ElasticsearchQueryContract`.
+
+    ## HTTP
+    - http-request-extensions: Extended `Request` class and typed-accessor macros (`getInt`,
+      `getBool`, `getFloat`, `getString`).
+    - http-resources: `ArrayResource`, `JsonResource`, `ErrorResource`, `SuccessResource`, plus
+      `ResourceResponse` and `PaginatedResourceResponse` with cursor pagination.
+    - http-form-requests: Form-request traits, including `RestrictsExtraAttributes`.
+
+    ## Authentication
+    - auth-internal-provider: `InternalUserProvider`, repositories, services, events, and Passport
+      integration under `Auth/`.
+
+    ## Cross-cutting middleware
+    - middlewares: `ApiLocale`, `SetRequestContext`, `SimpleBasicAuth`, and `XssSecurity` HTTP
+      middlewares.
+
+    ## Validation
+    - validation-strict: `strict` validation rule backed by `StrictTypeValidator` and the custom
+      `Validator` resolver.
+
+    ## Logging and debug
+    - logging-formatters: Monolog `DateTimeFormatter` for log timestamp formatting.
+    - debug-ip-gated: IP-gated debug-mode service provider.
+
+    ## Tooling
+    - artisan-commands: `clear-all`, `compile`, `db:clear`, `db:dump`, `db:restore`, `log:clear`,
+      `user:add`, `user:password`.
+    - composer-integrity: `ComposerChecker` and `ComposerScripts` verifying `vendor/` matches
+      `composer.lock` at runtime.
+
+    ## Utilities and testing
+    - support-helpers: `Arr`, `Str`, `Uuid`, `Declensions` support classes.
+    - testing-utilities: `InteractsWithDatabase` concern, PHPUnit `Constraints`,
+      `DataStructuresProvider`, `FakeDataProvider`, and `Response` helpers.
 
     ## Process
     - openspec-workflow: OpenSpec schema, artifact set, and generation rules for this project's spec-driven-longish workflow (mandatory summary.md for non-technical stakeholders, terminal commit-message suggestion lives on the summary artifact, apply-prerequisite enforcement)
-    - ci-pipeline: GitLab CI conventions for this project; today covers the automated AI MR review (pr-agent on Anthropic / claude-opus-4-7, auto /review on every MR, line-anchored inline comments, CLAUDE.md threading, allow_failure, pinned image tag, parallel-rollout discipline)
+    - ci-pipeline: GitHub Actions conventions for this project; today covers `.github/workflows/php.yml`, which on push and pull_request to `master` validates `composer.json` / `composer.lock`, caches `vendor/`, installs dependencies, and runs `composer phpcs` followed by `composer test` on `ubuntu-latest`.
 
     # OpenSpec workflow conventions
     - Scenarios use `#### Scenario:` (four hashtags) with `WHEN` / `THEN` lines.

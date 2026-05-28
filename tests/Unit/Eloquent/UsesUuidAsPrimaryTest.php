@@ -14,24 +14,28 @@ class UsesUuidAsPrimaryTest extends TestCase
     #[Test]
     public function it_should_check_uuid_is_valid_binary(): void
     {
-        $mock = $this->getMockForTrait(UsesUuidAsPrimary::class);
+        $subject = new class {
+            use UsesUuidAsPrimary;
+        };
 
         $uuidString = '055a40ec-94a1-4cd7-891f-11604409055e';
         $uuid = Uuid::fromString($uuidString);
         $uuidBinary = $uuid->getBytes();
 
-        $this->assertTrue($mock->isUuidBinary($uuidBinary));
+        $this->assertTrue($subject->isUuidBinary($uuidBinary));
     }
 
     #[Test]
     public function it_should_check_uuid_is_invalid_binary(): void
     {
-        $mock = $this->getMockForTrait(UsesUuidAsPrimary::class);
+        $subject = new class {
+            use UsesUuidAsPrimary;
+        };
 
         $uuidString = '055a40ec-94a1-4cd7-891f-11604409055e';
         $uuid = Uuid::fromString($uuidString);
         $uuidBinary = $uuid->toString(); // Not binary
 
-        $this->assertFalse($mock->isUuidBinary($uuidBinary));
+        $this->assertFalse($subject->isUuidBinary($uuidBinary));
     }
 }

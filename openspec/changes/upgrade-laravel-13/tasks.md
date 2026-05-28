@@ -1,15 +1,15 @@
 ## 1. Prepare branch and capture baseline
 
-- [ ] 1.1 Create the working branch `upgrade-laravel-13` from `master` and confirm `git status` is clean.
-- [ ] 1.2 On a baseline (pre-edit) tree, run `composer install`, `composer phpcs`, and `composer test`; record results so any regression is attributable.
-- [ ] 1.3 Open `composer.lock`, dump the current list of resolved versions for `require` and `require-dev` to a scratch note for diffing.
+- [x] 1.1 Create the working branch `upgrade-laravel-13` from `master` and confirm `git status` is clean.
+- [x] 1.2 On a baseline (pre-edit) tree, run `composer install`, `composer phpcs`, and `composer test`; record results so any regression is attributable.
+- [x] 1.3 Open `composer.lock`, dump the current list of resolved versions for `require` and `require-dev` to a scratch note for diffing.
 
 ## 2. Bump composer manifest
 
-- [ ] 2.1 Edit `composer.json#require` to set `laravel/framework: ^13.0`; leave `php: ^8.4` unchanged.
-- [ ] 2.2 Edit `composer.json#require-dev` to lift each dev-dep to the latest L13-compatible major: `orchestra/testbench`, `phpunit/phpunit`, `laravel/horizon`, `laravel/passport`, `aws/aws-sdk-php`, `elasticsearch/elasticsearch`, `google/apiclient`, `longman/php-code-style`, `mockery/mockery`, `neitanod/forceutf8`, `jetbrains/phpstorm-attributes`.
-- [ ] 2.3 Run `composer update --with-all-dependencies`; resolve any composer constraint errors by adjusting only the offending constraint (do not silently widen unrelated constraints).
-- [ ] 2.4 Commit the updated `composer.json` and `composer.lock` as a self-contained step so a bisect lands here cleanly.
+- [x] 2.1 Edit `composer.json#require` to set `laravel/framework: ^13.0`; leave `php: ^8.4` unchanged.
+- [x] 2.2 Edit `composer.json#require-dev` to lift each dev-dep to the latest L13-compatible major: `orchestra/testbench`, `phpunit/phpunit`, `laravel/horizon`, `laravel/passport`, `aws/aws-sdk-php`, `elasticsearch/elasticsearch`, `google/apiclient`, `longman/php-code-style`, `mockery/mockery`, `neitanod/forceutf8`, `jetbrains/phpstorm-attributes`.
+- [x] 2.3 Run `composer update --with-all-dependencies`; resolve any composer constraint errors by adjusting only the offending constraint (do not silently widen unrelated constraints).
+- [x] 2.4 Commit the updated `composer.json` and `composer.lock` as a self-contained step so a bisect lands here cleanly.
 
 ## 3. Handle stuck dev-deps
 

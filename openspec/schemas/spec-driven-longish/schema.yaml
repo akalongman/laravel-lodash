@@ -1,0 +1,402 @@
+name: spec-driven-longish
+version: 1
+description: Default OpenSpec workflow - proposal → specs → design → tasks
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: Initial proposal document outlining the change
+    template: proposal.md
+    instruction: |
+      BEFORE drafting any proposal content, you MUST run a clarification
+      interview to lock down scope. The only way to bypass this rule is for
+      the user to explicitly say "skip the interview" in the same turn that
+      invokes propose. Inferring "the user probably wants me to skip" from
+      context is a violation.
+
+      Interview protocol:
+      1. Pause before touching any files in `openspec/changes/<name>/`.
+      2. Ask the user clarifying questions. Where a question maps to a small
+         set of discrete options, present them as a multiple-choice list so
+         the user can pick rather than write open prose. Group related
+         questions into a single round of roughly 4 at a time to minimize
+         back-and-forth; append genuinely open-ended questions as plain
+         prose alongside the multiple-choice block.
+      3. The interview MUST cover, at minimum, these four dimensions:
+         - **Scope**: what is explicitly in, what is explicitly out.
+         - **Capability placement**: which existing capability from
+           `openspec/config.yaml`'s capability map owns the new requirements,
+           OR justify introducing a new capability.
+         - **Acceptance criteria**: what observable behavior or test outcome
+           proves the change is complete.
+         - **Constraints / non-functionals**: performance budgets, backward
+           compatibility, security implications, migration concerns.
+      4. After the user answers, proceed with proposal artifact generation.
+         If the answers reveal new ambiguity, run a follow-up round using
+         the same multiple-choice-where-possible discipline.
+
+      Why this is mandatory: `propose` generates multiple coupled artifacts
+      (proposal.md, design.md, tasks.md, specs/) in one workflow. Drafting
+      them on incomplete or assumed requirements produces a proposal that
+      looks finished but encodes the wrong scope, lands in the wrong
+      capability, or lacks acceptance criteria. Catching this in the
+      interview takes minutes; catching it after the fact requires unwinding
+      the proposal and any implementation that followed.
+
+      Only AFTER the interview answers are in hand do you draft the proposal
+      below.
+
+      ---
+
+      Create the proposal document that establishes WHY this change is needed.
+
+      Sections:
+      - **Why**: 1-2 sentences on the problem or opportunity. What problem does this solve? Why now?
+      - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or removals. Mark breaking changes with **BREAKING**.
+      - **Capabilities**: Identify which specs will be created or modified:
+        - **New Capabilities**: List capabilities being introduced. Each becomes a new `specs/<name>/spec.md`. Use kebab-case names (e.g., `user-auth`, `data-export`).
+        - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Check `openspec/specs/` for existing spec names. Leave empty if no requirement changes.
+      - **Impact**: Affected code, APIs, dependencies, or systems.
+
+      IMPORTANT: The Capabilities section is critical. It creates the contract between
+      proposal and specs phases. Research existing specs before filling this in.
+      Each capability listed here will need a corresponding spec file.
+
+      Keep it concise (1-2 pages). Focus on the "why" not the "how" -
+      implementation details belong in design.md.
+
+      This is the foundation - specs, design, and tasks all build on this.
+    requires: []
+
+  - id: specs
+    generates: "specs/**/*.md"
+    description: Detailed specifications for the change
+    template: spec.md
+    instruction: |
+      Create specification files that define WHAT the system should do.
+
+      Create one spec file per capability listed in the proposal's Capabilities section.
+      - New capabilities: use the exact kebab-case name from the proposal (specs/<capability>/spec.md).
+      - Modified capabilities: use the existing spec folder name from openspec/specs/<capability>/ when creating the delta spec at specs/<capability>/spec.md.
+
+      Delta operations (use ## headers):
+      - **ADDED Requirements**: New capabilities
+      - **MODIFIED Requirements**: Changed behavior - MUST include full updated content
+      - **REMOVED Requirements**: Deprecated features - MUST include **Reason** and **Migration**
+      - **RENAMED Requirements**: Name changes only - use FROM:/TO: format
+
+      Format requirements:
+      - Each requirement: `### Requirement: <name>` followed by description
+      - Use SHALL/MUST for normative requirements (avoid should/may)
+      - Each scenario: `#### Scenario: <name>` with WHEN/THEN format
+      - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
+      - Every requirement MUST have at least one scenario.
+
+      MODIFIED requirements workflow:
+      1. Locate the existing requirement in openspec/specs/<capability>/spec.md
+      2. Copy the ENTIRE requirement block (from `### Requirement:` through all scenarios)
+      3. Paste under `## MODIFIED Requirements` and edit to reflect new behavior
+      4. Ensure header text matches exactly (whitespace-insensitive)
+
+      Common pitfall: Using MODIFIED with partial content loses detail at archive time.
+      If adding new concerns without changing existing behavior, use ADDED instead.
+
+      Example:
+      ```
+      ## ADDED Requirements
+
+      ### Requirement: User can export data
+      The system SHALL allow users to export their data in CSV format.
+
+      #### Scenario: Successful export
+      - **WHEN** user clicks "Export" button
+      - **THEN** system downloads a CSV file with all user data
+
+      ## REMOVED Requirements
+
+      ### Requirement: Legacy export
+      **Reason**: Replaced by new export system
+      **Migration**: Use new export endpoint at /api/v2/export
+      ```
+
+      Specs should be testable - each scenario is a potential test case.
+    requires:
+      - proposal
+
+  - id: design
+    generates: design.md
+    description: Technical design document with implementation details
+    template: design.md
+    instruction: |
+      Create the design document that explains HOW to implement the change.
+
+      When to include design.md (create only if any apply):
+      - Cross-cutting change (multiple services/modules) or new architectural pattern
+      - New external dependency or significant data model changes
+      - Security, performance, or migration complexity
+      - Ambiguity that benefits from technical decisions before coding
+
+      Sections:
+      - **Context**: Background, current state, constraints, stakeholders
+      - **Goals / Non-Goals**: What this design achieves and explicitly excludes
+      - **Decisions**: Key technical choices with rationale (why X over Y?). Include alternatives considered for each decision.
+      - **Risks / Trade-offs**: Known limitations, things that could go wrong. Format: [Risk] → Mitigation
+      - **Migration Plan**: Steps to deploy, rollback strategy (if applicable)
+      - **Open Questions**: Outstanding decisions or unknowns to resolve
+
+      Focus on architecture and approach, not line-by-line implementation.
+      Reference the proposal for motivation and specs for requirements.
+
+      Good design docs explain the "why" behind technical decisions.
+    requires:
+      - proposal
+
+  - id: tasks
+    generates: tasks.md
+    description: Implementation checklist with trackable tasks
+    template: tasks.md
+    instruction: |
+      Create the task list that breaks down the implementation work.
+
+      **IMPORTANT: Follow the template below exactly.** The apply phase parses
+      checkbox format to track progress. Tasks not using `- [ ]` won't be tracked.
+
+      Guidelines:
+      - Group related tasks under ## numbered headings
+      - Each task MUST be a checkbox: `- [ ] X.Y Task description`
+      - Tasks should be small enough to complete in one session
+      - Order tasks by dependency (what must be done first?)
+
+      Example:
+      ```
+      ## 1. Setup
+
+      - [ ] 1.1 Create new module structure
+      - [ ] 1.2 Add dependencies to package.json
+
+      ## 2. Core Implementation
+
+      - [ ] 2.1 Implement data export function
+      - [ ] 2.2 Add CSV formatting utilities
+      ```
+
+      Reference specs for what needs to be built, design for how to build it.
+      Each task should be verifiable - you know when it's done.
+
+      ---
+
+      Render the freshly-generated task list as a markdown table once
+      the tasks file is written. This gives the user an at-a-glance
+      view of everything the apply phase will work through. Mandatory;
+      do NOT skip. The commit-message suggestion for the propose pass
+      is emitted later, by the `summary` artifact's instruction.
+      Steps:
+
+      1. Fetch the full task list:
+         `openspec instructions apply --change "<name>" --json`
+         Parse the `tasks` array. Each entry has `id` (integer),
+         `description` (string starting with the task number like `1.1`,
+         `2.3`), and `done` (boolean).
+
+      2. Render exactly this table:
+
+         | Phase | # | Task | Status |
+         |---|---|---|---|
+         | 1 | 1.1 | <one-line summary, leading `1.1 ` stripped> | `[ ]` |
+         | 1 | 1.2 | <…> | `[ ]` |
+         | 2 | 2.1 | <…> | `[ ]` |
+         | … | … | … | … |
+
+      3. Rules for the table:
+         - **Phase** column comes from the leading `N` in the `N.M` task
+           number.
+         - **#** column is the full `N.M` identifier.
+         - **Task** column is the description with the leading `N.M `
+           stripped, collapsed to a single line, capped at ~120 chars
+           (truncate with `…` only when necessary).
+         - **Status** column is `[ ]` for `done: false` and `[x]` for
+           `done: true`. At propose time every row is `[ ]`.
+         - Render every row — do not omit, do not collapse phases into
+           subheadings, do not insert horizontal separators between
+           phases.
+    requires:
+      - specs
+      - design
+
+  - id: summary
+    generates: summary.md
+    description: Plain-language summary for non-technical stakeholders (Product Owners, managers)
+    template: summary.md
+    instruction: |
+      Create a plain-language summary aimed at non-technical readers
+      (Product Owners, project managers, and other business
+      stakeholders). The goal is for someone outside engineering to
+      read this in under a minute and walk away knowing: what problem
+      we are solving, what we are shipping, what the business benefit
+      is, and what could go wrong or slip.
+
+      Required sections (use exactly these headings, in this order):
+
+      - **Problem**: The business pain in plain language. Size this
+        section to the change — no length cap.
+      - **Solution**: What we will ship, described in terms a user or
+        business stakeholder would recognize. Avoid implementation
+        detail.
+      - **Business Outcome**: The concrete benefit. Include a metric
+        if one exists; otherwise describe the observable improvement.
+      - **Risks & Timing**: Plain-language risks and a rough effort
+        framing (e.g. "small", "medium", "needs migration window").
+        May be omitted only when the change has neither risks nor
+        timing constraints worth flagging.
+
+      The four sections above are the ENTIRE body of `summary.md`.
+      Do NOT append additional sections, horizontal rules, footers,
+      "Suggested commit message" blocks, or any other content after
+      the Risks & Timing section. The file ends where Risks & Timing
+      ends. The commit-message suggestion described later in this
+      instruction is a chat-level deliverable, NOT a file section —
+      see the explicit boundary below.
+
+      Tone: soft guidance. Write for Product Owners and Managers.
+      Focus on business outcome, not implementation. There is no hard
+      list of forbidden terms and no word or page cap; trust your
+      judgement and keep it short.
+
+      Source material: read `proposal.md` for motivation,
+      `design.md` for risks and migration framing, and `tasks.md` for
+      effort framing. Do NOT copy sections verbatim — translate the
+      technical material into business language.
+
+      ---
+
+      After this artifact is written, the propose workflow is
+      complete: `summary` is the last artifact in the dependency
+      chain (`proposal`, `design`, and `tasks` are all prerequisites),
+      so reaching this point means every propose-phase file has been
+      generated.
+
+      End the propose workflow by suggesting ONE git commit message
+      for the entire change set just generated (typically: the new
+      `openspec/changes/<name>/` directory including the just-written
+      `summary.md`).
+
+      File boundary (MUST NOT violate): the commit-message suggestion
+      is a CHAT-LEVEL deliverable surfaced in your reply to the user
+      AFTER the file is written. It MUST NOT be embedded inside
+      `summary.md` (or any other artifact file in the change
+      directory) — no "Suggested commit message" section, no
+      trailing code block, no horizontal rule + footer. The summary
+      file is a stakeholder-facing artifact that lives forever in
+      the change directory and is later archived; a commit message
+      is a one-time conversational suggestion for the engineer
+      running propose. Mixing the two pollutes the artifact and
+      freezes a transient suggestion into permanent spec history.
+
+      Do NOT run `git commit` yourself; the suggestion is text the
+      user can copy, amend, or discard. Follow the project's
+      commit-message conventions when they are documented in
+      `CLAUDE.md`, a `.gitmessage` template, or a project commit
+      policy. When no convention is documented, default to a single
+      short imperative title under 72 characters, no body, no
+      trailers. Example: "Propose <change-name>".
+    requires:
+      - proposal
+      - design
+      - tasks
+
+apply:
+  requires: [tasks, summary]
+  tracks: tasks.md
+  instruction: |
+    Render the task list as a markdown table at session start AND again
+    at completion/pause. Mandatory; do NOT skip. The same table format
+    applies to both renders — only the `Status` column changes as work
+    progresses.
+
+    Steps for each render:
+
+    1. Fetch the task list (re-fetch at completion/pause to capture
+       freshly-flipped `done` flags):
+       `openspec instructions apply --change "<name>" --json`
+       Parse the `tasks` array. Each entry has `id` (integer),
+       `description` (string starting with `N.M `), and `done` (boolean).
+
+    2. Render exactly this table:
+
+       | Phase | # | Task | Status |
+       |---|---|---|---|
+       | 1 | 1.1 | <one-line summary, leading `1.1 ` stripped> | `[ ]` or `[x]` |
+       | 1 | 1.2 | <…> | `[ ]` or `[x]` |
+       | 2 | 2.1 | <…> | `[ ]` or `[x]` |
+       | … | … | … | … |
+
+    3. Rules for the table:
+       - **Phase** column comes from the leading `N` in the `N.M` task
+         number.
+       - **#** column is the full `N.M` identifier.
+       - **Task** column is the description with the leading `N.M `
+         stripped, collapsed to a single line, capped at ~120 chars
+         (truncate with `…` only when necessary).
+       - **Status** column is `[x]` when `done: true`, `[ ]` otherwise.
+       - Render every row — do not omit, do not collapse phases into
+         subheadings, do not insert horizontal separators between
+         phases.
+
+    At session start, the table is the headline of the "show current
+    progress" output. At completion/pause, the table replaces the
+    bulleted progress summary — readers should see exactly which rows
+    flipped from `[ ]` to `[x]` this session compared to whatever
+    started the session.
+
+    ---
+
+    Read context files, work through pending tasks, mark complete as you go.
+    Pause if you hit blockers or need clarification.
+
+    Before declaring work complete, run these last-mile sync checks. They
+    cover routine maintenance steps that are easy to forget and that
+    `openspec archive` does NOT perform automatically:
+
+    - **Capability map**: If this change creates a new capability spec at
+      `openspec/specs/<name>/spec.md` (typically because the proposal
+      listed it under "New Capabilities"), confirm that the same
+      kebab-case name appears as an entry in `openspec/config.yaml`'s
+      capability map, grouped under the appropriate area heading
+      (Academic, Platform, etc.). The map is the discovery surface for
+      the spec; an unregistered capability hides from contributors and
+      agents who orient themselves by reading `config.yaml` first. If
+      missing, add the entry now with a one-line description matching
+      the format of sibling entries.
+
+    - **CLAUDE.md capability-spec table** (if the project uses
+      Progressive Disclosure): if a new capability spec was created OR
+      an existing one gained a normative requirement that belongs in
+      the project's headline rules table, add or update the
+      corresponding row in `CLAUDE.md`'s capability-spec table. Keep
+      the summary self-contained per the rule file in
+      `.claude/rules/openspec.md`.
+
+    When ALL tasks are checked off, end the apply session with a
+    "## What shipped" section that lists, in this order, only the
+    categories with non-empty content for this change:
+
+    - **New HTTP endpoints**: method + path, one per line (e.g. `POST /api/v1/course-equivalencies`).
+    - **New / changed database tables**: table name + one-line summary of the migration intent.
+    - **New artisan commands**: command signature (e.g. `php artisan courses:import-legacy`).
+    - **New permissions / config keys**: full key string (e.g. `courses:view:history`, `services.gemini.project_id`).
+    - **Removed code**: deleted files or significant excisions, one line each.
+    - **Follow-ups**: anything intentionally deferred to a separate proposal.
+
+    Keep each bullet to one line. This is a quick-reference summary, not a
+    re-explanation of the change. Skip any category that has nothing to
+    report (do NOT emit empty headings).
+
+    After the "What shipped" summary, if there are uncommitted changes in
+    the working tree from this apply session, suggest ONE git commit
+    message that covers them. Do NOT run `git commit` yourself; the
+    suggestion is text the user can copy, amend, or discard. Follow the
+    project's commit-message conventions when documented in `CLAUDE.md`,
+    a `.gitmessage` template, or a project commit policy. When no
+    convention is documented, default to a single short imperative title
+    under 72 characters, no body, no trailers. Example: "Implement
+    <change-name>". If the user has already committed incrementally
+    during apply (working tree is clean), skip this step.

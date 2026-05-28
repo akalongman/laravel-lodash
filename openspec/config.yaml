@@ -1,20 +1,22 @@
-schema: spec-driven
+schema: spec-driven-longish
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+    # Constitution
+    The project constitution is CLAUDE.md (at the repo root). Treat it as the source of truth
+    for tech stack, architecture, and conventions.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+    # Project summary
+    TBD
+
+    # Capability map
+    TBD
+
+    ## Process
+    - openspec-workflow: OpenSpec schema, artifact set, and generation rules for this project's spec-driven-longish workflow (mandatory summary.md for non-technical stakeholders, terminal commit-message suggestion lives on the summary artifact, apply-prerequisite enforcement)
+    - ci-pipeline: GitLab CI conventions for this project; today covers the automated AI MR review (pr-agent on Anthropic / claude-opus-4-7, auto /review on every MR, line-anchored inline comments, CLAUDE.md threading, allow_failure, pinned image tag, parallel-rollout discipline)
+
+    # OpenSpec workflow conventions
+    - Scenarios use `#### Scenario:` (four hashtags) with `WHEN` / `THEN` lines.
+    - Use `SHALL` / `MUST` for normative requirements.
+    - Place new requirements under an existing capability when possible; justify
+      creating a new capability in the proposal.

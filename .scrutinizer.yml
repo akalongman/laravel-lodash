@@ -1,3 +1,16 @@
+build:
+    environment:
+        php:
+            version: '8.4'
+    nodes:
+        analysis:
+            dependencies:
+                override:
+                    - composer install --no-interaction --prefer-dist --no-progress
+            tests:
+                override:
+                    - php-scrutinizer-run
+
 tools:
     external_code_coverage:
         timeout: 600

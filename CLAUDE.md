@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project type
 
-This is a **Laravel package** (not an application), published as `longman/laravel-lodash` on Packagist. It adds utility functionality to Laravel applications. Requires `php ^8.4` and `laravel/framework ^12.0`. Tests run against a bootstrapped Laravel instance via `orchestra/testbench`.
+This is a **Laravel package** (not an application), published as `longman/laravel-lodash` on Packagist. It adds utility functionality to Laravel applications. Requires `php ^8.4` and `laravel/framework ^13.0`. Tests run against a bootstrapped Laravel instance via `orchestra/testbench`.
 
 ## Common commands
 
@@ -76,6 +76,16 @@ Additional conventions already used throughout the codebase:
 - Short nullable syntax (`?Type`), not `Type|null`.
 
 Follow the rules in `~/.claude/rules/php.md` for all PHP/Laravel work in this repo.
+
+## Capability specs (Progressive Disclosure)
+
+For canonical detail, read the cited capability spec under `openspec/specs/<name>/spec.md`. Rules below are summaries; the spec is the source of truth.
+
+| Topic | Spec | Rule summary |
+|---|---|---|
+| Package bootstrap and composer manifest contract | `service-provider` | `composer.json#require` SHALL declare `laravel/framework: ^13.0` and `php: ^8.4`. Main provider registers behavior only when gated by `lodash.register.*` flags; feature providers (Cache, Redis, Queue, Elasticsearch, Debug) MUST be opt-in via host `config/app.php`. Extended providers preserve parent signatures. |
+| GitHub Actions CI workflow | `ci-pipeline` | `.github/workflows/php.yml` runs on push and PR to `master`, single job on `ubuntu-latest` (no PHP / Laravel matrix). Pins `actions/checkout@v4` and `actions/cache@v4`, sets up PHP explicitly via `shivammathur/setup-php@v2` matching `composer.json#require.php`. Step order: `validate` → cached `install` → `phpcs` → `test`. `--no-suggest` flag forbidden. |
+| Composer dependency discipline | `dependency-management` | Every constraint uses a caret range; runtime deps in `require`, dev-only in `require-dev`, optional extras in `suggest` guarded at runtime. Stuck dev-deps without a Laravel-N-compatible release are pinned at the highest resolvable version with a documented follow-up; diagnostics-only stuck deps MAY be dropped. `composer.json` bumps SHALL bump `composer.lock` and CI PHP version in the same change. |
 
 ## Things to know before editing
 

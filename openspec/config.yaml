@@ -74,7 +74,8 @@ context: |
 
     ## Process
     - openspec-workflow: OpenSpec schema, artifact set, and generation rules for this project's spec-driven-longish workflow (mandatory summary.md for non-technical stakeholders, terminal commit-message suggestion lives on the summary artifact, apply-prerequisite enforcement)
-    - ci-pipeline: GitHub Actions conventions for this project; today covers `.github/workflows/php.yml`, which on push and pull_request to `master` validates `composer.json` / `composer.lock`, caches `vendor/`, installs dependencies, and runs `composer phpcs` followed by `composer test` on `ubuntu-latest`.
+    - ci-pipeline: GitHub Actions conventions for this project; `.github/workflows/php.yml` runs on push and pull_request to `master`, single job on `ubuntu-latest`, sets up PHP via `shivammathur/setup-php@v2` matching `composer.json#require.php`, validates composer files, caches `vendor/`, installs deps, runs `composer phpcs` then `composer test`.
+    - dependency-management: Composer constraint discipline. Caret ranges only, runtime in `require` vs. dev-only in `require-dev` vs. optional extras in `suggest`, stuck dev-dep pin-and-follow-up policy, and the rule that `composer.json` bumps move `composer.lock` and the CI PHP version in the same change.
 
     # OpenSpec workflow conventions
     - Scenarios use `#### Scenario:` (four hashtags) with `WHEN` / `THEN` lines.

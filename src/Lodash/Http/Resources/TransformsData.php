@@ -126,7 +126,7 @@ trait TransformsData
         } elseif (str_contains($transformValue, '.')) { // Getter contains relation
             [$relation, $transformValue] = explode('.', $transformValue);
             if (! $model->getRelation($relation)) {
-                throw new LogicException('Relation ' . $relation . ' does not available for model ' . $model::class.' to transform');
+                throw new LogicException('Relation ' . $relation . ' does not available for model ' . $model::class . ' to transform');
             }
 
             // Try to find getter for external field

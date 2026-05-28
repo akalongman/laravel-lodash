@@ -13,10 +13,10 @@ class DeclensionsTest extends TestCase
 {
     #[Test]
     #[DataProvider('dataForDeclensions')]
-    public function turn_words_declensions(string $word, array $declensions): void
+    public function turn_words_declensions(string $word, array $turned): void
     {
-        foreach ($declensions as $declension => $turned) {
-            $this->assertSame($turned, Declensions::applyDeclension($word, $declension));
+        foreach ($turned as $declension => $turnedWord) {
+            $this->assertSame($turnedWord, Declensions::applyDeclension($word, $declension));
         }
     }
 

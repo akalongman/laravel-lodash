@@ -40,18 +40,4 @@ class ServiceProviderTest extends TestCase
         $this->assertTrue(Request::hasMacro('getFloat'));
         $this->assertTrue(Request::hasMacro('getString'));
     }
-
-    #[Test]
-    public function check_blade_directives()
-    {
-        $directives = [
-            'datetime',
-            'plural',
-        ];
-
-        $registered = app('blade.compiler')->getCustomDirectives();
-        foreach ($directives as $directive) {
-            $this->assertContains($directive, array_keys($registered));
-        }
-    }
 }

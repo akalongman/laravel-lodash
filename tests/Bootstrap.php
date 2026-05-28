@@ -12,7 +12,7 @@ error_reporting(-1);
  */
 date_default_timezone_set('UTC');
 
-$root = realpath(__DIR__);
+$root = realpath(dirname(__DIR__));
 /**
  * Check that --dev composer installation was done
  */

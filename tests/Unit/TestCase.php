@@ -25,4 +25,16 @@ class TestCase extends BaseTestCase
             RedisServiceProvider::class,
         ];
     }
+
+    protected function defineEnvironment($app): void
+    {
+        $app['config']->set('lodash.register.request_macros', true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->app->make(ServiceProvider::class, ['app' => $this->app])->register();
+    }
 }

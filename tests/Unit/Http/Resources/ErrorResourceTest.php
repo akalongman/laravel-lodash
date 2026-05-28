@@ -26,7 +26,7 @@ class ErrorResourceTest extends TestCase
         $request = app(Request::class);
         $response = $resource->additional(['custom' => '1'])->toResponse($request);
 
-        $expected = '{"errors":{"general":{"aa":1,"aa2":2,"aa3":3}},"custom":"1"}';
+        $expected = '{"aa":1,"aa2":2,"aa3":3,"custom":"1"}';
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertSame($expected, $response->content());

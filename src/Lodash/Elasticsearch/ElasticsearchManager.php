@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Elasticsearch;
 
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
 use InvalidArgumentException;
 
 use function array_keys;
@@ -57,7 +57,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             ];
         }
 
-        $response = $this->client->indices()->create($params);
+        $response = $this->client->indices()->create($params)->asArray();
 
         if ($response['acknowledged'] !== true) {
             throw new ElasticsearchException('Something went wrong during index creation');
@@ -83,7 +83,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             ];
         }
 
-        $response = $this->client->indices()->delete($params);
+        $response = $this->client->indices()->delete($params)->asArray();
         if ($response['acknowledged'] !== true) {
             throw new ElasticsearchException('Something went wrong during index deletion');
         }
@@ -99,7 +99,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             'name' => $aliasName,
         ];
 
-        $response = $this->client->indices()->getAlias($params);
+        $response = $this->client->indices()->getAlias($params)->asArray();
         if (empty($response)) {
             throw new ElasticsearchException('Can not get alias ' . $aliasName);
         }
@@ -139,7 +139,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             $params['body'][] = $item;
         }
 
-        $responses = $this->client->bulk($params);
+        $responses = $this->client->bulk($params)->asArray();
         if ($responses['errors'] !== true) {
             return;
         }
@@ -178,7 +178,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             $params['body'][] = ['doc' => $item];
         }
 
-        $responses = $this->client->bulk($params);
+        $responses = $this->client->bulk($params)->asArray();
         if ($responses['errors'] !== true) {
             return;
         }
@@ -217,7 +217,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             $params['body'][] = $item;
         }
 
-        $responses = $this->client->bulk($params);
+        $responses = $this->client->bulk($params)->asArray();
         if ($responses['errors'] !== true) {
             return;
         }
@@ -257,7 +257,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             ];
         }
 
-        $results = $this->client->search($params);
+        $results = $this->client->search($params)->asArray();
 
         return $results;
     }
@@ -272,7 +272,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             'name' => $aliasName,
         ];
 
-        $exists = $this->client->indices()->existsAlias($params);
+        $exists = $this->client->indices()->existsAlias($params)->asBool();
 
         $actions = [];
         // If alias already exists remove from indexes
@@ -281,7 +281,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
                 'name' => $aliasName,
             ];
 
-            $response = $this->client->indices()->getAlias($params);
+            $response = $this->client->indices()->getAlias($params)->asArray();
             if (empty($response)) {
                 throw new ElasticsearchException('Can not get alias ' . $aliasName);
             }
@@ -311,7 +311,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             ],
         ];
 
-        $response = $this->client->indices()->updateAliases($params);
+        $response = $this->client->indices()->updateAliases($params)->asArray();
         if ($response['acknowledged'] !== true) {
             throw new ElasticsearchException('Switching alias response error');
         }
@@ -334,7 +334,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             ];
         }
 
-        $response = $this->client->indices()->putTemplate($params);
+        $response = $this->client->indices()->putTemplate($params)->asArray();
 
         if ($response['acknowledged'] !== true) {
             throw new ElasticsearchException('Something went wrong during template creation');
@@ -347,7 +347,7 @@ class ElasticsearchManager implements ElasticsearchManagerContract
             return false;
         }
 
-        return $this->client->ping();
+        return $this->client->ping()->asBool();
     }
 
     public function getClient(): Client

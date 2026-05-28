@@ -11,15 +11,37 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        extensions: mbstring, intl, redis, igbinary, json
+        coverage: none
 
     - name: Validate composer.json and composer.lock
       run: composer validate
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v5
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -28,14 +50,10 @@ jobs:
 
     - name: Install dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: composer install --prefer-dist --no-progress --no-suggest
-
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+      run: composer install --prefer-dist --no-progress
 
     - name: Run code style check
       run: composer run-script phpcs
 
     - name: Run test suite
       run: composer run-script test
-

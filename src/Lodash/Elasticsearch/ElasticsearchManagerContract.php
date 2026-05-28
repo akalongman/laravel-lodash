@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Longman\LaravelLodash\Elasticsearch;
 
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
 
 interface ElasticsearchManagerContract
 {

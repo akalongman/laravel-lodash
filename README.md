@@ -8,9 +8,22 @@
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This package adds lot of useful functionality to the Laravel >=8.0 project
+This package adds lot of useful functionality to the Laravel >=13.0 project.
 
-__Note:__ For Laravel older than 5.8 use the package version 1.*, for older than 8.0 - version 4.*
+### Compatibility
+
+Since version 11, the package major version matches the Laravel framework major version (lodash 13 targets Laravel 13, lodash 12 targets Laravel 12, and so on).
+
+| laravel-lodash | Laravel framework | PHP    |
+|----------------|-------------------|--------|
+| `^13.0`        | `^13.0`           | `^8.4` |
+| `^12.0`        | `^12.0`           | `^8.4` |
+| `^11.0`        | `^11.0`           | `^8.2` |
+| `^9.0`         | `^10.0`           | `^8.1` |
+| `^4.0`         | `< 8.0`           | varies |
+| `^1.0`         | `< 5.8`           | varies |
+
+If your application is still on an older Laravel major, install the matching previous tag of laravel-lodash.
 
 ## Table of Contents
 - [Installation](#installation)

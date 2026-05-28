@@ -9,6 +9,7 @@ use BadMethodCallException;
 use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 use function count;
 use function is_null;
@@ -111,7 +112,7 @@ class SqsFifoQueue extends SqsQueue
     {
         $messageGroupId = session()->getId();
         if (empty($messageGroupId)) {
-            $messageGroupId = str_random(40);
+            $messageGroupId = Str::random(40);
         }
 
         return $messageGroupId;
@@ -119,6 +120,6 @@ class SqsFifoQueue extends SqsQueue
 
     protected function getMessageDeduplicationId(string $payload): string
     {
-        return config('app.debug') ? str_random(40) : sha1($payload);
+        return config('app.debug') ? Str::random(40) : sha1($payload);
     }
 }

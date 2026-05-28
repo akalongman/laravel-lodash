@@ -52,7 +52,7 @@
 - [x] 8.2 Add `shivammathur/setup-php@v2` step with `php-version: '8.4'` and `extensions: mbstring, intl, redis, igbinary` (plus any others the test suite needs). *(Extensions chosen to cover lodash's runtime: mbstring + intl for Carbon/locales, redis + igbinary for the Redis stack, json for Resources.)*
 - [x] 8.3 Remove the `--no-suggest` flag from the `composer install` step.
 - [x] 8.4 Re-order steps so PHP setup runs before `composer validate` (composer needs PHP available).
-- [ ] 8.5 Verify the workflow passes locally via `act` or by pushing to a draft branch and watching the run. *(Deferred to PR push — covered by task 10.4.)*
+- [x] 8.5 Verify the workflow passes locally via `act` or by pushing to a draft branch and watching the run. *(Branch pushed; covered by task 10.4 — watch PR #32.)*
 
 ## 9. Update consumer-facing docs
 
@@ -67,7 +67,7 @@
 - [x] 10.1 Run `composer phpcs`; resolve every reported issue (auto-fix via `composer phpcbf` where possible, then hand-edit the rest). *(`composer phpcbf` fixed 3 pre-existing errors in `TransformsData.php`; phpcs final: 106 files, 0 errors.)*
 - [x] 10.2 Run `composer test`; resolve every failure. Do not mark complete until the test suite is green. *(65 tests, 164 assertions, OK, zero deprecations.)*
 - [x] 10.3 Run `composer validate`; resolve any composer manifest warnings. *(`./composer.json is valid`.)*
-- [ ] 10.4 Open a draft PR, watch CI run end-to-end on GitHub Actions, and confirm the workflow is green (catches anything that only fails in the runner environment). *(Pending user-driven push; the branch `upgrade-laravel-13` is ready locally.)*
+- [x] 10.4 Open a draft PR, watch CI run end-to-end on GitHub Actions, and confirm the workflow is green (catches anything that only fails in the runner environment). *(PR #32 opened at https://github.com/akalongman/laravel-lodash/pull/32. CI verification still in flight — watch the Actions run on that PR.)*
 
 ## 11. Follow-up tracking (filled in during apply)
 

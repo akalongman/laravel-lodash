@@ -12,12 +12,16 @@ This package adds lot of useful functionality to the Laravel >=13.0 project.
 
 ### Compatibility
 
+Since version 11, the package major version matches the Laravel framework major version (lodash 13 targets Laravel 13, lodash 12 targets Laravel 12, and so on).
+
 | laravel-lodash | Laravel framework | PHP    |
 |----------------|-------------------|--------|
-| `^14.0`        | `^13.0`           | `^8.4` |
-| `^13.0`        | `^12.0`           | `^8.4` |
-| `^4.0`         | `^8.0`            | `^8.0` |
-| `^1.0`         | `<= 5.8`          | varies |
+| `^13.0`        | `^13.0`           | `^8.4` |
+| `^12.0`        | `^12.0`           | `^8.4` |
+| `^11.0`        | `^11.0`           | `^8.2` |
+| `^9.0`         | `^10.0`           | `^8.1` |
+| `^4.0`         | `< 8.0`           | varies |
+| `^1.0`         | `< 5.8`           | varies |
 
 If your application is still on an older Laravel major, install the matching previous tag of laravel-lodash.
 

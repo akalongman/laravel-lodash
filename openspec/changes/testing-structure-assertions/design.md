@@ -71,11 +71,13 @@ Current state, verified against the installed dependencies:
 
 7. **Merge semantics for overlapping declarations.** Declarations like `'roles[]'` alongside `'roles[].admins[].item'` merge order-independently at the normalized-tree level: children are unioned; an explicit structure name wins over the key-derived default; two different explicit names for the same relation throw `InvalidArgumentException`, as does the same relation marked `[]` in one declaration and unmarked in another. Malformed segments (the legacy `'[roles]'` wrapper, empty names, misplaced `:` or `[]`, a string key mapping to a string value like `'program' => 'AdminProgram'`) throw `InvalidArgumentException` with a migration hint instead of silently corrupting the structure. Nested children arrays accept the full grammar recursively, dots included. Alternative considered: rejecting duplicates outright; rejected because composing relation sets (a base set plus per-test additions) is a legitimate pattern that merging serves. Alternative considered: `array_merge_recursive` on emitted structures; rejected because it appends duplicate numeric-key list entries (`['id', 'id', 'name']`), which then break exact mode's key-set comparison — merging happens on the normalized tree, never on emitted structures.
 
-   The rewrite removes the old `protected static includeNestedRelations()` / `includeNestedRelation()` methods outright (recorded under Changed (BREAKING)); deprecated shims would preserve exactly the semantics being eliminated. It also replaces `is_callable(['static', $method])` with `method_exists(static::class, $method)`, fixing the PHP 8.4 deprecation.
+   The rewrite removes the old `protected static includeNestedRelations()` / `includeNestedRelation()` methods outright (recorded under Changed (BREAKING)); deprecated shims would preserve exactly the semantics being eliminated. It also replaces `is_callable(['static', $method])` with explicit method/property resolution, fixing the PHP 8.4 deprecation.
+
+   Implementation constraint discovered by the tests: PHP method names are case-insensitive, so internal helpers MUST NOT follow the `get*Structure` naming pattern. The old `getItemStructure()` helper collided with any relation named `item` (the built getter name `getitemStructure` dispatched to the helper itself with zero arguments instead of falling through to `__callStatic`); the helper is renamed `resolveItemStructure()` and resolves a real getter method first, then the structure property, without re-entering the magic dispatcher.
 
 8. **Combined resource assertions, exact by default.** New API with no backward-compatibility constraint, matching the stated convention endgame (structure, wire type, and identity asserted at zero per-test cost):
    ```php
-   public static function setDataStructuresProvider(string $class): void
+   public static function setDataStructuresProvider(?string $class): void
 
    public function assertJsonDataResource(
        string $structure,

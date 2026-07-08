@@ -48,6 +48,7 @@ If your application is still on an older Laravel major, install the matching pre
     - [Blade Directives](#blade-directives)
     - [Misc](#misc)
         - [SelfDiagnosis Checks](#selfdiagnosis-checks)
+    - [Testing Helpers](#testing-helpers)
 - [TODO](#todo)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -507,6 +508,76 @@ For using this checks, you have to install the package: [laravel-self-diagnosis]
 \Longman\LaravelLodash\SelfDiagnosis\Checks\HorizonIsRunning::class,
 ...
 ```
+
+### Testing Helpers
+
+The `Longman\LaravelLodash\Testing\Response` class extends Laravel's `TestResponse` with assertions for JSON envelopes of the shape `{status, message, data, meta}`. Wire it into your base test case by overriding `createTestResponse()`:
+
+```php
+use Longman\LaravelLodash\Testing\Response;
+
+protected function createTestResponse($response, $request)
+{
+    return Response::fromBaseResponse($response, $request);
+}
+```
+
+Register your application's envelope shapes once (for example in the base test case's `setUp()`):
+
+```php
+Response::setSuccessResponseStructure(['status', 'message', 'data']);
+Response::setErrorResponseStructure(['status', 'message']);
+```
+
+Structure assertions validate `data` as a single item or as a collection. Collection assertions validate every row and fail with readable messages when `data` is missing, empty, or not a list. With `exact: true` any missing or unexpected extra key inside `data` (and inside `meta.pagination` when pager or cursor meta is included) fails the test, while envelope keys outside those subtrees stay loosely checked:
+
+```php
+$response->assertJsonDataItemStructure(['id', 'type', 'attributes' => ['name']], exact: true);
+$response->assertJsonDataCollectionStructure($structure, includePagerMeta: true, exact: true);
+```
+
+Reusable structures live in a `DataStructuresProvider` subclass, one static property per structure:
+
+```php
+use Longman\LaravelLodash\Testing\DataStructuresProvider;
+
+class AppStructures extends DataStructuresProvider
+{
+    protected static array $userStructure = ['id', 'type', 'attributes' => ['name']];
+    protected static array $roleStructure = ['id', 'type', 'attributes' => ['title']];
+}
+
+$structure = AppStructures::getUserStructure(['roles[]']);
+```
+
+Relation includes accept dots for linear chains and nested arrays for branching. Each segment is `name` or `name[]` (collection), optionally followed by `:StructureName` when the structure name differs from the relation key. Overlapping declarations merge, regardless of order:
+
+```php
+AppStructures::getUserStructure([
+    'program:AdminProgram' => [
+        'faculty:AdminFaculty',
+        'department:AdminDepartment',
+    ],
+    'roles[]',
+    'roles[].admins[].item',
+]);
+```
+
+The legacy `'[roles]'` wrapper syntax is not supported; declarations like it throw an `InvalidArgumentException` with a migration hint (write `'roles[]'` instead).
+
+The combined resource assertions tie a response to the exact records it should contain. Register the provider once, then a single call checks the structure (exact by default), the wire `type` (defaults to the structure name, override with `type:`), and the record identity. Expected ids derive from `(string) $model->getKey()`, or `getUidString()` for UUID-primary models:
+
+```php
+Response::setDataStructuresProvider(AppStructures::class);
+
+$response->assertJsonDataResource('User', $user, relations: ['roles[]']);
+
+$response->assertJsonDataResources('User', $users);                  // exactly these ids, any order
+$response->assertJsonDataResources('User', $users, ordered: true);   // and in this sequence
+$response->assertJsonDataResources('User', []);                      // proves the response is empty
+```
+
+On paginated endpoints the id comparison covers the current page. Resources with conditional fields can opt out of exactness with `exact: false`.
 
 ## TODO
 

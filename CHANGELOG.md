@@ -2,6 +2,12 @@
 
 All notable changes to `longman/laravel-lodash` are documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Refresh `composer.lock` to the latest resolvable versions (`laravel/framework` 13.19.0, `aws/aws-sdk-php` 3.388.0, `phpunit/phpunit` 13.2.4, `guzzlehttp/guzzle` 7.13.2, and transitive updates). Resolves four Dependabot alerts: guzzle dot-only cookie-domain matching and silent HTTPS-proxy downgrade (GHSA-cwxw-98qj-8qjx, GHSA-wpwq-4j6v-78m3), psr7 CRLF injection (GHSA-vm85-hxw5-5432), and phpseclib SSRF via X.509 AIA (GHSA-m557-wrgg-6rp4). No `composer.json` constraint changes; no direct dependency has a newer major available.
+
 ## [14.0.0] - 2026-07-08
 
 ### Changed (BREAKING)

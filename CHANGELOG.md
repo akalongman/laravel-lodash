@@ -2,7 +2,7 @@
 
 All notable changes to `longman/laravel-lodash` are documented in this file.
 
-## [Unreleased]
+## [14.0.1] - 2026-07-08
 
 ### Fixed
 

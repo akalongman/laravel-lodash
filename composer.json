@@ -43,7 +43,7 @@
         "mockery/mockery": "^1.6",
         "neitanod/forceutf8": "^2.0",
         "orchestra/testbench": "^11.0",
-        "phpunit/phpunit": "^13.0"
+        "phpunit/phpunit": "^13.2"
     },
     "autoload": {
         "psr-4": {

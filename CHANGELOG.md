@@ -2,6 +2,12 @@
 
 All notable changes to `longman/laravel-lodash` are documented in this file.
 
+## [Unreleased]
+
+### Tooling
+
+- Raise the `phpunit/phpunit` dev constraint from `^13.0` to `^13.2`: the test suite uses `expectExceptionMessageIsOrContains()`, introduced in PHPUnit 13.2. The 14.0.0 CI run failed against an older locked PHPUnit; the 14.0.1 lock refresh already resolved the failure, and this records the actual floor.
+
 ## [14.0.1] - 2026-07-08
 
 ### Fixed

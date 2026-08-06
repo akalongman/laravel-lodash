@@ -67,7 +67,7 @@ When `$exact` is true and pager or cursor meta is included, `assertJsonDataColle
 - **THEN** the assertion fails
 
 ### Requirement: Relation include grammar
-`DataStructuresProvider` SHALL accept relation includes where each segment is `name` or `name[]` (collection), optionally followed by `:StructureName`, composed via dots for linear chains and via nested arrays for branching. All accepted forms SHALL normalize into one internal tree before structures are emitted. Malformed segments, including the legacy `[name]` wrapper form, SHALL throw `InvalidArgumentException` with a migration hint.
+`DataStructuresProvider` SHALL accept relation includes where each segment is `name`, `name[]` (collection), or `name?` (nullable single relation), optionally followed by `:StructureName`, composed via dots for linear chains and via nested arrays for branching. All accepted forms SHALL normalize into one internal tree before structures are emitted. Malformed segments, including the legacy `[name]` wrapper form and any segment combining the collection and nullable markers, SHALL throw `InvalidArgumentException` with a migration hint.
 
 #### Scenario: Dotted chain and nested array are equivalent
 - **WHEN** a structure is resolved with `['program:AdminProgram.faculty:AdminFaculty']` and with `['program:AdminProgram' => ['faculty:AdminFaculty']]`
@@ -88,6 +88,18 @@ When `$exact` is true and pager or cursor meta is included, `assertJsonDataColle
 #### Scenario: String value under a string key throws
 - **WHEN** a structure is resolved with `['program' => 'AdminProgram']`
 - **THEN** an `InvalidArgumentException` is thrown hinting at the `'program:AdminProgram'` form
+
+#### Scenario: Nullable marker on a single relation
+- **WHEN** a structure is resolved with `['avatar?']` or `['avatar?:AdminAvatar']`
+- **THEN** the relation is normalized as nullable, carrying the same structure it would carry without the marker
+
+#### Scenario: Nullable marker composes in a chain
+- **WHEN** a structure is resolved with `['accounts?.degree']`
+- **THEN** `accounts` is normalized as nullable and retains `degree` as its child
+
+#### Scenario: Collection and nullable markers combined throw
+- **WHEN** a structure is resolved with `['roles[]?']` or `['roles?[]']`
+- **THEN** an `InvalidArgumentException` is thrown stating that a collection relation cannot be nullable
 
 ### Requirement: Data structure provider collection relations use the wildcard
 `DataStructuresProvider` SHALL emit collection relation structures under `['data']['*']` (not `['data'][0]`) at every nesting level, so that every row of a nested relationship collection is validated and the structure composes with exact mode.
@@ -168,3 +180,28 @@ Resource assertions SHALL derive the expected id exactly as `Http\Resources\Json
 #### Scenario: Empty expected set against a non-empty response
 - **WHEN** `assertJsonDataResources()` is called with an empty model set against a response whose `data` contains any row
 - **THEN** the assertion fails
+
+### Requirement: Nullable relation declarations accept null or the populated subtree
+`Testing\Response` resource assertions SHALL treat a relation declared nullable as satisfied by either the populated relationship subtree or an explicit `null` at `relationships.<name>`, under both exact and non-exact matching. A relation declared nullable SHALL still require the key to be present; an absent `relationships.<name>` key SHALL fail.
+
+This closes a gap that would otherwise make the empty-relationship wire shape unassertable: a nullable relation renders as `null` at `relationships.<name>` while a populated one renders at `relationships.<name>.data`, and a single declared structure must accept both.
+
+#### Scenario: Nullable relation is null in the response
+- **WHEN** a structure declaring `avatar?` is asserted against a response whose `relationships.avatar` is `null`
+- **THEN** the assertion passes
+
+#### Scenario: Nullable relation is populated in the response
+- **WHEN** a structure declaring `avatar?` is asserted against a response whose `relationships.avatar.data` contains a conforming avatar
+- **THEN** the assertion passes, and the avatar subtree is validated against the declared structure
+
+#### Scenario: Nullable relation key is absent
+- **WHEN** a structure declaring `avatar?` is asserted against a response containing no `relationships.avatar` key
+- **THEN** the assertion fails with a message naming the missing relationship
+
+#### Scenario: Nullable relation under exact mode
+- **WHEN** a structure declaring `avatar?` is asserted with `exact: true` against a response whose `relationships.avatar` is `null`
+- **THEN** the assertion passes and the surrounding `data` key set is still matched exactly
+
+#### Scenario: Non-nullable relation that renders null still fails
+- **WHEN** a structure declaring `avatar` without the nullable marker is asserted against a response whose `relationships.avatar` is `null`
+- **THEN** the assertion fails, so that an unintended empty relationship is not silently accepted

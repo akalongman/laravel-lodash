@@ -75,7 +75,7 @@ Run a command in your command line:
 
     composer require longman/laravel-lodash
 
-Add `LodashServiceProvider` to your service providers list in the `app.php`
+Add `ServiceProvider` to your service providers list in the `app.php`
 
 ```php
 'providers' => [
@@ -90,7 +90,7 @@ Add `LodashServiceProvider` to your service providers list in the `app.php`
 
 Copy the package config and translations to your application with the publish command:
 
-    php artisan vendor:publish --provider="Longman\LaravelLodash\LodashServiceProvider"
+    php artisan vendor:publish --provider="Longman\LaravelLodash\ServiceProvider"
 
 
 ## Usage
@@ -356,7 +356,7 @@ Function  | Description
 
 ### Extended Classes
 
-For this fuctional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
+For this fuctional you should add `Longman\LaravelLodash\ServiceProvider::class` in the `config/app.php` file.
 
 There is an extended classes via Laravel's builtin macros functionality
 
@@ -419,7 +419,7 @@ Requesting a relationship with no matching `include<Name>()` method throws, so a
 
 ### Artisan Commands
 
-For this fuctional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
+For this fuctional you should add `Longman\LaravelLodash\ServiceProvider::class` in the `config/app.php` file.
 
 Command  | Description
 ------------- | -------------
@@ -457,7 +457,7 @@ In the `config/auth.php` you have to add:
 
 ### Blade Directives
 
-For this functional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
+For this functional you should add `Longman\LaravelLodash\ServiceProvider::class` in the `config/app.php` file.
 
 Directive  | Description
 ------------- | -------------

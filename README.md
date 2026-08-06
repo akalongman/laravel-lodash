@@ -1,6 +1,6 @@
 # Laravel Lodash
 
-[![Build Status](https://img.shields.io/travis/akalongman/laravel-lodash/master.svg?style=flat-square)](https://travis-ci.org/akalongman/laravel-lodash)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/akalongman/laravel-lodash/php.yml?branch=master&style=flat-square)](https://github.com/akalongman/laravel-lodash/actions/workflows/php.yml)
 [![Latest Stable Version](https://img.shields.io/github/tag/akalongman/laravel-lodash.svg?style=flat-square)](https://github.com/akalongman/laravel-lodash/tags)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)

@@ -12,18 +12,29 @@ This package adds lot of useful functionality to the Laravel >=13.0 project.
 
 ### Compatibility
 
-Since version 11, the package major version matches the Laravel framework major version (lodash 13 targets Laravel 13, lodash 12 targets Laravel 12, and so on).
+The package major does not track the Laravel major. It did for some releases (lodash 11 targets Laravel 11, lodash 13 targets Laravel 13), but a package major is cut for this package's own breaking changes, so lodash 14 and 15 both target Laravel 13. Read the table rather than inferring from the version number.
 
-| laravel-lodash | Laravel framework | PHP    |
-|----------------|-------------------|--------|
-| `^13.0`        | `^13.0`           | `^8.4` |
-| `^12.0`        | `^12.0`           | `^8.4` |
-| `^11.0`        | `^11.0`           | `^8.2` |
-| `^9.0`         | `^10.0`           | `^8.1` |
-| `^4.0`         | `< 8.0`           | varies |
-| `^1.0`         | `< 5.8`           | varies |
+| laravel-lodash | Laravel framework  | PHP                 |
+|----------------|--------------------|---------------------|
+| `^15.0`        | `^13.0`            | `^8.4`              |
+| `^14.0`        | `^13.0`            | `^8.4`              |
+| `^13.0`        | `^13.0`            | `^8.4`              |
+| `^12.0`        | `^11.0` or `^12.0` | `^8.2` or `^8.4`    |
+| `^11.0`        | `^11.0`            | `^8.2`              |
+| `^10.0`        | `^10.0`            | `^8.2`              |
+| `^9.0`         | `^10.0`            | `^8.1`              |
+| `^8.0`         | `^8.0` or `^9.0`   | `^8.1`              |
+| `^7.0`         | `^9.0`             | `^8.1`              |
+| `^6.0`         | `^8.0`             | `^8.0`              |
+| `^5.0`         | `^8.0`             | `^8.0`              |
+| `^4.0`         | `^8.0`             | `^7.4`              |
+| `^3.0`         | `^7.3`             | `^7.3`              |
+| `^2.0`         | `^6.3`             | `^7.2`              |
+| `^1.0`         | `5.5` to `5.8`     | `>=7.1.3`           |
 
-If your application is still on an older Laravel major, install the matching previous tag of laravel-lodash.
+The 12.x line moved framework support mid-major: 12.0 targets Laravel 11, 12.1 accepts Laravel 11 or 12, and 12.2 requires Laravel 12 and PHP 8.4. Prefer `^12.2` when targeting Laravel 12.
+
+If your application is still on an older Laravel major, install the matching tag of laravel-lodash from the table above.
 
 ## Table of Contents
 - [Installation](#installation)

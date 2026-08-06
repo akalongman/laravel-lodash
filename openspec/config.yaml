@@ -6,7 +6,7 @@ context: |
     for tech stack, architecture, and conventions.
 
     # Project summary
-    longman/laravel-lodash is a Laravel utility package (requires PHP ^8.4 and laravel/framework ^12.0),
+    longman/laravel-lodash is a Laravel utility package (requires PHP ^8.4 and laravel/framework ^13.0),
     distributed on Packagist as `longman/laravel-lodash`. It augments a host Laravel application
     with opt-in extensions: extended Cache and Redis providers (igbinary serialization, client-side
     sharding), an SQS FIFO queue driver, an Elasticsearch wrapper, Eloquent traits and casts,

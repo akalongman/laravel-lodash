@@ -13,7 +13,12 @@ build:
                     # It does not fully support PHP 8.4 syntax used in this package
                     # (readonly classes, typed class constants). The repo's actual
                     # quality gate is the GitHub Actions workflow (phpcs + phpunit).
-                    - true
+                    #
+                    # Keep the quotes. Unquoted `true` is a YAML boolean, not the
+                    # no-op shell command, and Scrutinizer errors this node with
+                    # "Tests: errored" when it receives a boolean where it expects
+                    # a command string.
+                    - 'true'
 
 tools:
     external_code_coverage:

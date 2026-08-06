@@ -13,6 +13,10 @@ use Tests\Unit\TestCase;
 use Throwable;
 
 use function app;
+use function array_merge;
+use function array_values;
+use function count;
+use function implode;
 use function json_decode;
 
 class JsonResourceRelationsTest extends TestCase
@@ -149,6 +153,98 @@ class JsonResourceRelationsTest extends TestCase
         }
     }
 
+    #[Test]
+    public function it_should_render_the_same_payload_for_every_include_order(): void
+    {
+        $baseline = null;
+        $baselineOrder = '';
+
+        foreach (self::permutations(['accounts', 'accounts.degree', 'avatar']) as $order) {
+            $decoded = $this->render($this->deeplyPopulatedResource(), $order);
+
+            if ($baseline === null) {
+                $baseline = $decoded;
+                $baselineOrder = implode(',', $order);
+
+                continue;
+            }
+
+            $this->assertEquals(
+                $baseline,
+                $decoded,
+                'Include order [' . implode(',', $order) . '] rendered differently from [' . $baselineOrder . ']',
+            );
+        }
+    }
+
+    #[Test]
+    public function it_should_keep_a_nested_include_when_its_ancestor_is_listed_after_it(): void
+    {
+        $decoded = $this->render($this->deeplyPopulatedResource(), ['accounts.degree', 'accounts']);
+
+        $accounts = $decoded['data']['relationships']['accounts']['data'];
+
+        $this->assertSame('2', $accounts['id']);
+        $this->assertArrayHasKey('relationships', $accounts, 'The nested include was dropped by its ancestor.');
+        $this->assertSame('3', $accounts['relationships']['degree']['data']['id']);
+    }
+
+    #[Test]
+    public function it_should_keep_a_nested_include_when_defaults_precede_a_repeated_client_include(): void
+    {
+        $decoded = $this->render($this->deeplyPopulatedResource(), ['accounts', 'accounts.degree', 'accounts']);
+
+        $accounts = $decoded['data']['relationships']['accounts']['data'];
+
+        $this->assertArrayHasKey('relationships', $accounts, 'The nested include was dropped by its ancestor.');
+        $this->assertSame('3', $accounts['relationships']['degree']['data']['id']);
+    }
+
+    #[Test]
+    public function it_should_keep_a_three_level_chain_when_its_ancestor_is_listed_after_it(): void
+    {
+        $decoded = $this->render($this->deeplyPopulatedResource(), ['accounts.degree.faculty', 'accounts.degree']);
+
+        $accounts = $decoded['data']['relationships']['accounts']['data'];
+
+        $this->assertArrayHasKey('relationships', $accounts, 'The degree level was dropped by its ancestor.');
+
+        $degree = $accounts['relationships']['degree']['data'];
+
+        $this->assertSame('3', $degree['id']);
+        $this->assertArrayHasKey('relationships', $degree, 'The faculty level was dropped by its ancestor.');
+        $this->assertSame('4', $degree['relationships']['faculty']['data']['id']);
+    }
+
+    #[Test]
+    public function it_should_merge_sibling_branches_under_a_shared_parent(): void
+    {
+        $decoded = $this->render($this->deeplyPopulatedResource(), ['accounts.degree', 'accounts.avatar']);
+
+        $relationships = $decoded['data']['relationships']['accounts']['data']['relationships'];
+
+        $this->assertSame('3', $relationships['degree']['data']['id']);
+        $this->assertSame('5', $relationships['avatar']['data']['id']);
+    }
+
+    #[Test]
+    public function it_should_render_a_repeated_include_exactly_once(): void
+    {
+        $this->assertSame(
+            $this->content($this->deeplyPopulatedResource(), ['avatar']),
+            $this->content($this->deeplyPopulatedResource(), ['avatar', 'avatar']),
+        );
+    }
+
+    #[Test]
+    public function it_should_throw_for_an_unknown_include_alongside_a_preserved_ancestor(): void
+    {
+        $this->expectException(Throwable::class);
+        $this->expectExceptionMessage('Relation method does not exist: includeMissing');
+
+        $this->render($this->deeplyPopulatedResource(), ['accounts.degree', 'accounts', 'missing']);
+    }
+
     private function makeUser(int $id = 1): User
     {
         return new User([
@@ -173,5 +269,45 @@ class JsonResourceRelationsTest extends TestCase
     private function content(JsonResource $resource, array $relations): string
     {
         return $resource->withRelations($relations)->toResponse(app(Request::class))->content();
+    }
+
+    /**
+     * A fresh instance per call: rendering merges the requested relations into the
+     * resource, so reusing one instance across orderings would accumulate them.
+     */
+    private function deeplyPopulatedResource(): RelationResource
+    {
+        return (new RelationResource($this->makeUser()))->withIncludes([
+            'accounts' => (new RelationResource($this->makeUser(2)))->withIncludes([
+                'degree' => (new RelationResource($this->makeUser(3)))->withIncludes([
+                    'faculty' => new RelationResource($this->makeUser(4)),
+                ]),
+                'avatar' => new RelationResource($this->makeUser(5)),
+            ]),
+            'avatar'   => new RelationResource($this->makeUser(6)),
+        ]);
+    }
+
+    /**
+     * @param array<int, string> $items
+     * @return array<int, array<int, string>>
+     */
+    private static function permutations(array $items): array
+    {
+        if (count($items) <= 1) {
+            return [$items];
+        }
+
+        $result = [];
+        foreach ($items as $index => $item) {
+            $remaining = $items;
+            unset($remaining[$index]);
+
+            foreach (self::permutations(array_values($remaining)) as $permutation) {
+                $result[] = array_merge([$item], $permutation);
+            }
+        }
+
+        return $result;
     }
 }

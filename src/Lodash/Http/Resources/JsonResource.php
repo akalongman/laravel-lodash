@@ -225,6 +225,12 @@ abstract class JsonResource extends BaseResource
     {
         $result = [];
         foreach ($array as $item) {
+            // An ancestor path carries no instruction its descendant does not already
+            // imply, so the more specific entry wins regardless of position in the list.
+            if (! empty(Arr::get($result, $item))) {
+                continue;
+            }
+
             Arr::set($result, $item, []);
         }
 

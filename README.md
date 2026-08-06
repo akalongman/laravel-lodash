@@ -405,6 +405,16 @@ public function includeAvatar(): AvatarResource
 
 Requesting a relationship with no matching `include<Name>()` method throws, so a misspelled include stays loud rather than silently resolving to an empty value.
 
+Include paths compose as a set, not an ordered list of instructions. A parent and a path nested under it may both be requested, in either order, and both are honoured; a repeated path is harmless; and the rendered tree is the union of every path requested. That makes the usual controller pattern safe:
+
+```php
+private const array DEFAULT_INCLUDES = ['criteria', 'criteria.courseComponent'];
+
+$includes = array_merge(self::DEFAULT_INCLUDES, $request->getValidatedIncludes());
+```
+
+A client sending `?include=criteria` yields `['criteria', 'criteria.courseComponent', 'criteria']`, and the nested `courseComponent` still renders. The order in which keys appear inside the `relationships` object is not part of the contract, so compare payloads by structure rather than byte-for-byte across differently-ordered include lists.
+
 ### Artisan Commands
 
 The service provider is auto-discovered and `register.commands` defaults to `true`, so these commands are available out of the box. Set it to `false` in `config/lodash.php` to leave them unregistered.

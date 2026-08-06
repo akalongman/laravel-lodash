@@ -49,4 +49,9 @@ class RelationResource extends JsonResource
     {
         return $this->includes['degree'] ?? null;
     }
+
+    public function includeFaculty(): ?JsonResource
+    {
+        return $this->includes['faculty'] ?? null;
+    }
 }

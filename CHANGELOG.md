@@ -2,6 +2,18 @@
 
 All notable changes to `longman/laravel-lodash` are documented in this file.
 
+## [15.1.0] - 2026-08-06
+
+### Fixed
+
+- `Http\Resources\JsonResource` no longer drops a nested include when a shorter path sharing its prefix appears later in the include list. Include paths now compose as a set: `['accounts.degree', 'accounts']` and `['accounts', 'accounts.degree']` render the same payload, and the tree is the union of every requested path regardless of order.
+
+  **The pattern that triggers it is `array_merge($defaultIncludes, $request->getValidatedIncludes())`.** A controller declaring `['criteria', 'criteria.courseComponent']` as always-on defaults, merged with a client sending `?include=criteria`, produced `['criteria', 'criteria.courseComponent', 'criteria']`. The trailing `criteria` flattened the subtree the second entry had built, so `criteria` rendered with no `courseComponent` at all. Asking for more data returned less, with no error and nothing logged. The ordering requirement was invisible at the call site, which is why reversing the merge order is a workaround rather than a fix: it also does not cover a child resource whose own `$includedRelations` is merged with the chain passed down to it.
+
+  This is a widening, not a reshape. Every include list that previously produced a complete tree still produces it; only paths that were being silently discarded now survive. **Test suites are where this surfaces.** `Testing\Response`'s resource assertions default to `exact: true`, so a declared structure that omitted a relationship which was being dropped will newly fail on an unexpected key. Declare the recovered relationship rather than reverting, using the `?` nullable marker added in 15.0.0 where the relationship can also be empty. Any test asserting a nested relationship was absent under a prefix include was asserting the defect.
+
+  The order in which keys appear inside the rendered `relationships` object is not part of the contract. First-seen order is preserved in practice and nothing changes on the wire today, but consumers should not compare serialized payloads byte-for-byte across differently-ordered include lists.
+
 ## [15.0.0] - 2026-08-06
 
 ### Changed (BREAKING)

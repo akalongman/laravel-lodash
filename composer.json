@@ -92,7 +92,6 @@
         "phpcs": "./vendor/bin/phpcs --standard=phpcs.xml -spn --encoding=utf-8 src/ tests/ --report-width=150",
         "phpcbf": "./vendor/bin/phpcbf --standard=phpcs.xml -spn --encoding=utf-8 src/ tests/ --report-width=150",
         "test": "./vendor/bin/phpunit -c phpunit.xml.dist",
-        "coverage-clover": "./vendor/bin/phpunit --stop-on-failure --coverage-clover build/logs/clover.xml",
         "coverage-html": "./vendor/bin/phpunit --stop-on-failure --coverage-html build/coverage"
     }
 }

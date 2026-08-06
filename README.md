@@ -1,8 +1,6 @@
 # Laravel Lodash
 
 [![Build Status](https://img.shields.io/travis/akalongman/laravel-lodash/master.svg?style=flat-square)](https://travis-ci.org/akalongman/laravel-lodash)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/akalongman/laravel-lodash.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/laravel-lodash/?branch=master)
-[![Code Quality](https://img.shields.io/scrutinizer/g/akalongman/laravel-lodash.svg?style=flat-square)](https://scrutinizer-ci.com/g/akalongman/laravel-lodash/?branch=master)
 [![Latest Stable Version](https://img.shields.io/github/tag/akalongman/laravel-lodash.svg?style=flat-square)](https://github.com/akalongman/laravel-lodash/tags)
 [![Total Downloads](https://img.shields.io/packagist/dt/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)
 [![Downloads Month](https://img.shields.io/packagist/dm/Longman/laravel-lodash.svg)](https://packagist.org/packages/longman/laravel-lodash)
@@ -57,7 +55,6 @@ If your application is still on an older Laravel major, install the matching tag
     - [Middleware List](#middleware-list)
         - [XssSecurity](#xsssecurity)
         - [SimpleBasicAuth](#simplebasicauth)
-    - [Blade Directives](#blade-directives)
     - [Misc](#misc)
         - [SelfDiagnosis Checks](#selfdiagnosis-checks)
     - [Testing Helpers](#testing-helpers)
@@ -444,16 +441,6 @@ In the `config/auth.php` you have to add:
     ],
     . . .
 ```
-
-
-### Blade Directives
-
-For this functional you should add `Longman\LaravelLodash\ServiceProvider::class` in the `config/app.php` file.
-
-Directive  | Description
-------------- | -------------
-`@datetime($date);`  |  Display relative time. Example:<br/>`$date = Carbon\Carbon::now();`<br />`@datetime($date);`
-`@plural($count, $word)`  |  Pluralization helper. Example:<br/>`@plural(count($posts), 'post')`<br />Produces '1 post' or '2 posts', depending on how many items in $posts there are
 
 
 ### Misc

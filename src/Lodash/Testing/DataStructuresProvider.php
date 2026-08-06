@@ -40,7 +40,7 @@ abstract class DataStructuresProvider
     }
 
     /**
-     * @return array<string, array{structure: ?string, collection: bool, children: array}>
+     * @return array<string, array{structure: ?string, collection: bool, nullable: bool, children: array}>
      */
     protected static function normalizeRelations(array $relations): array
     {
@@ -66,13 +66,13 @@ abstract class DataStructuresProvider
     }
 
     /**
-     * @return array<string, array{structure: ?string, collection: bool, children: array}>
+     * @return array<string, array{structure: ?string, collection: bool, nullable: bool, children: array}>
      */
     protected static function normalizePath(string $path, array $children): array
     {
         $segments = explode('.', $path);
         $first = array_shift($segments);
-        [$name, $structure, $isCollection] = self::parseSegment($first);
+        [$name, $structure, $isCollection, $isNullable] = self::parseSegment($first);
 
         $childTree = $segments === []
             ? $children
@@ -82,13 +82,14 @@ abstract class DataStructuresProvider
             $name => [
                 'structure' => $structure,
                 'collection' => $isCollection,
+                'nullable' => $isNullable,
                 'children' => $childTree,
             ],
         ];
     }
 
     /**
-     * @return array{0: string, 1: ?string, 2: bool}
+     * @return array{0: string, 1: ?string, 2: bool, 3: bool}
      */
     protected static function parseSegment(string $segment): array
     {
@@ -119,24 +120,49 @@ abstract class DataStructuresProvider
             );
         }
 
+        $isNullable = false;
+        if (str_ends_with($name, '?')) {
+            $isNullable = true;
+            $name = substr($name, 0, -1);
+        }
+
         $isCollection = false;
         if (str_ends_with($name, '[]')) {
             $isCollection = true;
             $name = substr($name, 0, -2);
         }
 
+        // Accept the markers in either order so that both "roles[]?" and "roles?[]"
+        // reach the conflict check below rather than parsing as a stray "?" in the name.
+        if (str_ends_with($name, '?')) {
+            $isNullable = true;
+            $name = substr($name, 0, -1);
+        }
+
+        if ($isNullable && $isCollection) {
+            throw new InvalidArgumentException(
+                'Invalid relation segment "' . $segment . '". A collection relation cannot be nullable.',
+            );
+        }
+
         if ($name === '' || $structure === '' || str_contains($name, '[') || str_contains($name, ']')) {
             throw new InvalidArgumentException('Invalid relation segment "' . $segment . '".');
         }
 
-        return [$name, $structure, $isCollection];
+        if (str_contains($name, '?') || ($structure !== null && str_contains($structure, '?'))) {
+            throw new InvalidArgumentException(
+                'Invalid relation segment "' . $segment . '". The "?" marker is only valid at the end of a relation name.',
+            );
+        }
+
+        return [$name, $structure, $isCollection, $isNullable];
     }
 
     /**
-     * @param array<string, array{structure: ?string, collection: bool, children: array}> $tree
-     * @param array<string, array{structure: ?string, collection: bool, children: array}> $branch
+     * @param array<string, array{structure: ?string, collection: bool, nullable: bool, children: array}> $tree
+     * @param array<string, array{structure: ?string, collection: bool, nullable: bool, children: array}> $branch
      *
-     * @return array<string, array{structure: ?string, collection: bool, children: array}>
+     * @return array<string, array{structure: ?string, collection: bool, nullable: bool, children: array}>
      */
     protected static function mergeRelationTrees(array $tree, array $branch): array
     {
@@ -154,6 +180,12 @@ abstract class DataStructuresProvider
                 );
             }
 
+            if ($existing['nullable'] !== $node['nullable']) {
+                throw new InvalidArgumentException(
+                    'Relation "' . $name . '" is declared both as nullable and as non-nullable.',
+                );
+            }
+
             if ($existing['structure'] !== null && $node['structure'] !== null && $existing['structure'] !== $node['structure']) {
                 throw new InvalidArgumentException(
                     'Relation "' . $name . '" has conflicting structure names "' . $existing['structure'] . '" and "' . $node['structure'] . '".',
@@ -163,6 +195,7 @@ abstract class DataStructuresProvider
             $tree[$name] = [
                 'structure' => $existing['structure'] ?? $node['structure'],
                 'collection' => $existing['collection'],
+                'nullable' => $existing['nullable'],
                 'children' => self::mergeRelationTrees($existing['children'], $node['children']),
             ];
         }
@@ -171,7 +204,7 @@ abstract class DataStructuresProvider
     }
 
     /**
-     * @param array<string, array{structure: ?string, collection: bool, children: array}> $tree
+     * @param array<string, array{structure: ?string, collection: bool, nullable: bool, children: array}> $tree
      */
     protected static function applyRelationTree(array $structure, array $tree): array
     {
@@ -182,7 +215,13 @@ abstract class DataStructuresProvider
                 $relationStructure = static::applyRelationTree($relationStructure, $node['children']);
             }
 
-            $structure['relationships'][$name]['data'] = $node['collection']
+            // A nullable relation is emitted under a "?"-suffixed key. Testing\Response
+            // resolves the marker against the actual payload, because a null relationship
+            // renders at "relationships.<name>" while a populated one renders one level
+            // deeper at "relationships.<name>.data".
+            $key = $node['nullable'] ? $name . '?' : $name;
+
+            $structure['relationships'][$key]['data'] = $node['collection']
                 ? ['*' => $relationStructure]
                 : $relationStructure;
         }

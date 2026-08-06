@@ -49,6 +49,10 @@ class TestDataStructures extends DataStructuresProvider
         'id',
         'itemName',
     ];
+    protected static array $avatarStructure = [
+        'id',
+        'url',
+    ];
     protected static array $adminStudentStructure = [
         'id',
         'type',

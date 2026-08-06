@@ -167,4 +167,87 @@ class DataStructuresProviderTest extends TestCase
 
         TestDataStructures::getUserStructure(['unknown']);
     }
+
+    #[Test]
+    public function it_should_mark_a_nullable_relation_with_a_suffixed_key(): void
+    {
+        $structure = TestDataStructures::getUserStructure(['avatar?']);
+
+        $this->assertArrayHasKey('avatar?', $structure['relationships']);
+        $this->assertArrayNotHasKey('avatar', $structure['relationships']);
+        $this->assertSame(['id', 'url'], $structure['relationships']['avatar?']['data']);
+    }
+
+    #[Test]
+    public function it_should_accept_a_nullable_marker_with_a_structure_hint(): void
+    {
+        $structure = TestDataStructures::getUserStructure(['program?:AdminProgram']);
+
+        $this->assertSame(['id', 'title', 'code'], $structure['relationships']['program?']['data']);
+    }
+
+    #[Test]
+    public function it_should_compose_a_nullable_marker_in_a_chain(): void
+    {
+        $structure = TestDataStructures::getUserStructure(['program?:AdminProgram.faculty:AdminFaculty']);
+
+        $program = $structure['relationships']['program?']['data'];
+
+        $this->assertSame(['id', 'facultyName'], $program['relationships']['faculty']['data']);
+    }
+
+    #[Test]
+    public function it_should_merge_nullable_declarations_order_independently(): void
+    {
+        $forward = TestDataStructures::getUserStructure(['program?:AdminProgram', 'program?:AdminProgram.faculty:AdminFaculty']);
+        $reverse = TestDataStructures::getUserStructure(['program?:AdminProgram.faculty:AdminFaculty', 'program?:AdminProgram']);
+
+        $this->assertSame($forward, $reverse);
+        $this->assertArrayHasKey('program?', $forward['relationships']);
+    }
+
+    #[Test]
+    public function it_should_throw_when_the_collection_marker_precedes_the_nullable_marker(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('collection relation cannot be nullable');
+
+        TestDataStructures::getUserStructure(['roles[]?']);
+    }
+
+    #[Test]
+    public function it_should_throw_when_the_nullable_marker_precedes_the_collection_marker(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('collection relation cannot be nullable');
+
+        TestDataStructures::getUserStructure(['roles?[]']);
+    }
+
+    #[Test]
+    public function it_should_throw_on_a_question_mark_inside_a_relation_name(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('only valid at the end of a relation name');
+
+        TestDataStructures::getUserStructure(['av?atar']);
+    }
+
+    #[Test]
+    public function it_should_throw_on_a_question_mark_inside_a_structure_name(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('only valid at the end of a relation name');
+
+        TestDataStructures::getUserStructure(['program:Admin?Program']);
+    }
+
+    #[Test]
+    public function it_should_throw_on_inconsistent_nullable_markers(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIsOrContains('nullable and as non-nullable');
+
+        TestDataStructures::getUserStructure(['program:AdminProgram', 'program?:AdminProgram']);
+    }
 }

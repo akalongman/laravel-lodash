@@ -452,6 +452,144 @@ class ResponseTest extends TestCase
         $response->assertJsonDataResources('AdminStudent', [], includePagerMeta: false);
     }
 
+    #[Test]
+    public function it_should_assert_a_nullable_relation_that_is_null(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => $this->studentPayload(['avatar' => null]),
+        ]);
+
+        $response->assertJsonDataResource('AdminStudent', new TestUser(['id' => 5]), ['avatar?']);
+    }
+
+    #[Test]
+    public function it_should_assert_a_nullable_relation_that_is_populated(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => $this->studentPayload([
+                'avatar' => ['data' => ['id' => '9', 'url' => 'https://example.test/a.png']],
+            ]),
+        ]);
+
+        $response->assertJsonDataResource('AdminStudent', new TestUser(['id' => 5]), ['avatar?']);
+    }
+
+    #[Test]
+    public function it_should_fail_when_a_populated_nullable_relation_misses_a_declared_key(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => $this->studentPayload([
+                'avatar' => ['data' => ['id' => '9']],
+            ]),
+        ]);
+
+        $this->expectException(AssertionFailedError::class);
+
+        $response->assertJsonDataResource('AdminStudent', new TestUser(['id' => 5]), ['avatar?']);
+    }
+
+    #[Test]
+    public function it_should_fail_when_a_nullable_relation_key_is_absent(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => ['id' => '5', 'type' => 'AdminStudent', 'attributes' => ['name' => 'Alice']],
+        ]);
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessageIsOrContains('Nullable relationship "avatar" is missing from the response.');
+
+        $response->assertJsonDataResource('AdminStudent', new TestUser(['id' => 5]), ['avatar?']);
+    }
+
+    #[Test]
+    public function it_should_fail_when_a_null_relation_is_declared_without_the_nullable_marker(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => $this->studentPayload(['avatar' => null]),
+        ]);
+
+        $this->expectException(AssertionFailedError::class);
+
+        $response->assertJsonDataResource('AdminStudent', new TestUser(['id' => 5]), ['avatar']);
+    }
+
+    #[Test]
+    public function it_should_keep_exact_mode_strict_around_a_null_relation(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => $this->studentPayload(['avatar' => null, 'undeclared' => null]),
+        ]);
+
+        $this->expectException(AssertionFailedError::class);
+
+        $response->assertJsonDataResource('AdminStudent', new TestUser(['id' => 5]), ['avatar?']);
+    }
+
+    #[Test]
+    public function it_should_assert_a_null_relation_on_every_collection_row(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => [
+                $this->studentPayload(['avatar' => null], '1'),
+                $this->studentPayload(['avatar' => null], '2'),
+            ],
+        ]);
+
+        $response->assertJsonDataResources(
+            'AdminStudent',
+            [new TestUser(['id' => 1]), new TestUser(['id' => 2])],
+            ['avatar?'],
+            includePagerMeta: false,
+        );
+    }
+
+    #[Test]
+    public function it_should_fail_when_a_collection_row_misses_the_nullable_relation(): void
+    {
+        Response::setDataStructuresProvider(TestDataStructures::class);
+
+        $response = $this->createResponse([
+            'data' => [
+                $this->studentPayload(['avatar' => null], '1'),
+                ['id' => '2', 'type' => 'AdminStudent', 'attributes' => ['name' => 'Alice']],
+            ],
+        ]);
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessageIsOrContains('Nullable relationship "avatar" is missing from the response at index 1.');
+
+        $response->assertJsonDataResources(
+            'AdminStudent',
+            [new TestUser(['id' => 1]), new TestUser(['id' => 2])],
+            ['avatar?'],
+            includePagerMeta: false,
+        );
+    }
+
+    protected function studentPayload(array $relationships, string $id = '5'): array
+    {
+        return [
+            'id' => $id,
+            'type' => 'AdminStudent',
+            'attributes' => ['name' => 'Alice'],
+            'relationships' => $relationships,
+        ];
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

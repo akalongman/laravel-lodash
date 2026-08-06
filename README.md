@@ -41,6 +41,7 @@ If your application is still on an older Laravel major, install the matching pre
     - [Helper Functions](#helper-functions)
     - [Extended Classes](#extended-classes)
         - [Request Class](#request-class)
+        - [API Resources and Relationships](#api-resources-and-relationships)
     - [Artisan Commands](#artisan-commands)
     - [Middleware List](#middleware-list)
         - [XssSecurity](#xsssecurity)
@@ -357,6 +358,54 @@ Method  | Description
 `getFloat(string $name, float $default = 0): float`  |  Return request field value as a float
 `getString(string $name, string $default = ''): string`  |  Return request field value as a string
 
+#### API Resources and Relationships
+
+`Longman\LaravelLodash\Http\Resources\JsonResource` exposes each relationship as an `include<Name>()` method and renders only the relationships the client requested.
+
+A populated relationship carries its own `data` wrapper, one level deeper than the relationship key:
+
+```json
+{
+    "data": {
+        "id": "1",
+        "type": "User",
+        "attributes": {"name": "Alice"},
+        "relationships": {
+            "avatar": {"data": {"id": "9", "type": "Avatar", "attributes": {"url": "..."}}}
+        }
+    }
+}
+```
+
+A requested relationship that resolves to nothing renders as `null` at the relationship key itself, one level shallower:
+
+```json
+{
+    "data": {
+        "id": "1",
+        "type": "User",
+        "attributes": {"name": "Alice"},
+        "relationships": {"avatar": null}
+    }
+}
+```
+
+The key is always present once the client asked for the relationship, so an absent key means only that the relationship was not requested. Both ways of writing an empty relationship produce the same output:
+
+```php
+public function includeAvatar(): ?AvatarResource
+{
+    return $this->resource->avatar ? new AvatarResource($this->resource->avatar) : null;
+}
+
+public function includeAvatar(): AvatarResource
+{
+    return new AvatarResource($this->resource->avatar);
+}
+```
+
+Requesting a relationship with no matching `include<Name>()` method throws, so a misspelled include stays loud rather than silently resolving to an empty value.
+
 ### Artisan Commands
 
 For this fuctional you should add `Longman\LaravelLodash\LodashServiceProvider::class` in the `config/app.php` file.
@@ -564,6 +613,16 @@ AppStructures::getUserStructure([
 ```
 
 The legacy `'[roles]'` wrapper syntax is not supported; declarations like it throw an `InvalidArgumentException` with a migration hint (write `'roles[]'` instead).
+
+A single relation that may render as `null` is declared with a `?` suffix. One structure then covers both the populated and the empty case, under exact and non-exact matching, while a missing relationship key still fails with a message naming the relation:
+
+```php
+AppStructures::getUserStructure(['avatar?']);                  // null or the populated subtree
+AppStructures::getUserStructure(['avatar?:AdminAvatar']);      // with an explicit structure name
+AppStructures::getUserStructure(['accounts?.degree']);         // nullable parent in a chain
+```
+
+The marker cannot be combined with the collection marker (`'roles[]?'` and `'roles?[]'` both throw), because a relationship collection never renders as `null`. Structures containing a `?` marker must be asserted through `Testing\Response`, which resolves the marker against the actual payload; passing one to Laravel's raw `assertJsonStructure()` would assert against a key that does not exist in the response. Under a collection relation the rows must agree: the marker resolves to the empty form only when every observed row has that relationship `null`.
 
 The combined resource assertions tie a response to the exact records it should contain. Register the provider once, then a single call checks the structure (exact by default), the wire `type` (defaults to the structure name, override with `type:`), and the record identity. Expected ids derive from `(string) $model->getKey()`, or `getUidString()` for UUID-primary models:
 

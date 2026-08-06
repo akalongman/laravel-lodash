@@ -148,6 +148,7 @@ abstract class JsonResource extends BaseResource
         return $data;
     }
 
+    /** @return array<string, \Longman\LaravelLodash\Http\Resources\JsonResource|null> */
     protected function getRelationsData(): array
     {
         if (is_null($this->resource)) {
@@ -169,9 +170,14 @@ abstract class JsonResource extends BaseResource
                 $remainingRelations = array_keys(Arr::dot($remainingRelationChain));
             }
 
-            /** @var \Longman\LaravelLodash\Http\Resources\JsonResource $resource */
+            /** @var \Longman\LaravelLodash\Http\Resources\JsonResource|null $resource */
             $resource = $this->$methodName();
             if (is_null($resource)) {
+                // The client asked for this relationship and it resolved to nothing.
+                // Render an explicit null: omitting the key would be indistinguishable
+                // from the include having been ignored.
+                $relations[$currentRelation] = null;
+
                 continue;
             }
 

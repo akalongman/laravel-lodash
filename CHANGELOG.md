@@ -4,6 +4,20 @@ All notable changes to `longman/laravel-lodash` are documented in this file.
 
 ## [Unreleased]
 
+### Changed (BREAKING)
+
+- `Http\Resources\JsonResource` renders a requested-but-empty relationship as `null` under its key instead of omitting the key. An `includeXxx()` method returning `null` previously dropped the relationship from the `relationships` block entirely, which a client could not distinguish from the include being ignored, the server declining to serve it, or a bug. A populated relationship is still reached at `relationships.<name>.data`; an empty one is now `null` at `relationships.<name>`. Relationships the client did not request stay absent, so payload size is unchanged for them.
+
+  **Test suites break before client code does.** `Testing\Response::assertJsonDataResource()` and `assertJsonDataResources()` default to `exact: true`, so any test whose declared structure omitted a nullable relation, which was the only way to make it pass previously, now fails on the unexpected key. Migrate by declaring the relation with the new `?` marker, `['avatar?']`, instead of leaving it out. Client code branching on key presence (`array_key_exists`, `'avatar' in relationships`, `hasOwnProperty`) also changes behaviour; code reading `relationships.avatar?.data?.url` is unaffected.
+
+  The `return new XResource(null)` idiom already produced the new shape, because Laravel's `ConditionallyLoadsAttributes::filter()` collapses a resource wrapping a null model, so the two idioms now agree. Consumers who need the corrected shape before upgrading can rewrite a nullable `includeXxx()` from a null-guarded ternary to `return new XResource($model->relation);`, which produces the same output on 14.x and stays correct after the upgrade.
+
+- `Testing\DataStructuresProvider::parseSegment()` returns a fourth element carrying the nullable flag, and the normalized relation tree gained a `nullable` key. Subclasses overriding these protected members must update accordingly.
+
+### Added
+
+- `Testing\DataStructuresProvider` relation includes accept a `?` suffix marking a nullable single relation (`'avatar?'`, `'avatar?:AdminAvatar'`, `'accounts?.degree'`). `Testing\Response` resolves the marker against the actual payload, so one declared structure covers both the populated and the empty case under exact and non-exact matching, while a missing relationship key still fails with a message naming the relation. Combining the marker with the collection marker (`'roles[]?'`, `'roles?[]'`) throws `InvalidArgumentException`, since a relationship collection never renders as `null`.
+
 ### Tooling
 
 - Raise the `phpunit/phpunit` dev constraint from `^13.0` to `^13.2`: the test suite uses `expectExceptionMessageIsOrContains()`, introduced in PHPUnit 13.2. The 14.0.0 CI run failed against an older locked PHPUnit; the 14.0.1 lock refresh already resolved the failure, and this records the actual floor.

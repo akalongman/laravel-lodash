@@ -12,8 +12,14 @@ use Longman\LaravelLodash\Eloquent\UuidAsPrimaryContract;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 use function __;
+use function array_key_exists;
 use function array_merge;
+use function count;
+use function is_array;
+use function is_string;
 use function json_decode;
+use function str_ends_with;
+use function substr;
 
 class Response extends TestResponse
 {
@@ -153,6 +159,7 @@ class Response extends TestResponse
         bool $exact = true,
     ): self {
         $resolved = self::resolveDataStructure($structure, $relations);
+        $resolved = self::resolveNullableRelations($resolved, [$this->getDecodedContent()['data'] ?? null]);
 
         $this->assertJsonDataItemStructure($resolved, $exact);
 
@@ -184,6 +191,8 @@ class Response extends TestResponse
         }
 
         $resolved = self::resolveDataStructure($structure, $relations);
+        $rows = $this->getDecodedContent()['data'] ?? [];
+        $resolved = self::resolveNullableRelations($resolved, is_array($rows) ? $rows : []);
 
         $this->assertJsonDataCollectionStructure($resolved, $includePagerMeta, $includeCursorMeta, $exact);
 
@@ -298,6 +307,149 @@ class Response extends TestResponse
         $method = 'get' . $structure . 'Structure';
 
         return self::$dataStructuresProvider::$method($relations);
+    }
+
+    /**
+     * Resolve the "?" markers emitted by DataStructuresProvider for nullable relations.
+     *
+     * A populated relationship renders at "relationships.<name>.data" while an empty one
+     * renders as null at "relationships.<name>", so one declared structure cannot describe
+     * both. Each marked node is rewritten against the actual payload: to a presence-only
+     * leaf when the relationship is null, or to the declared subtree when it is populated.
+     * The leaf form keeps exact mode intact, because it still contributes the key.
+     *
+     * @param array<int, mixed> $actualItems
+     */
+    protected static function resolveNullableRelations(array $structure, array $actualItems): array
+    {
+        if (! isset($structure['relationships']) || ! is_array($structure['relationships'])) {
+            return $structure;
+        }
+
+        $resolved = [];
+
+        foreach ($structure['relationships'] as $key => $node) {
+            $isNullable = is_string($key) && str_ends_with($key, '?');
+            $name = $isNullable ? substr($key, 0, -1) : $key;
+
+            $values = self::collectRelationValues($actualItems, $name);
+
+            if ($isNullable) {
+                self::assertNullableRelationPresent($actualItems, $name);
+            }
+
+            if ($isNullable && $values !== [] && self::allNull($values)) {
+                $resolved[] = $name;
+
+                continue;
+            }
+
+            $resolved[$name] = is_array($node)
+                ? self::resolveNullableRelationNode($node, $values)
+                : $node;
+        }
+
+        $structure['relationships'] = $resolved;
+
+        return $structure;
+    }
+
+    /**
+     * @param array<int, mixed> $values
+     */
+    protected static function resolveNullableRelationNode(array $node, array $values): array
+    {
+        if (! isset($node['data']) || ! is_array($node['data'])) {
+            return $node;
+        }
+
+        $dataValues = [];
+        foreach ($values as $value) {
+            if (! is_array($value) || ! array_key_exists('data', $value)) {
+                continue;
+            }
+
+            $dataValues[] = $value['data'];
+        }
+
+        if (isset($node['data']['*']) && is_array($node['data']['*'])) {
+            $rows = [];
+            foreach ($dataValues as $list) {
+                if (! is_array($list)) {
+                    continue;
+                }
+
+                foreach ($list as $row) {
+                    $rows[] = $row;
+                }
+            }
+
+            $node['data']['*'] = self::resolveNullableRelations($node['data']['*'], $rows);
+
+            return $node;
+        }
+
+        $node['data'] = self::resolveNullableRelations($node['data'], $dataValues);
+
+        return $node;
+    }
+
+    /**
+     * @param array<int, mixed> $actualItems
+     *
+     * @return array<int, mixed>
+     */
+    protected static function collectRelationValues(array $actualItems, string $name): array
+    {
+        $values = [];
+
+        foreach ($actualItems as $item) {
+            if (! self::hasRelationKey($item, $name)) {
+                continue;
+            }
+
+            $values[] = $item['relationships'][$name];
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param array<int, mixed> $actualItems
+     */
+    protected static function assertNullableRelationPresent(array $actualItems, string $name): void
+    {
+        $isCollection = count($actualItems) > 1;
+
+        foreach ($actualItems as $index => $item) {
+            $message = 'Nullable relationship "' . $name . '" is missing from the response'
+                . ($isCollection ? ' at index ' . $index : '') . '.';
+
+            PHPUnit::assertTrue(self::hasRelationKey($item, $name), $message);
+        }
+    }
+
+    protected static function hasRelationKey(mixed $item, string $name): bool
+    {
+        if (! is_array($item) || ! is_array($item['relationships'] ?? null)) {
+            return false;
+        }
+
+        return array_key_exists($name, $item['relationships']);
+    }
+
+    /**
+     * @param array<int, mixed> $values
+     */
+    protected static function allNull(array $values): bool
+    {
+        foreach ($values as $value) {
+            if ($value !== null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected static function resolveExpectedId(Model $model): string

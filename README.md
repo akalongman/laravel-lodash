@@ -75,18 +75,9 @@ Run a command in your command line:
 
     composer require longman/laravel-lodash
 
-Add `ServiceProvider` to your service providers list in the `app.php`
+`Longman\LaravelLodash\ServiceProvider` is registered automatically through Laravel's package discovery, so there is no provider to add by hand.
 
-```php
-'providers' => [
-    . . .
-    /*
-     * Package Service Providers...
-     */
-    Longman\LaravelLodash\ServiceProvider::class,
-    . . .
-],
-```
+The opt-in feature providers are a separate matter. `Cache`, `Redis`, `Queue`, `Elasticsearch` and `Debug` are deliberately not auto-discovered, because each one replaces or extends a Laravel provider. Register those explicitly, as documented in the feature section that covers each.
 
 Copy the package config and translations to your application with the publish command:
 
@@ -356,7 +347,7 @@ Function  | Description
 
 ### Extended Classes
 
-For this fuctional you should add `Longman\LaravelLodash\ServiceProvider::class` in the `config/app.php` file.
+The service provider is auto-discovered, but these macros are **off by default**. Publish the config and set `register.request_macros` to `true` in `config/lodash.php` to enable them.
 
 There is an extended classes via Laravel's builtin macros functionality
 
@@ -419,7 +410,7 @@ Requesting a relationship with no matching `include<Name>()` method throws, so a
 
 ### Artisan Commands
 
-For this fuctional you should add `Longman\LaravelLodash\ServiceProvider::class` in the `config/app.php` file.
+The service provider is auto-discovered and `register.commands` defaults to `true`, so these commands are available out of the box. Set it to `false` in `config/lodash.php` to leave them unregistered.
 
 Command  | Description
 ------------- | -------------

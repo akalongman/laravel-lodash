@@ -419,7 +419,7 @@ A client sending `?include=criteria` yields `['criteria', 'criteria.courseCompon
 
 #### Strict validation rule
 
-The `strict` rule asserts the native PHP type of a value rather than accepting anything that could be coerced into that type. The service provider registers it automatically.
+The `strict` rule asserts the native PHP type of a value rather than accepting anything that could be coerced into that type. The service provider registers it while `register.validation_rules` is `true` (the default) in `config/lodash.php`; setting the flag to `false` leaves Laravel's stock validator (or your own resolver) in place and the rule unregistered.
 
 ```php
 public function rules(): array

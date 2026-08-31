@@ -7,6 +7,7 @@ namespace Tests\Unit\Validation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as IlluminateValidator;
 use InvalidArgumentException;
+use Longman\LaravelLodash\Validation\Validator as LodashValidator;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
 
@@ -14,6 +15,12 @@ use function trans;
 
 class ValidatorTest extends TestCase
 {
+    #[Test]
+    public function it_should_install_the_package_validator_by_default(): void
+    {
+        $this->assertInstanceOf(LodashValidator::class, Validator::make([], []));
+    }
+
     #[Test]
     public function it_should_enforce_an_integer_max_bound_numerically(): void
     {

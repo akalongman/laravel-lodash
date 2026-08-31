@@ -22,6 +22,8 @@ All notable changes to `longman/laravel-lodash` are documented in this file.
 
 ### Fixed
 
+- The `lodash.register.validation_rules` config flag now actually gates the validator resolver. The flag has shipped since the config's introduction but was read nowhere, so setting it to `false` silently did nothing. Consumers who set `false` expecting an opt-out now get one: the package validator (including the `strict` rule) is not installed, and any `strict` rules still declared will throw a `BadMethodCallException` because no extension registers them. The default remains `true`, so untouched configs see no change.
+
 - The validator resolver now accepts and forwards the custom attribute display names, so `FormRequest::attributes()` and the fourth argument of `Validator::make()` affect error messages again. The resolver closure took four parameters while Laravel's `Factory::resolve()` passes five, so display names were silently dropped for as long as the package's validator has been installed: messages rendered the raw field name (`The qty field ...`) where stock Laravel renders the display name (`The quantity field ...`).
 
 ## [15.1.0] - 2026-08-06

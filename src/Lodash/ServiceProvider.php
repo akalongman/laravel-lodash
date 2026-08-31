@@ -42,7 +42,40 @@ class ServiceProvider extends LaravelServiceProvider
             __DIR__ . '/../config/config.php' => config_path('lodash.php'),
         ]);
 
-        // Validator and rules
+        $this->registerValidator();
+
+        $this->loadTranslations();
+        //$this->loadValidations();
+    }
+
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'lodash');
+
+        $this->registerCommands();
+
+        $this->registerRequestMacros();
+    }
+
+    protected function registerCommands(): void
+    {
+        if (! config('lodash.register.commands')) {
+            return;
+        }
+
+        foreach ($this->commands as $name => $class) {
+            $this->app->singleton($name, $class);
+        }
+
+        $this->commands(array_keys($this->commands));
+    }
+
+    protected function registerValidator(): void
+    {
+        if (! config('lodash.register.validation_rules')) {
+            return;
+        }
+
         $this->app['validator']
             ->resolver(
                 function (Translator $translator, array $data, array $rules, array $messages, array $attributes): Validator {
@@ -71,31 +104,6 @@ class ServiceProvider extends LaravelServiceProvider
                     return $validator;
                 },
             );
-
-        $this->loadTranslations();
-        //$this->loadValidations();
-    }
-
-    public function register(): void
-    {
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'lodash');
-
-        $this->registerCommands();
-
-        $this->registerRequestMacros();
-    }
-
-    protected function registerCommands(): void
-    {
-        if (! config('lodash.register.commands')) {
-            return;
-        }
-
-        foreach ($this->commands as $name => $class) {
-            $this->app->singleton($name, $class);
-        }
-
-        $this->commands(array_keys($this->commands));
     }
 
     protected function registerRequestMacros(): void

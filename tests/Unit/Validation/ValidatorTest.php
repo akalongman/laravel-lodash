@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Validation;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Validator as IlluminateValidator;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Unit\TestCase;
@@ -112,6 +113,58 @@ class ValidatorTest extends TestCase
     public function it_should_leave_strict_boolean_attributes_untouched(): void
     {
         $this->assertTrue(Validator::make(['value' => true], ['value' => ['strict:boolean', 'max:1']])->passes());
+
+        $validator = Validator::make(['value' => true], ['value' => ['strict:boolean', 'max:0']]);
+
+        $this->assertTrue($validator->fails());
+        $this->assertSame(
+            (string) trans('validation.max.string', ['attribute' => 'value', 'max' => '0']),
+            $validator->errors()->first('value'),
+        );
+    }
+
+    #[Test]
+    public function it_should_not_leak_numeric_mode_into_after_hooks(): void
+    {
+        $validator = Validator::make(
+            ['b' => 'abcdefgh', 'a' => 999],
+            ['b' => ['strict:string'], 'a' => ['strict:integer', 'max:5']],
+        );
+
+        $validator->after(static function (IlluminateValidator $v): void {
+            $v->addFailure('b', 'Max', ['3']);
+        });
+
+        $this->assertTrue($validator->fails());
+        $this->assertSame(
+            (string) trans('validation.max.string', ['attribute' => 'b', 'max' => '3']),
+            $validator->errors()->first('b'),
+        );
+    }
+
+    #[Test]
+    public function it_should_forward_custom_attribute_names_to_messages(): void
+    {
+        $validator = Validator::make(
+            ['qty' => 2147483648],
+            ['qty' => ['strict:integer', 'max:32767']],
+            [],
+            ['qty' => 'quantity'],
+        );
+
+        $this->assertTrue($validator->fails());
+        $this->assertSame(
+            (string) trans('validation.max.numeric', ['attribute' => 'quantity', 'max' => '32767']),
+            $validator->errors()->first('qty'),
+        );
+    }
+
+    #[Test]
+    public function it_should_skip_a_bare_strict_rule_when_the_value_is_absent(): void
+    {
+        $this->assertTrue(Validator::make([], ['value' => ['strict']])->passes());
+        $this->assertTrue(Validator::make(['value' => null], ['value' => ['strict']])->passes());
+        $this->assertTrue(Validator::make(['value' => ''], ['value' => ['strict']])->passes());
     }
 
     #[Test]

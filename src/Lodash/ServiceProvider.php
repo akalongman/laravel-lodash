@@ -45,12 +45,13 @@ class ServiceProvider extends LaravelServiceProvider
         // Validator and rules
         $this->app['validator']
             ->resolver(
-                function (Translator $translator, array $data, array $rules, array $messages): Validator {
+                function (Translator $translator, array $data, array $rules, array $messages, array $attributes): Validator {
                     $validator = new Validator(
                         $translator,
                         $data,
                         $rules,
                         $messages,
+                        $attributes,
                     );
 
                     $validator->addExtension('strict', function (string $attribute, mixed $value, array $parameters, Validator $validator): bool {

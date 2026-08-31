@@ -10,10 +10,11 @@ This package adds lot of useful functionality to the Laravel >=13.0 project.
 
 ### Compatibility
 
-The package major does not track the Laravel major. It did for some releases (lodash 11 targets Laravel 11, lodash 13 targets Laravel 13), but a package major is cut for this package's own breaking changes, so lodash 14 and 15 both target Laravel 13. Read the table rather than inferring from the version number.
+The package major does not track the Laravel major. It did for some releases (lodash 11 targets Laravel 11, lodash 13 targets Laravel 13), but a package major is cut for this package's own breaking changes, so lodash 14 through 16 all target Laravel 13. Read the table rather than inferring from the version number.
 
 | laravel-lodash | Laravel framework  | PHP                 |
 |----------------|--------------------|---------------------|
+| `^16.0`        | `^13.0`            | `^8.4`              |
 | `^15.0`        | `^13.0`            | `^8.4`              |
 | `^14.0`        | `^13.0`            | `^8.4`              |
 | `^13.0`        | `^13.0`            | `^8.4`              |
@@ -430,7 +431,13 @@ public function rules(): array
 }
 ```
 
-Accepted type arguments are `int`, `integer`, `float`, `double`, `bool` and `boolean`, plus any name `gettype()` returns, such as `string` or `array`. Omitting the argument throws an `InvalidArgumentException`.
+Accepted type arguments are `int`, `integer`, `float`, `double`, `bool` and `boolean`, plus any name `gettype()` returns, such as `string` or `array`. Omitting the argument throws an `InvalidArgumentException` when the rule runs; like any non-implicit rule, `strict` is skipped for absent, `null`, and empty-string values.
+
+The package ships no message line for the rule, so a failing `strict` renders the raw key `validation.strict` until you define one. Add a line to your application's `lang/en/validation.php`; the `:type` placeholder is replaced with the declared type argument:
+
+```php
+'strict' => 'The :attribute field must be of type :type.',
+```
 
 Because the check is on the native type, the rule is stricter than Laravel's own: `strict:integer` rejects the string `'5'` that `integer` accepts. Keep in mind that query-string and form-encoded values always arrive as strings, so `strict:integer` fits JSON payloads, or data already cast before validation.
 

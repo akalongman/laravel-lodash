@@ -12,11 +12,17 @@ All notable changes to `longman/laravel-lodash` are documented in this file.
 
   **Requests that were being accepted will start being rejected.** That is the intent of the change, but any consumer relying on the inert bounds, even accidentally, sees new validation failures on upgrade. The failure message changes with it: `max` on such an attribute now renders `validation.max.numeric` ("must not be greater than 32767") rather than `validation.max.string` ("must not be greater than 32767 characters").
 
+  **Custom per-attribute size messages move with it.** A lang line keyed `validation.custom.<attribute>.<rule>.string`, written for the old wording, is no longer consulted on strict-numeric attributes; define the `.numeric` variant instead. Do not leave the `.string` child as the only entry under the bare key: with the `.numeric` line missing, Laravel falls back to the bare `validation.custom.<attribute>.<rule>` key, which then resolves to the nested array and crashes message formatting with a `TypeError`, so that misconfiguration surfaces as a 500 rather than as a wrong message. When both variants exist, `.numeric` wins where `.string` won before.
+
   **Test suites are where this surfaces first.** A test asserting that an out-of-range value passed validation on a strict-numeric attribute was asserting the defect; correct the expectation rather than reverting. Consumers who worked around this by declaring the type twice, `['strict:integer', 'integer', 'max:32767']`, see no behavioural change at all and may drop the now-redundant `integer` rule whenever convenient.
 
   Nothing else moves. `strict:string`, `strict:boolean`, `strict:array` and attributes carrying no `strict` rule keep the framework's default sizing: strings by character length, arrays by element count. The `gt`, `gte`, `lt` and `lte` comparisons already behaved numerically on strict attributes, because the framework's own `shouldBeNumeric()` covers them; they are now pinned by tests so that behaviour is guaranteed rather than incidental. `StrictTypeValidator` and the accepted type aliases are unchanged.
 
   One sharp edge is inherited rather than introduced: a PHP `INF` or `NAN` float on a strict-numeric attribute now raises `Brick\Math\Exception\NumberFormatException` during size validation, exactly as it already does on an attribute declared with Laravel's own `numeric` or `integer` rule (the framework's size-rule `catch` targets its own `MathException` class, not Brick's). Such values cannot arrive over HTTP, since JSON cannot encode them and form input is always strings; only PHP code validating computed floats can produce them. Previously they slipped through the inert bounds silently. Wrap the validation call or pre-check with `is_finite()` if your code validates computed floats.
+
+### Fixed
+
+- The validator resolver now accepts and forwards the custom attribute display names, so `FormRequest::attributes()` and the fourth argument of `Validator::make()` affect error messages again. The resolver closure took four parameters while Laravel's `Factory::resolve()` passes five, so display names were silently dropped for as long as the package's validator has been installed: messages rendered the raw field name (`The qty field ...`) where stock Laravel renders the display name (`The quantity field ...`).
 
 ## [15.1.0] - 2026-08-06
 

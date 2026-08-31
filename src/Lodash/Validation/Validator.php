@@ -7,15 +7,12 @@ namespace Longman\LaravelLodash\Validation;
 use Illuminate\Validation\Validator as BaseValidator;
 use Override;
 
-use function in_array;
 use function is_null;
 use function is_string;
 use function trim;
 
 class Validator extends BaseValidator
 {
-    protected const array NUMERIC_STRICT_TYPES = ['int', 'integer', 'float', 'double'];
-
     #[Override]
     protected function presentOrRuleIsImplicit($rule, $attribute, $value): bool
     {
@@ -30,35 +27,45 @@ class Validator extends BaseValidator
     #[Override]
     protected function getSize($attribute, $value): int|string
     {
-        $this->treatStrictNumericTypeAsNumericRule($attribute);
+        if (! $this->hasStrictNumericType($attribute)) {
+            return parent::getSize($attribute, $value);
+        }
 
-        return parent::getSize($attribute, $value);
+        $originalNumericRules = $this->numericRules;
+        $this->numericRules[] = 'Strict';
+
+        try {
+            return parent::getSize($attribute, $value);
+        } finally {
+            $this->numericRules = $originalNumericRules;
+        }
     }
 
     #[Override]
     protected function getAttributeType($attribute): string
     {
-        $this->treatStrictNumericTypeAsNumericRule($attribute);
-
-        return parent::getAttributeType($attribute);
-    }
-
-    private function treatStrictNumericTypeAsNumericRule(int|string $attribute): void
-    {
-        if (in_array('Strict', $this->numericRules, true)) {
-            return;
+        if (! $this->hasStrictNumericType($attribute)) {
+            return parent::getAttributeType($attribute);
         }
 
+        $originalNumericRules = $this->numericRules;
+        $this->numericRules[] = 'Strict';
+
+        try {
+            return parent::getAttributeType($attribute);
+        } finally {
+            $this->numericRules = $originalNumericRules;
+        }
+    }
+
+    private function hasStrictNumericType(int|string $attribute): bool
+    {
         $rule = $this->getRule($attribute, ['Strict']);
 
         if ($rule === null) {
-            return;
+            return false;
         }
 
-        if (! in_array($rule[1][0] ?? null, static::NUMERIC_STRICT_TYPES, true)) {
-            return;
-        }
-
-        $this->numericRules[] = 'Strict';
+        return StrictTypeValidator::isNumericType((string) ($rule[1][0] ?? ''));
     }
 }

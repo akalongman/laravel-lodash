@@ -1,7 +1,12 @@
 # validation-strict Specification
 
 ## Purpose
-TBD - created by archiving change strict-numeric-size-rules. Update Purpose after archive.
+Defines the `strict` validation rule: a native-PHP-type gate registered through the
+package's validator resolver and backed by `StrictTypeValidator`, together with the
+size-rule semantics of attributes it declares numeric. Covers which type arguments
+the rule accepts, how it differs from Laravel's coercing `integer`/`numeric` rules,
+and the numeric comparison and message selection that `min`, `max`, `size`,
+`between`, `gt`, `gte`, `lt` and `lte` apply to strict-numeric attributes.
 
 ## Requirements
 
@@ -11,8 +16,11 @@ The `strict:<type>` rule SHALL pass only when the PHP native type of the value
 matches the declared type, and SHALL NOT coerce. A numeric string is not an
 integer and an integer is not a float. The declared type SHALL be one of the
 aliases `int`, `integer`, `float`, `double`, `bool`, `boolean`, or otherwise a
-name that `gettype()` returns (`string`, `array`, `NULL`). A `strict` rule with
-no type argument SHALL throw an `InvalidArgumentException`.
+name that `gettype()` returns (`string`, `array`). A `strict` rule with no type
+argument SHALL throw an `InvalidArgumentException` when the rule executes. The
+rule is not implicit, so absent, `null`, and empty-string values skip it, as
+they skip any non-implicit rule; a missing type argument therefore surfaces
+only once a present value arrives.
 
 #### Scenario: Integer accepted, numeric string rejected
 - **WHEN** an attribute with the rule `strict:integer` receives the PHP integer `5`
@@ -26,9 +34,13 @@ no type argument SHALL throw an `InvalidArgumentException`.
 - **WHEN** an attribute with the rule `strict:string` receives the string `'abc'`
 - **THEN** validation passes
 
-#### Scenario: Missing type argument
-- **WHEN** an attribute carries the bare rule `strict`
+#### Scenario: Missing type argument with a present value
+- **WHEN** an attribute carries the bare rule `strict` and receives a present, non-empty value
 - **THEN** validation throws an `InvalidArgumentException` naming the missing type argument
+
+#### Scenario: Bare strict rule skipped for absent values
+- **WHEN** an attribute carries the bare rule `strict` and the value is absent, `null`, or an empty string
+- **THEN** validation passes and no exception is thrown, because non-implicit rules are skipped for such values
 
 ### Requirement: Size rules on strict-numeric attributes compare numerically
 

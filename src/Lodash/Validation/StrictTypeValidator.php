@@ -22,6 +22,13 @@ readonly class StrictTypeValidator
         'boolean' => self::NATIVE_TYPE_BOOL,
     ];
 
+    public static function isNumericType(string $type): bool
+    {
+        $nativeType = static::TYPE_MAP[$type] ?? null;
+
+        return in_array($nativeType, [static::NATIVE_TYPE_INT, static::NATIVE_TYPE_FLOAT], true);
+    }
+
     public function validate(string $attribute, mixed $value, array $parameters): bool
     {
         if (empty($parameters)) {

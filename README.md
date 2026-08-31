@@ -51,6 +51,7 @@ If your application is still on an older Laravel major, install the matching tag
     - [Extended Classes](#extended-classes)
         - [Request Class](#request-class)
         - [API Resources and Relationships](#api-resources-and-relationships)
+        - [Strict validation rule](#strict-validation-rule)
     - [Artisan Commands](#artisan-commands)
     - [Middleware List](#middleware-list)
         - [XssSecurity](#xsssecurity)
@@ -414,6 +415,26 @@ $includes = array_merge(self::DEFAULT_INCLUDES, $request->getValidatedIncludes()
 ```
 
 A client sending `?include=criteria` yields `['criteria', 'criteria.courseComponent', 'criteria']`, and the nested `courseComponent` still renders. The order in which keys appear inside the `relationships` object is not part of the contract, so compare payloads by structure rather than byte-for-byte across differently-ordered include lists.
+
+#### Strict validation rule
+
+The `strict` rule asserts the native PHP type of a value rather than accepting anything that could be coerced into that type. The service provider registers it automatically.
+
+```php
+public function rules(): array
+{
+    return [
+        'quantity' => ['required', 'strict:integer', 'min:1', 'max:32767'],
+        'name'     => ['required', 'strict:string', 'max:255'],
+    ];
+}
+```
+
+Accepted type arguments are `int`, `integer`, `float`, `double`, `bool` and `boolean`, plus any name `gettype()` returns, such as `string` or `array`. Omitting the argument throws an `InvalidArgumentException`.
+
+Because the check is on the native type, the rule is stricter than Laravel's own: `strict:integer` rejects the string `'5'` that `integer` accepts. Keep in mind that query-string and form-encoded values always arrive as strings, so `strict:integer` fits JSON payloads, or data already cast before validation.
+
+On an attribute whose strict type is numeric (`int`, `integer`, `float`, `double`), the size rules `min`, `max`, `size`, `between`, `gt`, `gte`, `lt` and `lte` compare the value as a number, and failure messages use the numeric wording. Laravel's own `integer` or `numeric` rule is not needed alongside. Other strict types keep the framework's default sizing: `['strict:string', 'max:5']` still rejects `'999999999'` for being nine characters long.
 
 ### Artisan Commands
 

@@ -2,6 +2,20 @@
 
 All notable changes to `longman/laravel-lodash` are documented in this file.
 
+## [16.0.0] - 2026-08-31
+
+### Changed (BREAKING)
+
+- Size rules on an attribute declared with a numeric `strict` type (`strict:int`, `strict:integer`, `strict:float`, `strict:double`) now compare the value as a number and report the numeric failure message. Previously they compared it as text.
+
+  **A bound that read as an enforced limit was inert.** Laravel's `Validator::getSize()` switches into numeric mode only when the attribute also carries one of the framework's own numeric rules (`numeric`, `integer`, `decimal`), and a rule registered through the validator resolver is invisible to that check. So `['strict:integer', 'max:32767']` measured `mb_strlen($value)` and admitted `2147483648`, `['strict:integer', 'min:1']` admitted `0`, and `['strict:integer', 'between:1,10']` admitted `999`. Nothing errored and nothing was logged; the limit simply did not apply. This surfaced as a security fix in a consuming application, where a value too large for its database column passed validation and was refused only by the database.
+
+  **Requests that were being accepted will start being rejected.** That is the intent of the change, but any consumer relying on the inert bounds, even accidentally, sees new validation failures on upgrade. The failure message changes with it: `max` on such an attribute now renders `validation.max.numeric` ("must not be greater than 32767") rather than `validation.max.string` ("must not be greater than 32767 characters").
+
+  **Test suites are where this surfaces first.** A test asserting that an out-of-range value passed validation on a strict-numeric attribute was asserting the defect; correct the expectation rather than reverting. Consumers who worked around this by declaring the type twice, `['strict:integer', 'integer', 'max:32767']`, see no behavioural change at all and may drop the now-redundant `integer` rule whenever convenient.
+
+  Nothing else moves. `strict:string`, `strict:boolean`, `strict:array` and attributes carrying no `strict` rule keep the framework's default sizing: strings by character length, arrays by element count. The `gt`, `gte`, `lt` and `lte` comparisons already behaved numerically on strict attributes, because the framework's own `shouldBeNumeric()` covers them; they are now pinned by tests so that behaviour is guaranteed rather than incidental. `StrictTypeValidator` and the accepted type aliases are unchanged.
+
 ## [15.1.0] - 2026-08-06
 
 ### Fixed

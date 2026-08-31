@@ -16,6 +16,8 @@ All notable changes to `longman/laravel-lodash` are documented in this file.
 
   Nothing else moves. `strict:string`, `strict:boolean`, `strict:array` and attributes carrying no `strict` rule keep the framework's default sizing: strings by character length, arrays by element count. The `gt`, `gte`, `lt` and `lte` comparisons already behaved numerically on strict attributes, because the framework's own `shouldBeNumeric()` covers them; they are now pinned by tests so that behaviour is guaranteed rather than incidental. `StrictTypeValidator` and the accepted type aliases are unchanged.
 
+  One sharp edge is inherited rather than introduced: a PHP `INF` or `NAN` float on a strict-numeric attribute now raises `Brick\Math\Exception\NumberFormatException` during size validation, exactly as it already does on an attribute declared with Laravel's own `numeric` or `integer` rule (the framework's size-rule `catch` targets its own `MathException` class, not Brick's). Such values cannot arrive over HTTP, since JSON cannot encode them and form input is always strings; only PHP code validating computed floats can produce them. Previously they slipped through the inert bounds silently. Wrap the validation call or pre-check with `is_finite()` if your code validates computed floats.
+
 ## [15.1.0] - 2026-08-06
 
 ### Fixed
